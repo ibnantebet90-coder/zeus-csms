@@ -1,0 +1,27 @@
+# Python / Virtual Environment
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# Environment Variables & Secrets (Sangat Penting!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Frontend / Next.js / Node
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Databases
+*.db
+*.sqlite3
+
+# Sistem Operasi Mac (karena kamu pakai MacBook Pro)
+.DS_Store
