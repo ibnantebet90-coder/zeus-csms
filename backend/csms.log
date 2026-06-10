@@ -1,858 +1,436 @@
 INFO:     Will watch for changes in these directories: ['/Users/clara/Documents/zeus-csms/backend']
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [70630] using WatchFiles
-2026-06-08 12:19:31 WIB [INFO] zeus.ocpp: WebSocket manager loaded — real-time broadcast aktif.
-INFO:     Started server process [70642]
+INFO:     Started reloader process [77216] using WatchFiles
+2026-06-09 14:55:38 WIB [INFO] zeus.ocpp: WebSocket manager loaded — real-time broadcast aktif.
+INFO:     Started server process [77219]
 INFO:     Waiting for application startup.
-2026-06-08 12:19:31 WIB [INFO] websockets.server: server listening on 0.0.0.0:9000
-2026-06-08 12:19:31 WIB [INFO] zeus.main: OCPP server berjalan di ws://0.0.0.0:9000
+2026-06-09 14:55:39 WIB [INFO] websockets.server: server listening on 0.0.0.0:9000
+2026-06-09 14:55:39 WIB [INFO] zeus.main: OCPP server berjalan di ws://0.0.0.0:9000
 INFO:     Application startup complete.
-INFO:     127.0.0.1:55371 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55371 - "GET /api/auth/me HTTP/1.1" 200 OK
-INFO:     ('127.0.0.1', 55374) - "WebSocket /ws/monitor" [accepted]
-2026-06-08 12:20:02 WIB [INFO] zeus.ws: Frontend client terhubung. Total: 1
-INFO:     127.0.0.1:55371 - "OPTIONS /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     connection open
-INFO:     127.0.0.1:55371 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55387 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55390 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55393 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-2026-06-08 12:21:40 WIB [INFO] zeus.ws: Frontend client terputus. Total: 0
+2026-06-09 15:01:23 WIB [INFO] websockets.server: connection open
+2026-06-09 15:01:23 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
+2026-06-09 15:01:23 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
+2026-06-09 15:01:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"6dfaffbd-ba1f-47ca-97f2-41f394826a5d","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:01:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
+2026-06-09 15:01:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"6dfaffbd-ba1f-47ca-97f2-41f394826a5d",{}]
+2026-06-09 15:01:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"d300d569-dff1-4a41-ae60-703c7c758263","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:01:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
+2026-06-09 15:01:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"d300d569-dff1-4a41-ae60-703c7c758263",{}]
+INFO:     127.0.0.1:52795 - "OPTIONS /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52795 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52795 - "OPTIONS /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     ('127.0.0.1', 52803) - "WebSocket /ws/monitor" [accepted]
+2026-06-09 15:01:54 WIB [INFO] zeus.ws: Frontend client terhubung. Total: 1
+INFO:     127.0.0.1:52805 - "OPTIONS /api/transactions?limit=10 HTTP/1.1" 200 OK
 INFO:     connection closed
-INFO:     ('127.0.0.1', 55413) - "WebSocket /ws/monitor" [accepted]
-2026-06-08 12:21:44 WIB [INFO] zeus.ws: Frontend client terhubung. Total: 1
+2026-06-09 15:01:54 WIB [ERROR] zeus.ws: WebSocket error: 
+2026-06-09 15:01:54 WIB [ERROR] zeus.ws: WebSocket error: WebSocket is not connected. Need to call "accept" first.
+2026-06-09 15:01:54 WIB [INFO] zeus.ws: Frontend client terputus. Total: 0
+INFO:     127.0.0.1:52807 - "OPTIONS /api/charge-points HTTP/1.1" 200 OK
+INFO:     ('127.0.0.1', 52808) - "WebSocket /ws/monitor" [accepted]
+2026-06-09 15:01:54 WIB [INFO] zeus.ws: Frontend client terhubung. Total: 1
 INFO:     connection open
-2026-06-08 12:26:50 WIB [INFO] zeus.ws: Frontend client terputus. Total: 0
+INFO:     127.0.0.1:52795 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52805 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52807 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52807 - "OPTIONS /api/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52807 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
+2026-06-09 15:02:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"2bd6fb6b-78fc-4ccc-b355-9b620df8db0c","Heartbeat",{}]
+2026-06-09 15:02:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
+2026-06-09 15:02:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"2bd6fb6b-78fc-4ccc-b355-9b620df8db0c",{"currentTime":"2026-06-09T15:02:23.078275+07:00"}]
+INFO:     127.0.0.1:52816 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
+2026-06-09 15:02:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"2ca36314-d6af-40dd-a32f-0fc9904397c3","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Preparing"}]
+2026-06-09 15:02:55 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Preparing, error: NoError
+2026-06-09 15:02:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"2ca36314-d6af-40dd-a32f-0fc9904397c3",{}]
+INFO:     127.0.0.1:52823 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52825 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
+2026-06-09 15:03:44 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"32cf59cb-b2dd-471b-a142-0da6536b4293","Authorize",{"idTag":"a56def4b"}]
+2026-06-09 15:03:44 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Authorize — id_tag: a56def4b
+2026-06-09 15:03:44 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Authorize result — a56def4b: Accepted
+2026-06-09 15:03:44 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"32cf59cb-b2dd-471b-a142-0da6536b4293",{"idTagInfo":{"status":"Accepted"}}]
+2026-06-09 15:03:45 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"7847d0db-58c6-4e8d-b299-d54f8b91543e","Authorize",{"idTag":"a56def4b"}]
+2026-06-09 15:03:45 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Authorize — id_tag: a56def4b
+2026-06-09 15:03:45 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Authorize result — a56def4b: Accepted
+2026-06-09 15:03:45 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"7847d0db-58c6-4e8d-b299-d54f8b91543e",{"idTagInfo":{"status":"Accepted"}}]
+INFO:     127.0.0.1:52832 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52835 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
+2026-06-09 15:04:45 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
+2026-06-09 15:04:45 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
+2026-06-09 15:04:45 WIB [INFO] websockets.server: connection closed
+INFO:     127.0.0.1:52842 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52844 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52850 - "OPTIONS /api/customers?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52853 - "OPTIONS /api/charging-limit/usage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52854 - "OPTIONS /api/charging-limit/requests?status=Pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52850 - "GET /api/customers?limit=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52854 - "GET /api/charging-limit/usage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52853 - "GET /api/charging-limit/requests?status=Pending HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52853 - "GET /api/charge-points HTTP/1.1" 200 OK
+2026-06-09 15:05:49 WIB [INFO] websockets.server: connection open
+2026-06-09 15:05:49 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
+2026-06-09 15:05:49 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
+2026-06-09 15:05:49 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"e7837972-4898-4e1b-92a4-ccc888c63e59","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":11012149,"timestamp":"2026-06-09T22:04:43.000+07:00"}]
+2026-06-09 15:05:49 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 11012149 Wh
+2026-06-09 15:05:49 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Transaksi dimulai — transaction_id: 630054323
+2026-06-09 15:05:49 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"e7837972-4898-4e1b-92a4-ccc888c63e59",{"transactionId":630054323,"idTagInfo":{"status":"Accepted"}}]
+INFO:     127.0.0.1:52862 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52864 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52866 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52870 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52872 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52875 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52877 - "GET /api/charge-points HTTP/1.1" 200 OK
+2026-06-09 15:07:45 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
+2026-06-09 15:07:45 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
+2026-06-09 15:07:45 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 630054323 masih Active. Menunggu reconnect...
+2026-06-09 15:07:45 WIB [INFO] websockets.server: connection closed
+INFO:     127.0.0.1:52883 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52885 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52887 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52890 - "GET /api/charge-points HTTP/1.1" 200 OK
+2026-06-09 15:08:49 WIB [INFO] websockets.server: connection open
+2026-06-09 15:08:49 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
+2026-06-09 15:08:49 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 630054323 masih Active, status dipertahankan: Charging
+2026-06-09 15:08:49 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
+2026-06-09 15:08:50 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"4bec5066-4ea3-46cb-9360-716bb4b0b290","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
+2026-06-09 15:08:50 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
+2026-06-09 15:08:50 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"4bec5066-4ea3-46cb-9360-716bb4b0b290",{}]
+2026-06-09 15:08:50 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"3586cd67-f223-4abe-a9e1-454885685d1d","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:05:43.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:05:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:05:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:08:50 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"3586cd67-f223-4abe-a9e1-454885685d1d",{}]
+2026-06-09 15:08:50 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"da08919b-63fb-4cf0-8b1c-fd8098ed6348","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:08:50 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
+2026-06-09 15:08:50 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"da08919b-63fb-4cf0-8b1c-fd8098ed6348",{}]
+2026-06-09 15:08:51 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"38905d29-0bda-4805-a068-b42fd71bb1a1","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"SuspendedEV"}]
+2026-06-09 15:08:51 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: SuspendedEV, error: NoError
+2026-06-09 15:08:51 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"38905d29-0bda-4805-a068-b42fd71bb1a1",{}]
+2026-06-09 15:08:51 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"40bbb4d5-385f-481e-b8f9-a8528ce2909b","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:06:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:06:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:06:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:08:51 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"40bbb4d5-385f-481e-b8f9-a8528ce2909b",{}]
+2026-06-09 15:08:51 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"dd43e22e-012e-4c23-9460-dba6e58795c0","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":11012149,"timestamp":"2026-06-09T22:04:43.000+07:00"}]
+2026-06-09 15:08:51 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 11012149 Wh
+2026-06-09 15:08:51 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=11012149 sudah ada (transaction_id=630054323)
+2026-06-09 15:08:51 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"dd43e22e-012e-4c23-9460-dba6e58795c0",{"transactionId":630054323,"idTagInfo":{"status":"Accepted"}}]
+2026-06-09 15:08:52 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"2b5c4951-cbf5-4b79-bab9-7f2a34c3c397","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
+2026-06-09 15:08:53 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"2b5c4951-cbf5-4b79-bab9-7f2a34c3c397",{"status":"Accepted"}]
+2026-06-09 15:08:53 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
+INFO:     127.0.0.1:52920 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52922 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52924 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52927 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52929 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52931 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52933 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52937 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52940 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52942 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52944 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52948 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52951 - "OPTIONS /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52951 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52953 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52955 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52958 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52960 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52962 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52964 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52972 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52974 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52976 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52978 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52981 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52992 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52996 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52998 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53001 - "GET /api/charge-points HTTP/1.1" 200 OK
+2026-06-09 15:17:45 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
+2026-06-09 15:17:45 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
+2026-06-09 15:17:45 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 630054323 masih Active. Menunggu reconnect...
+2026-06-09 15:17:45 WIB [INFO] websockets.server: connection closed
+INFO:     127.0.0.1:53006 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53008 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53010 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53013 - "GET /api/charge-points HTTP/1.1" 200 OK
+2026-06-09 15:18:53 WIB [INFO] websockets.server: connection open
+2026-06-09 15:18:53 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
+2026-06-09 15:18:53 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 630054323 masih Active, status dipertahankan: Charging
+2026-06-09 15:18:53 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
+2026-06-09 15:18:54 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"8e91d53c-7cc9-4ad6-8a43-230f3888c16a","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
+2026-06-09 15:18:54 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
+2026-06-09 15:18:54 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"8e91d53c-7cc9-4ad6-8a43-230f3888c16a",{}]
+2026-06-09 15:18:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"b79c55bb-2efc-4570-a30d-788515e96768","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:05:43.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:05:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:05:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:18:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"b79c55bb-2efc-4570-a30d-788515e96768",{}]
+2026-06-09 15:18:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"89ea94ea-f7af-4511-8d7f-11784d7f1bbc","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:18:55 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
+2026-06-09 15:18:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"89ea94ea-f7af-4511-8d7f-11784d7f1bbc",{}]
+2026-06-09 15:18:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"ace205c0-5737-46ea-8117-b9f71fd033a8","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"SuspendedEV"}]
+2026-06-09 15:18:55 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: SuspendedEV, error: NoError
+2026-06-09 15:18:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"ace205c0-5737-46ea-8117-b9f71fd033a8",{}]
+2026-06-09 15:18:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"d32dbc52-17cd-4db5-9588-0c24bad1b691","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:06:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:06:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:06:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:18:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"d32dbc52-17cd-4db5-9588-0c24bad1b691",{}]
+2026-06-09 15:18:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"aa0593e0-c5f4-49b7-96f7-71c418cf788d","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:07:43.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:07:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:07:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:18:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"aa0593e0-c5f4-49b7-96f7-71c418cf788d",{}]
+2026-06-09 15:18:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"b14ca6cb-a802-483b-8951-7f6bdf882dd5","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:08:43.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:08:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:08:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:18:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"b14ca6cb-a802-483b-8951-7f6bdf882dd5",{}]
+2026-06-09 15:18:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"4b6b76fc-125f-4f23-acbd-30812d43bc13","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:18:56 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
+2026-06-09 15:18:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"4b6b76fc-125f-4f23-acbd-30812d43bc13",{}]
+2026-06-09 15:18:57 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"0fa25f83-a2d6-4763-ba2d-dc28df84b322","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"SuspendedEV"}]
+2026-06-09 15:18:57 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: SuspendedEV, error: NoError
+2026-06-09 15:18:57 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"0fa25f83-a2d6-4763-ba2d-dc28df84b322",{}]
+2026-06-09 15:18:57 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"a9e3efd8-3135-4ab7-99f6-80ba9be6ca25","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"SuspendedEV"}]
+2026-06-09 15:18:57 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: SuspendedEV, error: NoError
+2026-06-09 15:18:57 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"a9e3efd8-3135-4ab7-99f6-80ba9be6ca25",{}]
+2026-06-09 15:18:58 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"a9c4c9ce-e3f9-4486-8541-73620dab0b23","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:09:43.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:09:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:09:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:18:58 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"a9c4c9ce-e3f9-4486-8541-73620dab0b23",{}]
+2026-06-09 15:18:58 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"e931f5c1-1a48-4072-9857-3de18c715353","Heartbeat",{}]
+2026-06-09 15:18:58 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
+2026-06-09 15:18:58 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"e931f5c1-1a48-4072-9857-3de18c715353",{"currentTime":"2026-06-09T15:18:58.500435+07:00"}]
+2026-06-09 15:18:58 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"d839a6d6-681a-4fac-b5a6-5d9504187032","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:10:43.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:10:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:10:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:18:58 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"d839a6d6-681a-4fac-b5a6-5d9504187032",{}]
+2026-06-09 15:18:59 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"90f581c2-6317-4405-94fe-459b601b2e8f","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:11:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:11:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:11:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:18:59 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"90f581c2-6317-4405-94fe-459b601b2e8f",{}]
+2026-06-09 15:18:59 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"dcffe18e-9752-47f9-86a8-d913f95599b3","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:12:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:12:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:12:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:18:59 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"dcffe18e-9752-47f9-86a8-d913f95599b3",{}]
+2026-06-09 15:18:59 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"99f649b6-56ef-49da-8963-82d02b6c1bca","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:13:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:13:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:13:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:18:59 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"99f649b6-56ef-49da-8963-82d02b6c1bca",{}]
+2026-06-09 15:18:59 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"ee4db0e2-da63-4dcd-9e04-67ceb1a100f3","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:14:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:14:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:14:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:18:59 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"ee4db0e2-da63-4dcd-9e04-67ceb1a100f3",{}]
+2026-06-09 15:19:00 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"6cc77f95-dc98-4fda-8958-29969c186b6e","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:15:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:15:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:15:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:19:00 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"6cc77f95-dc98-4fda-8958-29969c186b6e",{}]
+2026-06-09 15:19:00 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"e94cdb0f-e6ce-4edc-9c81-2a502e02d129","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:16:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:16:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:16:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:19:00 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"e94cdb0f-e6ce-4edc-9c81-2a502e02d129",{}]
+2026-06-09 15:19:00 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"258fc644-2343-4b33-aac7-d5a919f6acd6","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":11012149,"timestamp":"2026-06-09T22:04:43.000+07:00"}]
+2026-06-09 15:19:00 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 11012149 Wh
+2026-06-09 15:19:00 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=11012149 sudah ada (transaction_id=630054323)
+2026-06-09 15:19:00 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"258fc644-2343-4b33-aac7-d5a919f6acd6",{"transactionId":630054323,"idTagInfo":{"status":"Accepted"}}]
+2026-06-09 15:19:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"e2c604bc-501c-4400-96e0-af1de2cb824e","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
+2026-06-09 15:19:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"e2c604bc-501c-4400-96e0-af1de2cb824e",{"status":"Accepted"}]
+2026-06-09 15:19:01 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
+INFO:     127.0.0.1:53121 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53123 - "GET /api/charge-points HTTP/1.1" 200 OK
+2026-06-09 15:19:31 WIB [INFO] zeus.ws: Frontend client terputus. Total: 0
 INFO:     connection closed
-INFO:     ('127.0.0.1', 55479) - "WebSocket /ws/monitor" [accepted]
-2026-06-08 12:26:53 WIB [INFO] zeus.ws: Frontend client terhubung. Total: 1
+INFO:     ('127.0.0.1', 53135) - "WebSocket /ws/monitor" [accepted]
+2026-06-09 15:19:35 WIB [INFO] zeus.ws: Frontend client terhubung. Total: 1
 INFO:     connection open
-INFO:     127.0.0.1:55481 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55491 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55494 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55497 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55501 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55503 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55509 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55514 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55522 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55528 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55535 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55545 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55551 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55553 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-2026-06-08 12:33:53 WIB [INFO] websockets.server: connection open
-2026-06-08 12:33:53 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 12:33:53 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 12:33:54 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"3577ec8f-fba5-4b6c-815c-c069d4b97bc6","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:33:54 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 12:33:54 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"3577ec8f-fba5-4b6c-815c-c069d4b97bc6",{}]
-2026-06-08 12:33:54 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"94a01a8b-709f-4f56-a133-86f2ae68977b","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:33:54 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 12:33:54 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"94a01a8b-709f-4f56-a133-86f2ae68977b",{}]
-INFO:     127.0.0.1:55570 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55578 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-2026-06-08 12:34:52 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"be545fe5-2192-45c0-bda1-5ad52ddd1296","Heartbeat",{}]
-2026-06-08 12:34:52 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 12:34:52 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"be545fe5-2192-45c0-bda1-5ad52ddd1296",{"currentTime":"2026-06-08T12:34:52.908230+07:00"}]
-INFO:     127.0.0.1:55585 - "OPTIONS /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55585 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-2026-06-08 12:35:09 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"c9fb3d4b-8cc8-4e70-9179-23d72926b1bb","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Preparing"}]
-2026-06-08 12:35:09 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Preparing, error: NoError
-2026-06-08 12:35:09 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"c9fb3d4b-8cc8-4e70-9179-23d72926b1bb",{}]
-INFO:     127.0.0.1:55590 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-2026-06-08 12:35:31 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"dfaf42f4-e204-4866-9373-170da1bc044a","Authorize",{"idTag":"a56def4b"}]
-2026-06-08 12:35:31 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Authorize — id_tag: a56def4b
-2026-06-08 12:35:31 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Authorize result — a56def4b: Accepted
-2026-06-08 12:35:31 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"dfaf42f4-e204-4866-9373-170da1bc044a",{"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 12:35:32 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"4d907a6d-b062-4f63-b934-3aac91157ca5","Authorize",{"idTag":"a56def4b"}]
-2026-06-08 12:35:32 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Authorize — id_tag: a56def4b
-2026-06-08 12:35:32 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Authorize result — a56def4b: Accepted
-2026-06-08 12:35:32 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"4d907a6d-b062-4f63-b934-3aac91157ca5",{"idTagInfo":{"status":"Accepted"}}]
-INFO:     127.0.0.1:55600 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55604 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-2026-06-08 12:36:32 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 12:36:32 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 12:36:32 WIB [INFO] websockets.server: connection closed
-INFO:     127.0.0.1:55616 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55623 - "OPTIONS /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55623 - "GET /api/charge-points HTTP/1.1" 200 OK
-2026-06-08 12:37:41 WIB [INFO] websockets.server: connection open
-2026-06-08 12:37:41 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 12:37:41 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 12:37:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"b24d9562-195d-4891-88a1-e423e3e7b164","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 12:37:41 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 12:37:41 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Transaksi dimulai — transaction_id: 629101442
-2026-06-08 12:37:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"b24d9562-195d-4891-88a1-e423e3e7b164",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-INFO:     127.0.0.1:55633 - "GET /api/charge-points HTTP/1.1" 401 Unauthorized
-2026-06-08 12:37:56 WIB [INFO] zeus.ws: Frontend client terputus. Total: 0
+INFO:     127.0.0.1:53166 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53177 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53180 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53183 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53186 - "GET /api/charge-points HTTP/1.1" 200 OK
+2026-06-09 15:23:17 WIB [INFO] zeus.ws: Frontend client terputus. Total: 0
 INFO:     connection closed
-2026-06-08 12:39:32 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 12:39:32 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 12:39:32 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 12:39:32 WIB [INFO] websockets.server: connection closed
-2026-06-08 12:40:39 WIB [INFO] websockets.server: connection open
-2026-06-08 12:40:39 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 12:40:39 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 12:40:39 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 12:40:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"72594b15-1f14-4f0e-aa53-7e690792679c","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:40:40 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:40:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"72594b15-1f14-4f0e-aa53-7e690792679c",{}]
-2026-06-08 12:40:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"9d04827f-c98a-44a7-8fd1-2d417bae798c","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:40:40 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:40:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"9d04827f-c98a-44a7-8fd1-2d417bae798c",{}]
-2026-06-08 12:40:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"f998bbe0-de2a-4dca-9515-6a0c42bb6cc0","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:37:29.000+07:00","sampledValue":[{"value":"10964773","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:37:29.000+07:00","sampledValue":[{"value":"3078","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:37:29.000+07:00","sampledValue":[{"value":"13","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:40:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"f998bbe0-de2a-4dca-9515-6a0c42bb6cc0",{}]
-2026-06-08 12:40:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"3da31a69-62b2-4fd6-bc9f-677d3661fb0a","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:40:40 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 12:40:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"3da31a69-62b2-4fd6-bc9f-677d3661fb0a",{}]
-2026-06-08 12:40:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"c208e4b0-7d04-44c1-af8f-6e74c86f8421","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:40:41 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:40:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"c208e4b0-7d04-44c1-af8f-6e74c86f8421",{}]
-2026-06-08 12:40:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"5504cb6e-5c67-4fdd-a39e-c50eb732d7d8","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:38:29.000+07:00","sampledValue":[{"value":"10964824","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:38:29.000+07:00","sampledValue":[{"value":"3068","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:38:29.000+07:00","sampledValue":[{"value":"13","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:40:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"5504cb6e-5c67-4fdd-a39e-c50eb732d7d8",{}]
-2026-06-08 12:40:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"89795350-0011-4653-82ee-43e55a262d95","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 12:40:41 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 12:40:41 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 12:40:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"89795350-0011-4653-82ee-43e55a262d95",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 12:40:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"165ba4b5-14a1-4111-b757-2b4f0a1316db","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 12:40:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"165ba4b5-14a1-4111-b757-2b4f0a1316db",{"status":"Accepted"}]
-2026-06-08 12:40:42 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-INFO:     127.0.0.1:55709 - "OPTIONS /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55709 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55709 - "OPTIONS /api/dashboard/summary HTTP/1.1" 200 OK
-INFO:     ('127.0.0.1', 55716) - "WebSocket /ws/monitor" [accepted]
-2026-06-08 12:41:30 WIB [INFO] zeus.ws: Frontend client terhubung. Total: 1
-INFO:     127.0.0.1:55719 - "OPTIONS /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53195 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53195 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     ('127.0.0.1', 53196) - "WebSocket /ws/monitor" [accepted]
+2026-06-09 15:23:17 WIB [INFO] zeus.ws: Frontend client terhubung. Total: 1
 INFO:     connection open
-INFO:     127.0.0.1:55720 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55719 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55709 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55725 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55734 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-2026-06-08 12:42:31 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 12:42:31 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 12:42:31 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 12:42:31 WIB [INFO] websockets.server: connection closed
-INFO:     127.0.0.1:55740 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55746 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55748 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55750 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55752 - "GET /api/charge-points HTTP/1.1" 200 OK
-2026-06-08 12:43:33 WIB [INFO] websockets.server: connection open
-2026-06-08 12:43:33 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 12:43:33 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 12:43:33 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 12:43:34 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"73c4e4b4-ebe4-4322-9196-056215b48574","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:43:34 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:43:34 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"73c4e4b4-ebe4-4322-9196-056215b48574",{}]
-2026-06-08 12:43:34 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"38559474-fafd-494c-8a0f-ffc73ff48fb0","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:43:34 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:43:34 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"38559474-fafd-494c-8a0f-ffc73ff48fb0",{}]
-2026-06-08 12:43:34 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"fbcb7002-6742-43c5-be4f-4c06745c7fc6","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:37:29.000+07:00","sampledValue":[{"value":"10964773","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:37:29.000+07:00","sampledValue":[{"value":"3078","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:37:29.000+07:00","sampledValue":[{"value":"13","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:43:34 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"fbcb7002-6742-43c5-be4f-4c06745c7fc6",{}]
-2026-06-08 12:43:34 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"763517fb-b7de-451d-a0c7-98cad9d50162","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:43:34 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 12:43:34 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"763517fb-b7de-451d-a0c7-98cad9d50162",{}]
-2026-06-08 12:43:34 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"c0e66c83-d0df-484b-b40e-c84643a14554","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:43:34 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:43:34 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"c0e66c83-d0df-484b-b40e-c84643a14554",{}]
-2026-06-08 12:43:34 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"7f2ffee6-8431-4bbc-bdb8-fb3bf431504d","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:38:29.000+07:00","sampledValue":[{"value":"10964824","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:38:29.000+07:00","sampledValue":[{"value":"3068","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:38:29.000+07:00","sampledValue":[{"value":"13","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:43:34 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"7f2ffee6-8431-4bbc-bdb8-fb3bf431504d",{}]
-2026-06-08 12:43:35 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"8ff242b5-7a46-4bf4-9ca6-19cc97d11d80","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:39:29.000+07:00","sampledValue":[{"value":"10964875","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:39:29.000+07:00","sampledValue":[{"value":"3077","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:39:29.000+07:00","sampledValue":[{"value":"13","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:43:35 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"8ff242b5-7a46-4bf4-9ca6-19cc97d11d80",{}]
-2026-06-08 12:43:35 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"20c5d200-6ef0-458d-8eef-6e009eae85a7","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:40:28.000+07:00","sampledValue":[{"value":"10964926","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:40:28.000+07:00","sampledValue":[{"value":"3067","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:40:28.000+07:00","sampledValue":[{"value":"13","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:43:35 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"20c5d200-6ef0-458d-8eef-6e009eae85a7",{}]
-2026-06-08 12:43:35 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"0f483d40-64e7-4215-af0a-eb5dd9334cef","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:43:35 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 12:43:35 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"0f483d40-64e7-4215-af0a-eb5dd9334cef",{}]
-2026-06-08 12:43:35 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"300788b7-55b2-4652-bfc0-223cc0a564f8","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:43:35 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:43:35 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"300788b7-55b2-4652-bfc0-223cc0a564f8",{}]
-2026-06-08 12:43:36 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"2ab95ec8-d48e-4797-ab83-032db4c887b6","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:43:36 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:43:36 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"2ab95ec8-d48e-4797-ab83-032db4c887b6",{}]
-2026-06-08 12:43:36 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"f564c858-61ca-4cce-83b1-76641dd2adda","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:41:28.000+07:00","sampledValue":[{"value":"10964978","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:41:28.000+07:00","sampledValue":[{"value":"3078","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:41:28.000+07:00","sampledValue":[{"value":"13","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:43:36 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"f564c858-61ca-4cce-83b1-76641dd2adda",{}]
-2026-06-08 12:43:36 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"03afbdb5-1b4a-4efe-94fc-b0c1fe039efb","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 12:43:36 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 12:43:36 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 12:43:36 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"03afbdb5-1b4a-4efe-94fc-b0c1fe039efb",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 12:43:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"4d6603a0-07d1-445e-bffc-87fffe4800c8","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 12:43:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"4d6603a0-07d1-445e-bffc-87fffe4800c8",{"status":"Accepted"}]
-2026-06-08 12:43:37 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-INFO:     127.0.0.1:55812 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55816 - "OPTIONS /api/commands/logs HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55816 - "GET /api/commands/logs HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55816 - "OPTIONS /api/commands/logs?charge_point_id=BPPT-NewACCS_Serpong HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55816 - "GET /api/commands/logs?charge_point_id=BPPT-NewACCS_Serpong HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55816 - "OPTIONS /api/commands/active-transactions?charge_point_id=BPPT-NewACCS_Serpong HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55816 - "GET /api/commands/active-transactions?charge_point_id=BPPT-NewACCS_Serpong HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55818 - "GET /api/commands/logs?charge_point_id=BPPT-NewACCS_Serpong HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55818 - "OPTIONS /api/commands/send HTTP/1.1" 200 OK
-2026-06-08 12:44:14 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] >> RemoteStopTransaction(transaction_id=629101442)
-2026-06-08 12:44:14 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"883bdde9-ba0c-4183-950d-89a68a8e1c37","RemoteStopTransaction",{"transactionId":629101442}]
-2026-06-08 12:44:14 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"883bdde9-ba0c-4183-950d-89a68a8e1c37",{"status":"Rejected"}]
-2026-06-08 12:44:14 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] << RemoteStopTransaction: Rejected
-INFO:     127.0.0.1:55818 - "POST /api/commands/send HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55818 - "GET /api/commands/logs?charge_point_id=BPPT-NewACCS_Serpong HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55818 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55818 - "GET /api/commands/active-transactions?charge_point_id=BPPT-NewACCS_Serpong HTTP/1.1" 200 OK
-2026-06-08 12:44:22 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] >> RemoteStopTransaction(transaction_id=629101442)
-2026-06-08 12:44:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"bb388627-9297-4a7c-a312-ad87ed35c0c1","RemoteStopTransaction",{"transactionId":629101442}]
-2026-06-08 12:44:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"bb388627-9297-4a7c-a312-ad87ed35c0c1",{"status":"Rejected"}]
-2026-06-08 12:44:22 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] << RemoteStopTransaction: Rejected
-INFO:     127.0.0.1:55818 - "POST /api/commands/send HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55818 - "GET /api/commands/logs?charge_point_id=BPPT-NewACCS_Serpong HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55821 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55824 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55826 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55828 - "GET /api/charge-points HTTP/1.1" 200 OK
-2026-06-08 12:45:32 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 12:45:32 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 12:45:32 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 12:45:32 WIB [INFO] websockets.server: connection closed
-INFO:     127.0.0.1:55840 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55844 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55850 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55853 - "GET /api/charge-points HTTP/1.1" 200 OK
-2026-06-08 12:46:39 WIB [INFO] websockets.server: connection open
-2026-06-08 12:46:39 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 12:46:39 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 12:46:39 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 12:46:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"9487db9b-828a-4381-8448-8cbcdaaf63db","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:39:29.000+07:00","sampledValue":[{"value":"10964875","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:39:29.000+07:00","sampledValue":[{"value":"3077","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:39:29.000+07:00","sampledValue":[{"value":"13","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:46:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"9487db9b-828a-4381-8448-8cbcdaaf63db",{}]
-2026-06-08 12:46:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"ae0438db-3305-4c62-9c78-8027b0c164c4","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:40:28.000+07:00","sampledValue":[{"value":"10964926","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:40:28.000+07:00","sampledValue":[{"value":"3067","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:40:28.000+07:00","sampledValue":[{"value":"13","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:46:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"ae0438db-3305-4c62-9c78-8027b0c164c4",{}]
-2026-06-08 12:46:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"b09ff32d-ea6a-428c-b13c-763725d92e3a","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:46:40 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 12:46:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"b09ff32d-ea6a-428c-b13c-763725d92e3a",{}]
-2026-06-08 12:46:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"9c2a6ebc-5a28-4ffc-a7e2-37cdbff8e1d7","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:46:40 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:46:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"9c2a6ebc-5a28-4ffc-a7e2-37cdbff8e1d7",{}]
-2026-06-08 12:46:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"df4aced2-0017-4e43-a974-4b0feecc7873","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:46:40 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:46:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"df4aced2-0017-4e43-a974-4b0feecc7873",{}]
-2026-06-08 12:46:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"cb7f6655-62d1-4586-9250-08b179bd2e8a","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:41:28.000+07:00","sampledValue":[{"value":"10964978","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:41:28.000+07:00","sampledValue":[{"value":"3078","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:41:28.000+07:00","sampledValue":[{"value":"13","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:46:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"cb7f6655-62d1-4586-9250-08b179bd2e8a",{}]
-2026-06-08 12:46:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"4c71b8b1-6889-4a53-9e24-2ac92bb850f7","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:42:29.000+07:00","sampledValue":[{"value":"10965028","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:42:29.000+07:00","sampledValue":[{"value":"3070","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:42:29.000+07:00","sampledValue":[{"value":"13","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:46:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"4c71b8b1-6889-4a53-9e24-2ac92bb850f7",{}]
-2026-06-08 12:46:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"8ced9f78-797d-494e-b691-a1fc246b73a5","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:43:29.000+07:00","sampledValue":[{"value":"10965081","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:43:29.000+07:00","sampledValue":[{"value":"2818","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:43:29.000+07:00","sampledValue":[{"value":"12","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:46:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"8ced9f78-797d-494e-b691-a1fc246b73a5",{}]
-2026-06-08 12:46:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"0223734e-76d7-4a85-a417-646c85239c1b","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:46:41 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 12:46:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"0223734e-76d7-4a85-a417-646c85239c1b",{}]
-2026-06-08 12:46:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"b80ae751-c464-4250-a82b-b12eef4680e8","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:46:41 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:46:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"b80ae751-c464-4250-a82b-b12eef4680e8",{}]
-2026-06-08 12:46:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"f0e7adbc-bf0f-4ae5-b09a-53cc5b338273","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:46:42 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:46:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"f0e7adbc-bf0f-4ae5-b09a-53cc5b338273",{}]
-2026-06-08 12:46:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"68bb38da-f2a9-456b-861b-cae3278477ad","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:44:28.000+07:00","sampledValue":[{"value":"10965127","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:44:28.000+07:00","sampledValue":[{"value":"2756","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:44:28.000+07:00","sampledValue":[{"value":"12","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:46:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"68bb38da-f2a9-456b-861b-cae3278477ad",{}]
-2026-06-08 12:46:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"870381c7-9c1f-4395-8747-db6b1e95d675","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 12:46:42 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 12:46:42 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 12:46:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"870381c7-9c1f-4395-8747-db6b1e95d675",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 12:46:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"3eee47ab-a02f-4ab6-a764-c8265fdb102e","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 12:46:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"3eee47ab-a02f-4ab6-a764-c8265fdb102e",{"status":"Accepted"}]
-2026-06-08 12:46:43 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-INFO:     127.0.0.1:55914 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55917 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55919 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55921 - "OPTIONS /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55921 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55926 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55931 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55934 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55936 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55939 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55943 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55945 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55949 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55954 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55956 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55959 - "GET /api/charge-points HTTP/1.1" 200 OK
-2026-06-08 12:50:32 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 12:50:32 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 12:50:32 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 12:50:32 WIB [INFO] websockets.server: connection closed
-INFO:     127.0.0.1:55965 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55968 - "GET /api/charge-points HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55968 - "OPTIONS /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55968 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55972 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-2026-06-08 12:51:40 WIB [INFO] websockets.server: connection open
-2026-06-08 12:51:40 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 12:51:40 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 12:51:40 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 12:51:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"3039ded3-3137-4c31-993b-226834816b94","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:42:29.000+07:00","sampledValue":[{"value":"10965028","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:42:29.000+07:00","sampledValue":[{"value":"3070","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:42:29.000+07:00","sampledValue":[{"value":"13","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:51:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"3039ded3-3137-4c31-993b-226834816b94",{}]
-2026-06-08 12:51:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"ebf47fd9-da36-4ebf-9cd1-cb565e7895ef","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:43:29.000+07:00","sampledValue":[{"value":"10965081","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:43:29.000+07:00","sampledValue":[{"value":"2818","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:43:29.000+07:00","sampledValue":[{"value":"12","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:51:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"ebf47fd9-da36-4ebf-9cd1-cb565e7895ef",{}]
-2026-06-08 12:51:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"9df2079f-9bfb-4ce8-abfb-59ec61736281","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:51:41 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 12:51:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"9df2079f-9bfb-4ce8-abfb-59ec61736281",{}]
-2026-06-08 12:51:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"959822a7-44c4-4245-9fa4-db133cd1347c","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:51:41 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:51:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"959822a7-44c4-4245-9fa4-db133cd1347c",{}]
-2026-06-08 12:51:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"608a1af2-3256-46c0-b75e-bda88f245a8c","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:51:41 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:51:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"608a1af2-3256-46c0-b75e-bda88f245a8c",{}]
-2026-06-08 12:51:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"662ca111-dc02-4be4-8efa-d2b49089d781","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:44:28.000+07:00","sampledValue":[{"value":"10965127","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:44:28.000+07:00","sampledValue":[{"value":"2756","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:44:28.000+07:00","sampledValue":[{"value":"12","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:51:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"662ca111-dc02-4be4-8efa-d2b49089d781",{}]
-2026-06-08 12:51:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"782d78c1-7361-450d-a1bf-4dea3b6831ab","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:45:29.000+07:00","sampledValue":[{"value":"10965171","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:45:29.000+07:00","sampledValue":[{"value":"2558","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:45:29.000+07:00","sampledValue":[{"value":"11","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:51:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"782d78c1-7361-450d-a1bf-4dea3b6831ab",{}]
-2026-06-08 12:51:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"1aba823f-b9cc-48aa-bf85-f1ecca80f285","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:46:29.000+07:00","sampledValue":[{"value":"10965212","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:46:29.000+07:00","sampledValue":[{"value":"2395","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:46:29.000+07:00","sampledValue":[{"value":"10","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:51:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"1aba823f-b9cc-48aa-bf85-f1ecca80f285",{}]
-2026-06-08 12:51:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"0a7a43bc-3402-48ec-897e-94d63d866745","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:51:42 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 12:51:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"0a7a43bc-3402-48ec-897e-94d63d866745",{}]
-2026-06-08 12:51:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"78d8221f-8769-494a-b3ee-dceeefb6fdd3","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:51:43 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:51:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"78d8221f-8769-494a-b3ee-dceeefb6fdd3",{}]
-2026-06-08 12:51:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"8c7e1c6e-4d67-4a5f-bf3c-2d297c641938","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:51:43 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:51:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"8c7e1c6e-4d67-4a5f-bf3c-2d297c641938",{}]
-2026-06-08 12:51:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"c109718f-290d-437f-be46-27cc6587fbc9","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:47:28.000+07:00","sampledValue":[{"value":"10965252","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:47:28.000+07:00","sampledValue":[{"value":"2318","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:47:28.000+07:00","sampledValue":[{"value":"10","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:51:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"c109718f-290d-437f-be46-27cc6587fbc9",{}]
-2026-06-08 12:51:44 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"8e42aed3-c9e3-433f-b8f4-61743a71b6bd","Heartbeat",{}]
-2026-06-08 12:51:44 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 12:51:44 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"8e42aed3-c9e3-433f-b8f4-61743a71b6bd",{"currentTime":"2026-06-08T12:51:44.250223+07:00"}]
-2026-06-08 12:51:44 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"7c0956d3-cb6b-43cf-9b53-61af462b28a7","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:48:29.000+07:00","sampledValue":[{"value":"10965291","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:48:29.000+07:00","sampledValue":[{"value":"2314","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:48:29.000+07:00","sampledValue":[{"value":"10","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:51:44 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"7c0956d3-cb6b-43cf-9b53-61af462b28a7",{}]
-2026-06-08 12:51:44 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"71ea603f-fbd8-4d72-80bc-b89d71e191ed","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:49:28.000+07:00","sampledValue":[{"value":"10965327","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:49:28.000+07:00","sampledValue":[{"value":"2157","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:49:28.000+07:00","sampledValue":[{"value":"9","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:51:44 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"71ea603f-fbd8-4d72-80bc-b89d71e191ed",{}]
-2026-06-08 12:51:45 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"0ad92858-a662-4c81-8d3b-0ebbd45fa108","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 12:51:45 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 12:51:45 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 12:51:45 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"0ad92858-a662-4c81-8d3b-0ebbd45fa108",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 12:51:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"50ba278e-ea87-40f2-a2df-3ff5de80c237","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 12:51:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"50ba278e-ea87-40f2-a2df-3ff5de80c237",{"status":"Accepted"}]
-2026-06-08 12:51:46 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-INFO:     127.0.0.1:56050 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-2026-06-08 12:53:32 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 12:53:32 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 12:53:32 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 12:53:32 WIB [INFO] websockets.server: connection closed
-2026-06-08 12:54:37 WIB [INFO] websockets.server: connection open
-2026-06-08 12:54:37 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 12:54:37 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 12:54:37 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 12:54:38 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"e67b4df1-831d-47f9-b8a6-53bec8e61872","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:45:29.000+07:00","sampledValue":[{"value":"10965171","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:45:29.000+07:00","sampledValue":[{"value":"2558","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:45:29.000+07:00","sampledValue":[{"value":"11","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:54:38 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"e67b4df1-831d-47f9-b8a6-53bec8e61872",{}]
-2026-06-08 12:54:38 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"fe710453-78c5-4283-94ff-95721de11a4f","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:46:29.000+07:00","sampledValue":[{"value":"10965212","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:46:29.000+07:00","sampledValue":[{"value":"2395","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:46:29.000+07:00","sampledValue":[{"value":"10","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:54:38 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"fe710453-78c5-4283-94ff-95721de11a4f",{}]
-2026-06-08 12:54:38 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"c0b63020-0401-49df-8c23-548ee8f6a994","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:54:38 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 12:54:38 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"c0b63020-0401-49df-8c23-548ee8f6a994",{}]
-2026-06-08 12:54:38 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"7c492155-60da-4f14-a898-01baf19c9bb1","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:54:38 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:54:38 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"7c492155-60da-4f14-a898-01baf19c9bb1",{}]
-2026-06-08 12:54:38 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"a6603b6b-78d2-412b-bc5c-ead2b23e0387","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:54:38 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:54:38 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"a6603b6b-78d2-412b-bc5c-ead2b23e0387",{}]
-2026-06-08 12:54:39 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"d5bb8603-a241-4ca2-a7a5-fc276f0e3e5b","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:47:28.000+07:00","sampledValue":[{"value":"10965252","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:47:28.000+07:00","sampledValue":[{"value":"2318","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:47:28.000+07:00","sampledValue":[{"value":"10","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:54:39 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"d5bb8603-a241-4ca2-a7a5-fc276f0e3e5b",{}]
-2026-06-08 12:54:39 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"23016ecf-a774-462f-81f9-fabb6f4e5a18","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:48:29.000+07:00","sampledValue":[{"value":"10965291","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:48:29.000+07:00","sampledValue":[{"value":"2314","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:48:29.000+07:00","sampledValue":[{"value":"10","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:54:39 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"23016ecf-a774-462f-81f9-fabb6f4e5a18",{}]
-2026-06-08 12:54:39 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"9f8dc0ab-0811-40dd-93b3-45a744158cda","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:49:28.000+07:00","sampledValue":[{"value":"10965327","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:49:28.000+07:00","sampledValue":[{"value":"2157","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:49:28.000+07:00","sampledValue":[{"value":"9","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:54:39 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"9f8dc0ab-0811-40dd-93b3-45a744158cda",{}]
-2026-06-08 12:54:39 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"8f106062-2e72-415d-a218-6b6a86e00194","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:50:28.000+07:00","sampledValue":[{"value":"10965362","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:50:28.000+07:00","sampledValue":[{"value":"2115","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:50:28.000+07:00","sampledValue":[{"value":"9","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:54:39 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"8f106062-2e72-415d-a218-6b6a86e00194",{}]
-2026-06-08 12:54:39 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"0d3ffb69-f54d-4b97-81ea-119bb51c0b8a","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:51:28.000+07:00","sampledValue":[{"value":"10965397","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:51:28.000+07:00","sampledValue":[{"value":"1960","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:51:28.000+07:00","sampledValue":[{"value":"9","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:54:39 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"0d3ffb69-f54d-4b97-81ea-119bb51c0b8a",{}]
-2026-06-08 12:54:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"c62246a2-81e4-401c-916e-d37ca89b6d5b","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:54:40 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 12:54:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"c62246a2-81e4-401c-916e-d37ca89b6d5b",{}]
-2026-06-08 12:54:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"a52613f6-6056-40af-8f8d-647e0b44d4b3","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:54:40 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:54:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"a52613f6-6056-40af-8f8d-647e0b44d4b3",{}]
-2026-06-08 12:54:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"2f68ddca-81c2-46ac-8107-ed0280b79677","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:54:40 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:54:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"2f68ddca-81c2-46ac-8107-ed0280b79677",{}]
-2026-06-08 12:54:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"333cca79-9017-44f5-8c05-32976f4c74b3","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:52:28.000+07:00","sampledValue":[{"value":"10965433","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:52:28.000+07:00","sampledValue":[{"value":"1996","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:52:28.000+07:00","sampledValue":[{"value":"9","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:54:40 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"333cca79-9017-44f5-8c05-32976f4c74b3",{}]
-2026-06-08 12:54:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"e734f0ff-8b82-45b4-8550-3430eba49cd2","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 12:54:41 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 12:54:41 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 12:54:41 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"e734f0ff-8b82-45b4-8550-3430eba49cd2",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 12:54:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"574dc9e3-1b6a-402b-b3e8-3fe798faa997","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 12:54:42 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"574dc9e3-1b6a-402b-b3e8-3fe798faa997",{"status":"Accepted"}]
-2026-06-08 12:54:42 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-2026-06-08 12:55:47 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 12:55:47 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 12:55:47 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 12:55:47 WIB [INFO] websockets.server: connection closed
-2026-06-08 12:56:54 WIB [INFO] websockets.server: connection open
-2026-06-08 12:56:54 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 12:56:54 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 12:56:54 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 12:56:54 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"ed2405fc-c3ab-42cf-a20c-919e070db7d8","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:50:28.000+07:00","sampledValue":[{"value":"10965362","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:50:28.000+07:00","sampledValue":[{"value":"2115","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:50:28.000+07:00","sampledValue":[{"value":"9","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:56:54 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"ed2405fc-c3ab-42cf-a20c-919e070db7d8",{}]
-2026-06-08 12:56:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"caadde9c-855d-45f4-83dd-0243328365cd","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:51:28.000+07:00","sampledValue":[{"value":"10965397","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:51:28.000+07:00","sampledValue":[{"value":"1960","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:51:28.000+07:00","sampledValue":[{"value":"9","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:56:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"caadde9c-855d-45f4-83dd-0243328365cd",{}]
-2026-06-08 12:56:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"ad6f418b-f8f7-437d-9018-474ddabd3fd7","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:56:55 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 12:56:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"ad6f418b-f8f7-437d-9018-474ddabd3fd7",{}]
-2026-06-08 12:56:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"8ab64d5b-653d-4016-94d9-0b178b562da7","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:56:55 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:56:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"8ab64d5b-653d-4016-94d9-0b178b562da7",{}]
-2026-06-08 12:56:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"5a484bf1-620b-493f-8f97-b71726cb0911","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
-2026-06-08 12:56:55 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
-2026-06-08 12:56:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"5a484bf1-620b-493f-8f97-b71726cb0911",{}]
-2026-06-08 12:56:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"5eae9da7-550f-4ba3-aaa1-9335dc3307fd","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:52:28.000+07:00","sampledValue":[{"value":"10965433","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:52:28.000+07:00","sampledValue":[{"value":"1996","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:52:28.000+07:00","sampledValue":[{"value":"9","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:56:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"5eae9da7-550f-4ba3-aaa1-9335dc3307fd",{}]
-2026-06-08 12:56:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"8b428603-5007-40f5-9860-d629586908e4","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:53:29.000+07:00","sampledValue":[{"value":"10965464","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:53:29.000+07:00","sampledValue":[{"value":"1841","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:53:29.000+07:00","sampledValue":[{"value":"8","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 12:56:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"8b428603-5007-40f5-9860-d629586908e4",{}]
-2026-06-08 12:56:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"996ebd80-ba92-49ee-8b7a-bd903f238de2","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:56:56 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 12:56:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"996ebd80-ba92-49ee-8b7a-bd903f238de2",{}]
-2026-06-08 12:56:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"be4b2d27-0c3f-40e4-9274-c85f77b7fd7d","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:56:56 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 12:56:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"be4b2d27-0c3f-40e4-9274-c85f77b7fd7d",{}]
-2026-06-08 12:56:57 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"2519cce3-c34c-4175-b7fe-3cb1a8ba98ee","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:56:57 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 12:56:57 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"2519cce3-c34c-4175-b7fe-3cb1a8ba98ee",{}]
-2026-06-08 12:56:57 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"d7bf0bc7-c718-4ad9-b9e7-893d5dc81c03","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:56:57 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 12:56:57 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"d7bf0bc7-c718-4ad9-b9e7-893d5dc81c03",{}]
-2026-06-08 12:56:57 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"7d368639-27a7-48c9-8330-bb1e1842993a","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 12:56:57 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 12:56:57 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"7d368639-27a7-48c9-8330-bb1e1842993a",{}]
-2026-06-08 12:56:58 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"be05e513-d3e4-42c4-b1f2-8ace07e3cf7f","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 12:56:58 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 12:56:58 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 12:56:58 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"be05e513-d3e4-42c4-b1f2-8ace07e3cf7f",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 12:56:59 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"175e666f-dcc7-4bb0-bfdc-0e1e3ee39ca9","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 12:56:59 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"175e666f-dcc7-4bb0-bfdc-0e1e3ee39ca9",{"status":"Accepted"}]
-2026-06-08 12:56:59 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-2026-06-08 13:00:04 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 13:00:04 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 13:00:04 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 13:00:04 WIB [INFO] websockets.server: connection closed
-2026-06-08 13:01:14 WIB [INFO] websockets.server: connection open
-2026-06-08 13:01:14 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 13:01:14 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 13:01:14 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 13:01:14 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"dcfd53d4-c7fc-4aa5-945e-ff7fb2e0e552","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-08T19:53:29.000+07:00","sampledValue":[{"value":"10965464","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-08T19:53:29.000+07:00","sampledValue":[{"value":"1841","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-08T19:53:29.000+07:00","sampledValue":[{"value":"8","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
-2026-06-08 13:01:14 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"dcfd53d4-c7fc-4aa5-945e-ff7fb2e0e552",{}]
-2026-06-08 13:01:14 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"e7a1ab8c-c0ae-4a3c-aa64-3ffe5c768a01","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:01:14 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:01:14 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"e7a1ab8c-c0ae-4a3c-aa64-3ffe5c768a01",{}]
-2026-06-08 13:01:15 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"43eca40f-26d0-45be-9095-064aee6b06d4","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:01:15 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:01:15 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"43eca40f-26d0-45be-9095-064aee6b06d4",{}]
-2026-06-08 13:01:15 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"77205d41-da83-421d-beb2-5a34843cf083","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:01:15 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:01:15 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"77205d41-da83-421d-beb2-5a34843cf083",{}]
-2026-06-08 13:01:15 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"92bd1947-beb0-4026-a97b-a54db3df56ca","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:01:15 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:01:15 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"92bd1947-beb0-4026-a97b-a54db3df56ca",{}]
-2026-06-08 13:01:15 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"68dd1ba9-69e2-4c41-bc5f-4072fa97ed21","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:01:15 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:01:15 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"68dd1ba9-69e2-4c41-bc5f-4072fa97ed21",{}]
-2026-06-08 13:01:15 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"4a2f029b-af3d-42e5-9854-e01db718442b","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:01:15 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:01:15 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"4a2f029b-af3d-42e5-9854-e01db718442b",{}]
-2026-06-08 13:01:15 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"95d6027f-5055-4cb0-98a2-2a709f305434","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:01:15 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:01:15 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"95d6027f-5055-4cb0-98a2-2a709f305434",{}]
-2026-06-08 13:01:15 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"ce1e9803-6c06-4c42-b3f1-0d5469607633","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:01:16 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:01:16 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"ce1e9803-6c06-4c42-b3f1-0d5469607633",{}]
-2026-06-08 13:01:16 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"94236c01-5b64-47d0-9a21-59503a72a3fc","Heartbeat",{}]
-2026-06-08 13:01:16 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:01:16 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"94236c01-5b64-47d0-9a21-59503a72a3fc",{"currentTime":"2026-06-08T13:01:16.254234+07:00"}]
-2026-06-08 13:01:16 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"6125cc0f-b1f8-48d8-a687-586476dfcd64","Heartbeat",{}]
-2026-06-08 13:01:16 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:01:16 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"6125cc0f-b1f8-48d8-a687-586476dfcd64",{"currentTime":"2026-06-08T13:01:16.455152+07:00"}]
-2026-06-08 13:01:16 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"12882f55-eb97-4e07-832d-c95e81dda58e","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 13:01:16 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 13:01:16 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 13:01:16 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"12882f55-eb97-4e07-832d-c95e81dda58e",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 13:01:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"54124a60-de9c-4b23-aad4-a8afa4ccd373","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 13:01:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"54124a60-de9c-4b23-aad4-a8afa4ccd373",{"status":"Accepted"}]
-2026-06-08 13:01:17 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-2026-06-08 13:02:22 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 13:02:22 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 13:02:22 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 13:02:22 WIB [INFO] websockets.server: connection closed
-2026-06-08 13:03:22 WIB [INFO] websockets.server: connection open
-2026-06-08 13:03:22 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 13:03:22 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 13:03:22 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 13:03:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"e36768bd-2915-4d9a-a114-a3890e404e0c","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:03:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:03:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"e36768bd-2915-4d9a-a114-a3890e404e0c",{}]
-2026-06-08 13:03:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"08c8c148-c3fe-4bdc-b5a1-f0d83186657a","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:03:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:03:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"08c8c148-c3fe-4bdc-b5a1-f0d83186657a",{}]
-2026-06-08 13:03:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"6d305495-e8cd-464f-b6aa-ffc14a6b8e5a","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:03:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:03:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"6d305495-e8cd-464f-b6aa-ffc14a6b8e5a",{}]
-2026-06-08 13:03:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"65d2b486-8fce-4c8d-b8b5-cbd2fe325e0f","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:03:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:03:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"65d2b486-8fce-4c8d-b8b5-cbd2fe325e0f",{}]
-2026-06-08 13:03:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"ca2b8d92-88eb-4f29-8d55-feecfa6fdd2f","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:03:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:03:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"ca2b8d92-88eb-4f29-8d55-feecfa6fdd2f",{}]
-2026-06-08 13:03:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"9869a6d1-5a2d-4c8c-9449-a786db60c34f","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:03:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:03:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"9869a6d1-5a2d-4c8c-9449-a786db60c34f",{}]
-2026-06-08 13:03:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"3f1d9952-caaf-4c38-be19-bd0535b42bf8","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 13:03:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 13:03:24 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 13:03:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"3f1d9952-caaf-4c38-be19-bd0535b42bf8",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 13:03:25 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"4f187e1e-78a4-44e2-a3c4-29e0297a9e6b","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 13:03:25 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"4f187e1e-78a4-44e2-a3c4-29e0297a9e6b",{"status":"Accepted"}]
-2026-06-08 13:03:25 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-2026-06-08 13:04:30 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 13:04:30 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 13:04:30 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 13:04:30 WIB [INFO] websockets.server: connection closed
-2026-06-08 13:05:36 WIB [INFO] websockets.server: connection open
-2026-06-08 13:05:36 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 13:05:36 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 13:05:36 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"5784b7ce-4073-4b32-b604-99809748737a","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:05:37 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"5784b7ce-4073-4b32-b604-99809748737a",{}]
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"b309e079-19a5-42f7-8e61-21569cb6ce49","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:05:37 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"b309e079-19a5-42f7-8e61-21569cb6ce49",{}]
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"e968bc5d-1718-42ca-89bc-e70b749c217a","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:05:37 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"e968bc5d-1718-42ca-89bc-e70b749c217a",{}]
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"9dfde0fd-ec81-432b-b35f-312193376ef2","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:05:37 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"9dfde0fd-ec81-432b-b35f-312193376ef2",{}]
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"c8b24f65-b1b5-48a9-adac-0255ff180679","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:05:37 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"c8b24f65-b1b5-48a9-adac-0255ff180679",{}]
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"52427f97-f09c-4a6f-96ff-96ef6eacee00","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:05:37 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"52427f97-f09c-4a6f-96ff-96ef6eacee00",{}]
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"d81dfe70-e96f-4925-83f6-d7296575ba56","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 13:05:37 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 13:05:37 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 13:05:37 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"d81dfe70-e96f-4925-83f6-d7296575ba56",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 13:05:38 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"b836fd26-deb6-4c47-a490-0272ffb3c21b","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 13:05:39 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"b836fd26-deb6-4c47-a490-0272ffb3c21b",{"status":"Accepted"}]
-2026-06-08 13:05:39 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-2026-06-08 13:10:44 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 13:10:44 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 13:10:44 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 13:10:44 WIB [INFO] websockets.server: connection closed
-2026-06-08 13:11:45 WIB [INFO] websockets.server: connection open
-2026-06-08 13:11:45 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 13:11:45 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 13:11:45 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 13:11:45 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"38d23381-0d9c-46a1-b8d8-9032c5955292","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:11:45 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:11:45 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"38d23381-0d9c-46a1-b8d8-9032c5955292",{}]
-2026-06-08 13:11:45 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"222b778f-ca4c-4563-8aa5-08659d6fc36e","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:11:45 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:11:45 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"222b778f-ca4c-4563-8aa5-08659d6fc36e",{}]
-2026-06-08 13:11:45 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"5ac35043-8fc1-4ecb-80c2-675707fbaf76","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:11:45 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:11:45 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"5ac35043-8fc1-4ecb-80c2-675707fbaf76",{}]
-2026-06-08 13:11:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"206b1836-8381-4ac9-aba3-74f0748e41d9","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:11:46 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:11:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"206b1836-8381-4ac9-aba3-74f0748e41d9",{}]
-2026-06-08 13:11:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"a4ce4c64-1c36-4632-94fb-354a6ba4ac38","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:11:46 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:11:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"a4ce4c64-1c36-4632-94fb-354a6ba4ac38",{}]
-2026-06-08 13:11:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"587195f4-c0fd-42e1-95f6-7ae501a4c52d","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:11:46 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:11:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"587195f4-c0fd-42e1-95f6-7ae501a4c52d",{}]
-2026-06-08 13:11:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"368ff8f3-bb5d-4e48-9353-b096346185fc","Heartbeat",{}]
-2026-06-08 13:11:46 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:11:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"368ff8f3-bb5d-4e48-9353-b096346185fc",{"currentTime":"2026-06-08T13:11:46.617251+07:00"}]
-2026-06-08 13:11:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"c0321806-6a11-4b2f-a2aa-824b4b72bb81","Heartbeat",{}]
-2026-06-08 13:11:46 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:11:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"c0321806-6a11-4b2f-a2aa-824b4b72bb81",{"currentTime":"2026-06-08T13:11:46.824815+07:00"}]
-2026-06-08 13:11:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"96e7c605-aff3-4eed-92f0-1d9ad9a639ed","Heartbeat",{}]
-2026-06-08 13:11:46 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:11:46 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"96e7c605-aff3-4eed-92f0-1d9ad9a639ed",{"currentTime":"2026-06-08T13:11:46.949880+07:00"}]
-2026-06-08 13:11:47 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"6fbfe6b8-fa43-483a-b1ea-8ab1123e48a0","Heartbeat",{}]
-2026-06-08 13:11:47 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:11:47 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"6fbfe6b8-fa43-483a-b1ea-8ab1123e48a0",{"currentTime":"2026-06-08T13:11:47.067058+07:00"}]
-2026-06-08 13:11:47 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"16dd276d-cb11-4b69-9661-69823694242b","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 13:11:47 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 13:11:47 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 13:11:47 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"16dd276d-cb11-4b69-9661-69823694242b",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 13:11:48 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"78160dbd-3949-439c-b6b2-4c9045dd3ab8","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 13:11:48 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"78160dbd-3949-439c-b6b2-4c9045dd3ab8",{"status":"Accepted"}]
-2026-06-08 13:11:48 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-2026-06-08 13:12:53 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 13:12:53 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 13:12:53 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 13:12:53 WIB [INFO] websockets.server: connection closed
-2026-06-08 13:14:00 WIB [INFO] websockets.server: connection open
-2026-06-08 13:14:00 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 13:14:00 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 13:14:00 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 13:14:00 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"3c508bbe-e6c8-4ee5-9d4a-24d073a67296","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:14:00 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:14:00 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"3c508bbe-e6c8-4ee5-9d4a-24d073a67296",{}]
-2026-06-08 13:14:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"af8b9955-af9b-4182-ae86-40572546cbc4","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:14:01 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:14:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"af8b9955-af9b-4182-ae86-40572546cbc4",{}]
-2026-06-08 13:14:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"6953bc48-0306-4c79-92e0-72020fb84efb","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:14:01 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:14:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"6953bc48-0306-4c79-92e0-72020fb84efb",{}]
-2026-06-08 13:14:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"d59eb557-f242-4ada-8b99-481df639121f","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:14:01 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:14:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"d59eb557-f242-4ada-8b99-481df639121f",{}]
-2026-06-08 13:14:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"d07edd1c-73ba-4b38-bba7-470dca2d73ef","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:14:01 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:14:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"d07edd1c-73ba-4b38-bba7-470dca2d73ef",{}]
-2026-06-08 13:14:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"70c820d7-2cf6-41f4-a191-946e8c9aee8a","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:14:01 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:14:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"70c820d7-2cf6-41f4-a191-946e8c9aee8a",{}]
-2026-06-08 13:14:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"8695cd13-d9c3-45fc-a3b5-e95e9394f28d","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 13:14:01 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 13:14:01 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 13:14:01 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"8695cd13-d9c3-45fc-a3b5-e95e9394f28d",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 13:14:02 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"5836a77a-725e-45d0-bf33-e338678cf8ea","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 13:14:03 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"5836a77a-725e-45d0-bf33-e338678cf8ea",{"status":"Accepted"}]
-2026-06-08 13:14:03 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-INFO:     127.0.0.1:56421 - "OPTIONS /api/transactions?limit=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56421 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
-2026-06-08 13:16:08 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 13:16:08 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 13:16:08 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 13:16:08 WIB [INFO] websockets.server: connection closed
-2026-06-08 13:17:16 WIB [INFO] websockets.server: connection open
-2026-06-08 13:17:16 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 13:17:16 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 13:17:16 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 13:17:16 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"60dd6c91-ae68-4c6e-ba3a-cc5fdc26dbf6","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:17:16 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:17:16 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"60dd6c91-ae68-4c6e-ba3a-cc5fdc26dbf6",{}]
-2026-06-08 13:17:16 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"550fc699-9a2c-48a5-8073-04691e541a91","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:17:16 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:17:16 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"550fc699-9a2c-48a5-8073-04691e541a91",{}]
-2026-06-08 13:17:16 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"39d736e6-a6b5-451a-a330-1b29271c3106","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:17:16 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:17:16 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"39d736e6-a6b5-451a-a330-1b29271c3106",{}]
-2026-06-08 13:17:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"c1ae80cd-1351-4f89-89be-0f39597dbb04","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:17:17 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:17:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"c1ae80cd-1351-4f89-89be-0f39597dbb04",{}]
-2026-06-08 13:17:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"4be82871-034c-4c66-80c4-642bbd6b62cc","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:17:17 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:17:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"4be82871-034c-4c66-80c4-642bbd6b62cc",{}]
-2026-06-08 13:17:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"b5a05d3b-6c28-49d4-b375-cc7a108d67a9","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:17:17 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:17:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"b5a05d3b-6c28-49d4-b375-cc7a108d67a9",{}]
-2026-06-08 13:17:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"4c0a8311-fcda-46c3-8dcf-7ed6db5faf33","Heartbeat",{}]
-2026-06-08 13:17:17 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:17:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"4c0a8311-fcda-46c3-8dcf-7ed6db5faf33",{"currentTime":"2026-06-08T13:17:17.538008+07:00"}]
-2026-06-08 13:17:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"ed6b3e14-6fed-42fd-9b93-730a2007baff","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 13:17:17 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 13:17:17 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 13:17:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"ed6b3e14-6fed-42fd-9b93-730a2007baff",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 13:17:18 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"bdb6c732-f6f9-4790-becc-42b50657828b","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 13:17:18 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"bdb6c732-f6f9-4790-becc-42b50657828b",{"status":"Accepted"}]
-2026-06-08 13:17:18 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-2026-06-08 13:18:23 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 13:18:23 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 13:18:23 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 13:18:23 WIB [INFO] websockets.server: connection closed
-2026-06-08 13:19:27 WIB [INFO] websockets.server: connection open
-2026-06-08 13:19:27 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 13:19:27 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 13:19:27 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 13:19:27 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"72ff4c7a-f09c-40fa-8ece-45975ac0c6bc","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:19:27 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:19:27 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"72ff4c7a-f09c-40fa-8ece-45975ac0c6bc",{}]
-2026-06-08 13:19:27 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"f292c8cc-c225-4567-88cd-51109ef418c0","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:19:27 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:19:27 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"f292c8cc-c225-4567-88cd-51109ef418c0",{}]
-2026-06-08 13:19:27 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"6c9f8f91-02f3-4380-8da2-b6396d5ab794","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:19:27 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:19:27 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"6c9f8f91-02f3-4380-8da2-b6396d5ab794",{}]
-2026-06-08 13:19:27 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"f4b300f4-ac10-48ae-b918-53af8b1db69d","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:19:27 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:19:27 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"f4b300f4-ac10-48ae-b918-53af8b1db69d",{}]
-2026-06-08 13:19:27 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"43505de3-2dd9-448a-a6bb-78cde65b0792","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:19:27 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:19:27 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"43505de3-2dd9-448a-a6bb-78cde65b0792",{}]
-2026-06-08 13:19:28 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"ce1519cb-8813-46bf-a1e9-6f96059d18d6","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:19:28 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:19:28 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"ce1519cb-8813-46bf-a1e9-6f96059d18d6",{}]
-2026-06-08 13:19:28 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"d3cfd0dd-1bf6-4843-8b22-cd50a495af22","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 13:19:28 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 13:19:28 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 13:19:28 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"d3cfd0dd-1bf6-4843-8b22-cd50a495af22",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 13:19:29 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"5bf2e493-509b-4d1f-9345-af4239fa2fe7","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 13:19:29 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"5bf2e493-509b-4d1f-9345-af4239fa2fe7",{"status":"Accepted"}]
-2026-06-08 13:19:29 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-2026-06-08 13:21:34 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 13:21:34 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 13:21:34 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 13:21:34 WIB [INFO] websockets.server: connection closed
-2026-06-08 13:22:42 WIB [INFO] websockets.server: connection open
-2026-06-08 13:22:42 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 13:22:42 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 13:22:42 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 13:22:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"5471189b-4cfc-45d0-a41e-84076892be84","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:22:43 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:22:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"5471189b-4cfc-45d0-a41e-84076892be84",{}]
-2026-06-08 13:22:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"ad36d0d7-46f4-4bed-9cb4-9da8c1c9359e","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:22:43 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:22:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"ad36d0d7-46f4-4bed-9cb4-9da8c1c9359e",{}]
-2026-06-08 13:22:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"000a9533-7540-4194-b16b-f7c56d91e406","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:22:43 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:22:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"000a9533-7540-4194-b16b-f7c56d91e406",{}]
-2026-06-08 13:22:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"fdbf5a8f-a2e3-4cc2-946b-d91ba24d3433","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:22:43 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:22:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"fdbf5a8f-a2e3-4cc2-946b-d91ba24d3433",{}]
-2026-06-08 13:22:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"b09abb15-dde1-49c9-abdb-8df2c96fcae0","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:22:43 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:22:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"b09abb15-dde1-49c9-abdb-8df2c96fcae0",{}]
-2026-06-08 13:22:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"27df54a8-d232-4f94-9c92-62f9b41d28c8","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:22:43 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:22:43 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"27df54a8-d232-4f94-9c92-62f9b41d28c8",{}]
-2026-06-08 13:22:44 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"ff92d45a-6881-4939-9940-572872c9fd0b","Heartbeat",{}]
-2026-06-08 13:22:44 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:22:44 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"ff92d45a-6881-4939-9940-572872c9fd0b",{"currentTime":"2026-06-08T13:22:44.055677+07:00"}]
-2026-06-08 13:22:44 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"b5997b7b-fdf9-4cc2-9da1-97b739aabb87","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 13:22:44 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 13:22:44 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 13:22:44 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"b5997b7b-fdf9-4cc2-9da1-97b739aabb87",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 13:22:45 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"7a3bf7a6-549e-4be3-9a96-12b48faf00cb","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 13:22:45 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"7a3bf7a6-549e-4be3-9a96-12b48faf00cb",{"status":"Accepted"}]
-2026-06-08 13:22:45 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-2026-06-08 13:23:50 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 13:23:50 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 13:23:50 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 13:23:50 WIB [INFO] websockets.server: connection closed
-2026-06-08 13:24:54 WIB [INFO] websockets.server: connection open
-2026-06-08 13:24:54 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 13:24:54 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 13:24:54 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 13:24:54 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"a53f7ac4-a757-42ee-9674-66596e2f11ae","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:24:54 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:24:54 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"a53f7ac4-a757-42ee-9674-66596e2f11ae",{}]
-2026-06-08 13:24:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"77bc0142-06fb-42a9-8a8c-f8bc1f4e6dfb","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:24:55 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:24:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"77bc0142-06fb-42a9-8a8c-f8bc1f4e6dfb",{}]
-2026-06-08 13:24:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"7dcfd153-64b6-487f-a6fe-97dc6c5236cd","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:24:55 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:24:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"7dcfd153-64b6-487f-a6fe-97dc6c5236cd",{}]
-2026-06-08 13:24:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"fd062a85-5209-4076-b2fd-83f4b3286c23","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:24:55 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:24:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"fd062a85-5209-4076-b2fd-83f4b3286c23",{}]
-2026-06-08 13:24:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"5dda5099-57ed-4f76-8579-a9b308982b89","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:24:55 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:24:55 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"5dda5099-57ed-4f76-8579-a9b308982b89",{}]
-2026-06-08 13:24:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"861f0d65-6bea-4e91-964d-dac5de38bc29","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:24:56 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:24:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"861f0d65-6bea-4e91-964d-dac5de38bc29",{}]
-2026-06-08 13:24:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"8651ff5e-59bf-4eaa-83fd-5cffbb00ba8b","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 13:24:56 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 13:24:56 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 13:24:56 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"8651ff5e-59bf-4eaa-83fd-5cffbb00ba8b",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 13:24:57 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"4d7daa96-274a-4888-9175-f7ec0e510a3b","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 13:24:57 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"4d7daa96-274a-4888-9175-f7ec0e510a3b",{"status":"Accepted"}]
-2026-06-08 13:24:57 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-2026-06-08 13:28:02 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 13:28:02 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 13:28:02 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 13:28:02 WIB [INFO] websockets.server: connection closed
-2026-06-08 13:29:07 WIB [INFO] websockets.server: connection open
-2026-06-08 13:29:07 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 13:29:07 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 13:29:07 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 13:29:08 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"7d86265c-8ee3-4e82-8a22-98a88a80a9f5","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:29:08 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:29:08 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"7d86265c-8ee3-4e82-8a22-98a88a80a9f5",{}]
-2026-06-08 13:29:08 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"28f63cda-a93c-44d5-af75-f6c9efaa61d4","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:29:08 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:29:08 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"28f63cda-a93c-44d5-af75-f6c9efaa61d4",{}]
-2026-06-08 13:29:08 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"ad12131e-8650-4b1f-b422-2231f33da73f","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:29:08 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:29:08 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"ad12131e-8650-4b1f-b422-2231f33da73f",{}]
-2026-06-08 13:29:08 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"0ace946c-7624-4375-bd3e-6d183aaabb52","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:29:08 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:29:08 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"0ace946c-7624-4375-bd3e-6d183aaabb52",{}]
-2026-06-08 13:29:09 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"82a60bdd-34ba-4bea-a432-cd545e4f49fb","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:29:09 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:29:09 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"82a60bdd-34ba-4bea-a432-cd545e4f49fb",{}]
-2026-06-08 13:29:09 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"7c74f0bc-1f0d-4f18-b43e-1d7e9e2c7b43","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:29:09 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:29:09 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"7c74f0bc-1f0d-4f18-b43e-1d7e9e2c7b43",{}]
-2026-06-08 13:29:09 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"43eed819-7ba3-42a6-a262-ca0dedb087af","Heartbeat",{}]
-2026-06-08 13:29:09 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:29:09 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"43eed819-7ba3-42a6-a262-ca0dedb087af",{"currentTime":"2026-06-08T13:29:09.589529+07:00"}]
-2026-06-08 13:29:09 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"69a13c85-f154-44c8-a066-46f1689919d6","Heartbeat",{}]
-2026-06-08 13:29:09 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:29:09 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"69a13c85-f154-44c8-a066-46f1689919d6",{"currentTime":"2026-06-08T13:29:09.830543+07:00"}]
-2026-06-08 13:29:10 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"7885a85d-f904-4f71-94d7-f94f802eb2ea","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 13:29:10 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 13:29:10 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 13:29:10 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"7885a85d-f904-4f71-94d7-f94f802eb2ea",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 13:29:11 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"9186f560-199f-46dd-8502-19f1bca11b54","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 13:29:11 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"9186f560-199f-46dd-8502-19f1bca11b54",{"status":"Accepted"}]
-2026-06-08 13:29:11 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-2026-06-08 13:35:16 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
-2026-06-08 13:35:16 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 13:35:16 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 13:35:16 WIB [INFO] websockets.server: connection closed
-2026-06-08 13:36:22 WIB [INFO] websockets.server: connection open
-2026-06-08 13:36:22 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
-2026-06-08 13:36:22 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 629101442 masih Active, status dipertahankan: Charging
-2026-06-08 13:36:22 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
-2026-06-08 13:36:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"dc15581d-4d03-4083-8692-2ca970a4bba4","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:36:22 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:36:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"dc15581d-4d03-4083-8692-2ca970a4bba4",{}]
-2026-06-08 13:36:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"56966128-cbf0-4e3f-b9f5-581b04d0eed3","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:36:22 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:36:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"56966128-cbf0-4e3f-b9f5-581b04d0eed3",{}]
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"95c22ae4-4304-49f2-b54f-f1a3617891d8","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:36:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"95c22ae4-4304-49f2-b54f-f1a3617891d8",{}]
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"71117ca3-f95f-46e2-ab65-b2fe9303042d","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:36:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"71117ca3-f95f-46e2-ab65-b2fe9303042d",{}]
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"47cab8de-d77f-44c6-bcdc-77ff45951bb7","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:36:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"47cab8de-d77f-44c6-bcdc-77ff45951bb7",{}]
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"79a054db-c8b9-41ed-8a54-c04cdcbfd1e8","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
-2026-06-08 13:36:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"79a054db-c8b9-41ed-8a54-c04cdcbfd1e8",{}]
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"c94e28b9-6f83-4e6b-a14e-d2c0a6d78f4c","Heartbeat",{}]
-2026-06-08 13:36:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"c94e28b9-6f83-4e6b-a14e-d2c0a6d78f4c",{"currentTime":"2026-06-08T13:36:23.693591+07:00"}]
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"793b5ca5-4a81-472a-b6f5-94b150f2e12d","Heartbeat",{}]
-2026-06-08 13:36:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"793b5ca5-4a81-472a-b6f5-94b150f2e12d",{"currentTime":"2026-06-08T13:36:23.896084+07:00"}]
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"c2f738d2-c1c0-48bd-929d-4f1563cd1f35","Heartbeat",{}]
-2026-06-08 13:36:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:36:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"c2f738d2-c1c0-48bd-929d-4f1563cd1f35",{"currentTime":"2026-06-08T13:36:23.991082+07:00"}]
-2026-06-08 13:36:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"8c0f8a07-7b89-4ef4-a5a6-112e8db95ebc","Heartbeat",{}]
-2026-06-08 13:36:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:36:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"8c0f8a07-7b89-4ef4-a5a6-112e8db95ebc",{"currentTime":"2026-06-08T13:36:24.102284+07:00"}]
-2026-06-08 13:36:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"d71c0037-aa21-41b0-8c62-f4b8d92bd6b9","Heartbeat",{}]
-2026-06-08 13:36:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
-2026-06-08 13:36:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"d71c0037-aa21-41b0-8c62-f4b8d92bd6b9",{"currentTime":"2026-06-08T13:36:24.200254+07:00"}]
-2026-06-08 13:36:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"9663d166-5201-486f-9409-fbbcf5af695f","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":10964735,"timestamp":"2026-06-08T19:36:30.000+07:00"}]
-2026-06-08 13:36:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 10964735 Wh
-2026-06-08 13:36:24 WIB [WARNING] zeus.ocpp: [BPPT-NewACCS_Serpong] Duplikat StartTransaction diabaikan — meter_start=10964735 sudah ada (transaction_id=629101442)
-2026-06-08 13:36:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"9663d166-5201-486f-9409-fbbcf5af695f",{"transactionId":629101442,"idTagInfo":{"status":"Accepted"}}]
-2026-06-08 13:36:25 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [2,"7341e334-2a4f-44e5-a066-77ddfb36251a","TriggerMessage",{"requestedMessage":"StatusNotification","connectorId":1}]
-2026-06-08 13:36:25 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [3,"7341e334-2a4f-44e5-a066-77ddfb36251a",{"status":"Accepted"}]
-2026-06-08 13:36:25 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] TriggerMessage StatusNotification dikirim setelah reconnect (connector 1)
-2026-06-08 14:03:07 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: no close frame received or sent
-2026-06-08 14:03:07 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
-2026-06-08 14:03:07 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 629101442 masih Active. Menunggu reconnect...
-2026-06-08 14:03:07 WIB [INFO] websockets.server: connection closed
-2026-06-08 14:07:57 WIB [INFO] zeus.ws: Frontend client terputus. Total: 0
+INFO:     127.0.0.1:53195 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53198 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53203 - "OPTIONS /api/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53203 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53211 - "GET /api/transactions?limit=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53211 - "OPTIONS /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53220 - "OPTIONS /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53221 - "OPTIONS /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53211 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53220 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53221 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53223 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53225 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53227 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53227 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53230 - "GET /api/charge-points HTTP/1.1" 200 OK
+2026-06-09 15:25:15 WIB [INFO] websockets.server: connection open
+2026-06-09 15:25:15 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
+2026-06-09 15:25:15 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 630054323 masih Active, status dipertahankan: Charging
+2026-06-09 15:25:15 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
+INFO:     127.0.0.1:53234 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:25:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"23b5b588-0e54-4f52-8ea7-e16a99920ad6","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:07:43.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:07:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:07:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:25:17 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"23b5b588-0e54-4f52-8ea7-e16a99920ad6",{}]
+2026-06-09 15:25:18 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"dec93c4f-7d77-4b03-a3a9-c4fe0300febf","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:08:43.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:08:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:08:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:25:18 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"dec93c4f-7d77-4b03-a3a9-c4fe0300febf",{}]
+2026-06-09 15:25:18 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"90613beb-7662-4015-90be-bcd735ec9f2d","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:25:18 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
+2026-06-09 15:25:18 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"90613beb-7662-4015-90be-bcd735ec9f2d",{}]
+INFO:     127.0.0.1:53234 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53234 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:25:18 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"0466dfa6-b814-45b4-bf0b-7f1314f8698a","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"SuspendedEV"}]
+2026-06-09 15:25:18 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: SuspendedEV, error: NoError
+2026-06-09 15:25:18 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"0466dfa6-b814-45b4-bf0b-7f1314f8698a",{}]
+INFO:     127.0.0.1:53234 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53247 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:25:18 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"a356c111-12e0-427a-b11e-a6f9825da673","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"SuspendedEV"}]
+2026-06-09 15:25:18 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: SuspendedEV, error: NoError
+2026-06-09 15:25:18 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"a356c111-12e0-427a-b11e-a6f9825da673",{}]
+INFO:     127.0.0.1:53247 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53234 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:25:18 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"75ae5ca5-fa8a-4c9d-821f-9606bd775aa3","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:09:43.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:09:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:09:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:25:19 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"75ae5ca5-fa8a-4c9d-821f-9606bd775aa3",{}]
+2026-06-09 15:25:19 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"eceb8b5e-5ee3-4f1a-8d75-4ac937e84507","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:10:43.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:10:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:10:43.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:25:19 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"eceb8b5e-5ee3-4f1a-8d75-4ac937e84507",{}]
+INFO:     127.0.0.1:53234 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53234 - "GET /api/charge-points HTTP/1.1" 200 OK
+2026-06-09 15:25:19 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"44d74892-8ad1-4d1b-981e-c25ff4f6e8f6","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:11:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:11:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:11:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:25:19 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"44d74892-8ad1-4d1b-981e-c25ff4f6e8f6",{}]
+2026-06-09 15:25:19 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"1bb19144-c8d7-40b3-a110-a7821959186f","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:12:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:12:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:12:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:25:19 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"1bb19144-c8d7-40b3-a110-a7821959186f",{}]
+2026-06-09 15:25:19 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"6cb35f3f-e8b6-493c-ad41-b1392a361f10","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:13:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:13:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:13:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:25:19 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"6cb35f3f-e8b6-493c-ad41-b1392a361f10",{}]
+2026-06-09 15:25:20 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"54266f89-df3e-481f-9425-28a6fba34223","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:14:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:14:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:14:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:25:20 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"54266f89-df3e-481f-9425-28a6fba34223",{}]
+2026-06-09 15:25:20 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"a06339dd-688c-46ac-b798-f5457137249e","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:15:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:15:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:15:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:25:20 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"a06339dd-688c-46ac-b798-f5457137249e",{}]
+2026-06-09 15:25:20 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"1bd27036-e934-4ffa-9384-882c3c10463f","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:16:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:16:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:16:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:25:20 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"1bd27036-e934-4ffa-9384-882c3c10463f",{}]
+2026-06-09 15:25:20 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"6f2b3041-d33d-418d-be0e-e2c2df261f5f","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:17:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:17:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:17:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:25:20 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"6f2b3041-d33d-418d-be0e-e2c2df261f5f",{}]
+2026-06-09 15:25:20 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"e2f8d0e9-665f-4711-ad0a-b97a22d382dc","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
+2026-06-09 15:25:20 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
+2026-06-09 15:25:20 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"e2f8d0e9-665f-4711-ad0a-b97a22d382dc",{}]
+INFO:     127.0.0.1:53234 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53247 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:25:21 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"085f55d2-4a60-4828-8a91-f6249419f807","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:25:21 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
+2026-06-09 15:25:21 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Transaksi 630054323 di-complete via StatusNotification Available. Energi: 0.0 kWh, meter_stop: 11012149
+2026-06-09 15:25:21 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"085f55d2-4a60-4828-8a91-f6249419f807",{}]
+INFO:     127.0.0.1:53234 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53247 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53234 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53247 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53234 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:25:21 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"960c3489-b190-4e6c-9319-596645f6c735","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:25:21 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
+2026-06-09 15:25:21 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"960c3489-b190-4e6c-9319-596645f6c735",{}]
+INFO:     127.0.0.1:53234 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53247 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:25:21 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"c6d3020a-38a9-4285-aac4-8d07ba5cd149","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:25:21 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
+2026-06-09 15:25:21 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"c6d3020a-38a9-4285-aac4-8d07ba5cd149",{}]
+INFO:     127.0.0.1:53247 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53234 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:25:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"f8e6304d-402b-481c-9d9e-beae382d4999","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:25:22 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
+2026-06-09 15:25:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"f8e6304d-402b-481c-9d9e-beae382d4999",{}]
+INFO:     127.0.0.1:53234 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53247 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:25:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"e9b6c20a-ed59-4d1b-9f4d-5eba9c8ce9ae","Heartbeat",{}]
+2026-06-09 15:25:22 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
+2026-06-09 15:25:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"e9b6c20a-ed59-4d1b-9f4d-5eba9c8ce9ae",{"currentTime":"2026-06-09T15:25:22.206415+07:00"}]
+INFO:     127.0.0.1:53247 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:25:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"2a0a7528-fe13-4e1c-a611-d18f287e32d8","Heartbeat",{}]
+2026-06-09 15:25:22 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
+2026-06-09 15:25:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"2a0a7528-fe13-4e1c-a611-d18f287e32d8",{"currentTime":"2026-06-09T15:25:22.424048+07:00"}]
+INFO:     127.0.0.1:53247 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:25:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"70156d9a-2625-4e53-8109-d42f2e9a6d80","Heartbeat",{}]
+2026-06-09 15:25:22 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
+2026-06-09 15:25:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"70156d9a-2625-4e53-8109-d42f2e9a6d80",{"currentTime":"2026-06-09T15:25:22.519376+07:00"}]
+INFO:     127.0.0.1:53247 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:25:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"11d21b28-63e0-4fce-8ff8-b5fdf54edeb9","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":11012149,"timestamp":"2026-06-09T22:04:43.000+07:00"}]
+2026-06-09 15:25:22 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 11012149 Wh
+2026-06-09 15:25:22 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Transaksi dimulai — transaction_id: 630066051
+2026-06-09 15:25:22 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"11d21b28-63e0-4fce-8ff8-b5fdf54edeb9",{"transactionId":630066051,"idTagInfo":{"status":"Accepted"}}]
+INFO:     127.0.0.1:53247 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53234 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53247 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53322 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53324 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53324 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53324 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53327 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53329 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53329 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53329 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53331 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53334 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53334 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53334 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53337 - "GET /api/charge-points HTTP/1.1" 200 OK
+2026-06-09 15:27:15 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: received 1000 (OK); then sent 1000 (OK)
+2026-06-09 15:27:15 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
+2026-06-09 15:27:15 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 630066051 masih Active. Menunggu reconnect...
+2026-06-09 15:27:15 WIB [INFO] websockets.server: connection closed
+INFO:     127.0.0.1:53341 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53341 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53341 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53343 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53345 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53345 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53345 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53349 - "GET /api/charge-points HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53351 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53351 - "GET /api/charge-points HTTP/1.1" 200 OK
+2026-06-09 15:28:22 WIB [INFO] websockets.server: connection open
+2026-06-09 15:28:22 WIB [INFO] zeus.ocpp: Charge point terhubung: BPPT-NewACCS_Serpong | Protocol: ocpp1.6
+2026-06-09 15:28:22 WIB [INFO] zeus.ocpp: Charge point BPPT-NewACCS_Serpong reconnect — transaksi 630066051 masih Active, status dipertahankan: Charging
+2026-06-09 15:28:22 WIB [INFO] zeus.ocpp: Registry updated: ['BPPT-NewACCS_Serpong']
+INFO:     127.0.0.1:53351 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53351 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+2026-06-09 15:28:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"3ac8d934-42a7-40ba-a1a5-eaa774a08dbd","MeterValues",{"connectorId":1,"transactionId":-1,"meterValue":[{"timestamp":"2026-06-09T22:17:42.000+07:00","sampledValue":[{"value":"11012149","context":"Sample.Periodic","format":"Raw","measurand":"Energy.Active.Import.Register","location":"Inlet","unit":"Wh"}]},{"timestamp":"2026-06-09T22:17:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Power.Active.Import","location":"Inlet","unit":"W"}]},{"timestamp":"2026-06-09T22:17:42.000+07:00","sampledValue":[{"value":"0","context":"Sample.Periodic","format":"Raw","measurand":"Current.Import","location":"Inlet","unit":"A"}]}]}]
+2026-06-09 15:28:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"3ac8d934-42a7-40ba-a1a5-eaa774a08dbd",{}]
+2026-06-09 15:28:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"e1a7d7b6-0dff-4686-a53d-119bfe2101ad","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Charging"}]
+2026-06-09 15:28:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Charging, error: NoError
+2026-06-09 15:28:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"e1a7d7b6-0dff-4686-a53d-119bfe2101ad",{}]
+INFO:     127.0.0.1:53351 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53351 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:28:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"856e28fa-56b5-493e-93ce-1e44a339d986","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:28:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
+2026-06-09 15:28:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Transaksi 630066051 di-complete via StatusNotification Available. Energi: 0.0 kWh, meter_stop: 11012149
+2026-06-09 15:28:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"856e28fa-56b5-493e-93ce-1e44a339d986",{}]
+INFO:     127.0.0.1:53365 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53351 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53365 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53351 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53365 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:28:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"cc6353ba-dda5-468d-b6af-0a31ee4de1b8","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:28:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
+2026-06-09 15:28:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"cc6353ba-dda5-468d-b6af-0a31ee4de1b8",{}]
+INFO:     127.0.0.1:53365 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53351 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:28:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"b63c6453-0c71-4131-97a2-68d417a51f63","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:28:23 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
+2026-06-09 15:28:23 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"b63c6453-0c71-4131-97a2-68d417a51f63",{}]
+INFO:     127.0.0.1:53351 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53365 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:28:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"9d4aa7df-5c0c-4585-93ac-4a24cef5b7bb","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:28:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
+2026-06-09 15:28:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"9d4aa7df-5c0c-4585-93ac-4a24cef5b7bb",{}]
+INFO:     127.0.0.1:53365 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53351 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:28:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"fe8ce356-9288-4860-900e-b0d1356af521","StatusNotification",{"connectorId":0,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:28:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 0, status: Available, error: NoError
+2026-06-09 15:28:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"fe8ce356-9288-4860-900e-b0d1356af521",{}]
+INFO:     127.0.0.1:53351 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53365 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:28:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"d4c94812-1996-4f15-8c94-33d615f4167d","StatusNotification",{"connectorId":1,"errorCode":"NoError","status":"Available"}]
+2026-06-09 15:28:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StatusNotification — connector: 1, status: Available, error: NoError
+2026-06-09 15:28:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"d4c94812-1996-4f15-8c94-33d615f4167d",{}]
+INFO:     127.0.0.1:53365 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53351 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:28:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"8ed74767-7d88-49cd-a65e-771b3229f39d","Heartbeat",{}]
+2026-06-09 15:28:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Heartbeat
+2026-06-09 15:28:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"8ed74767-7d88-49cd-a65e-771b3229f39d",{"currentTime":"2026-06-09T15:28:24.546454+07:00"}]
+INFO:     127.0.0.1:53351 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:28:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: receive message [2,"14ad6c74-1c15-4971-8eea-5f4368befe00","StartTransaction",{"connectorId":1,"idTag":"a56def4b","meterStart":11012149,"timestamp":"2026-06-09T22:04:43.000+07:00"}]
+2026-06-09 15:28:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] StartTransaction — connector: 1, id_tag: a56def4b, meter_start: 11012149 Wh
+2026-06-09 15:28:24 WIB [INFO] zeus.ocpp: [BPPT-NewACCS_Serpong] Transaksi dimulai — transaction_id: 630067872
+2026-06-09 15:28:24 WIB [INFO] ocpp: BPPT-NewACCS_Serpong: send [3,"14ad6c74-1c15-4971-8eea-5f4368befe00",{"transactionId":630067872,"idTagInfo":{"status":"Accepted"}}]
+INFO:     127.0.0.1:53351 - "GET /api/transactions?limit=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53365 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53351 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+2026-06-09 15:28:30 WIB [ERROR] zeus.ocpp: Error pada koneksi BPPT-NewACCS_Serpong: no close frame received or sent
+2026-06-09 15:28:30 WIB [INFO] zeus.ocpp: Charge point terputus: BPPT-NewACCS_Serpong
+2026-06-09 15:28:30 WIB [WARNING] zeus.ocpp: Charge point BPPT-NewACCS_Serpong terputus saat transaksi 630067872 masih Active. Menunggu reconnect...
+2026-06-09 15:28:30 WIB [INFO] websockets.server: connection closed
+INFO:     127.0.0.1:53399 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53399 - "GET /api/charge-points HTTP/1.1" 200 OK
+2026-06-09 15:28:36 WIB [INFO] zeus.ws: Frontend client terputus. Total: 0
 INFO:     connection closed
-INFO:     ('127.0.0.1', 56902) - "WebSocket /ws/monitor" [accepted]
-2026-06-08 14:08:00 WIB [INFO] zeus.ws: Frontend client terhubung. Total: 1
+INFO:     ('127.0.0.1', 53411) - "WebSocket /ws/monitor" [accepted]
+2026-06-09 15:28:39 WIB [INFO] zeus.ws: Frontend client terhubung. Total: 1
 INFO:     connection open
-2026-06-08 14:08:53 WIB [INFO] zeus.ws: Frontend client terputus. Total: 0
+INFO:     127.0.0.1:53413 - "GET /api/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53434 - "GET /api/dashboard/summary HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53436 - "GET /api/transactions?limit=10 HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53438 - "GET /api/charge-points HTTP/1.1" 401 Unauthorized
+2026-06-09 16:13:39 WIB [INFO] zeus.ws: Frontend client terputus. Total: 0
 INFO:     connection closed

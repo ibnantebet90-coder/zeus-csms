@@ -59,7 +59,7 @@ DB_PORT = int(os.getenv("DB_PORT", "3306"))
 DB_USER = os.getenv("DB_USER", "zeus_user")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "zeus_password")
 DB_NAME = os.getenv("DB_NAME", "zeus_csms")
-OCPP_HOST = os.getenv("OCPP_HOST", "10.10.204.171")
+OCPP_HOST = os.getenv("OCPP_HOST", "10.10.204.205")
 OCPP_PORT = int(os.getenv("OCPP_PORT", "9000"))
 HEARTBEAT_INTERVAL = int(os.getenv("HEARTBEAT_INTERVAL", "30"))
 
