@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  background-color: #030712;
+  color: #f9fafb;
+  min-height: 100vh;
+}
+
+/* ── Zeus background overlay ─────────────────────────────── */
+.zeus-bg {
+  position: relative;
+  isolation: isolate;
+}
+
+.zeus-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: var(--zeus-bg, url('/bg-2.jpg'));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ── Leaflet fixes ───────────────────────────────────────── */
+.leaflet-container {
+  background: #1f2937 !important;
+}
+
+.leaflet-tile-pane {
+  filter: brightness(0.85) saturate(0.9);
+}
+
+.leaflet-control-zoom a {
+  background-color: #1f2937 !important;
+  color: #e5e7eb !important;
+  border-color: #374151 !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: #374151 !important;
+}
+
+.leaflet-control-attribution {
+  background-color: rgba(17, 24, 39, 0.8) !important;
+  color: #6b7280 !important;
+  font-size: 10px !important;
+}
