@@ -1,6 +1,16 @@
 """
-ZEUS CSMS — OCPP 1.6 Central System
+ZEUS CSMS — OCPP 1.6 Central System  (schema v0.5)
 Handler lengkap dengan broadcast WebSocket real-time ke frontend.
+
+Perubahan dari versi sebelumnya (schema v0.4 → v0.5):
+- Semua query transactions pakai ocpp_transaction_id (bukan transaction_id)
+- Semua FK ke charge_points pakai charge_point_pk (INT) — lookup via get_cp_pk()
+- Authorize: baca dari id_tags (bukan customers.id_tag_token)
+- Charging limit: baca dari settings (bukan charging_limit_config)
+- connectors: kolom timestamp → last_status_at
+- meter_values: tambah transaction_pk + ocpp_transaction_id
+- auto_complete: set auto_completed=1 pada transaksi yang di-complete otomatis
+- charge_limit_requests: INSERT pakai charge_point_pk
 """
 
 import asyncio
@@ -129,6 +139,15 @@ def db_fetchall(sql: str, params: tuple = ()):
         conn.close()
 
 
+def get_cp_pk(charge_point_id: str) -> int | None:
+    """Ambil charge_points.id (PK integer) dari charge_point_id string OCPP."""
+    row = db_fetchone(
+        "SELECT id FROM charge_points WHERE charge_point_id=%s",
+        (charge_point_id,),
+    )
+    return row["id"] if row else None
+
+
 async def broadcast(method: str, *args, **kwargs):
     """Helper — broadcast ke WebSocket jika enabled."""
     if WS_ENABLED:
@@ -150,22 +169,22 @@ async def ext_broadcast(data: dict):
 async def auto_complete_stale_transactions():
     """Background task — auto-complete transaksi Active yang sudah tidak ada MeterValues > 15 menit."""
     while True:
-        await asyncio.sleep(60)  # Cek setiap 1 menit
+        await asyncio.sleep(60)
         try:
             stale = db_fetchall(
-                """SELECT t.transaction_id, t.charge_point_id, t.connector_id,
-                        t.meter_start, t.tariff_per_kwh,
-                        mv.last_meter, mv.mv_timestamp as last_mv_time
+                """SELECT t.id AS tx_pk, t.ocpp_transaction_id, t.charge_point_id,
+                        t.connector_id, t.meter_start, t.tariff_per_kwh,
+                        mv.last_meter, mv.mv_timestamp AS last_mv_time
                     FROM transactions t
                     LEFT JOIN (
-                        SELECT transaction_id,
-                            MAX(value) as last_meter,
-                            MAX(timestamp) as mv_timestamp
+                        SELECT transaction_pk,
+                            MAX(value)     AS last_meter,
+                            MAX(timestamp) AS mv_timestamp
                         FROM meter_values
-                        WHERE measurand='Energy.Active.Import.Register'
-                        GROUP BY transaction_id
-                    ) mv ON mv.transaction_id = t.transaction_id
-                    WHERE t.status='Active'
+                        WHERE measurand = 'Energy.Active.Import.Register'
+                        GROUP BY transaction_pk
+                    ) mv ON mv.transaction_pk = t.id
+                    WHERE t.status = 'Active'
                     AND (
                         (
                             mv.mv_timestamp IS NULL
@@ -178,7 +197,8 @@ async def auto_complete_stale_transactions():
                 continue
 
             for tx in stale:
-                transaction_id = tx["transaction_id"]
+                tx_pk = tx["tx_pk"]
+                ocpp_transaction_id = tx["ocpp_transaction_id"]
                 charge_point_id = tx["charge_point_id"]
                 meter_stop = (
                     int(tx["last_meter"]) if tx["last_meter"] else tx["meter_start"]
@@ -195,12 +215,12 @@ async def auto_complete_stale_transactions():
                     """UPDATE transactions SET
                         meter_stop=%s, stop_timestamp=NOW(), stop_reason='AutoCompleted',
                         energy_consumed_kwh=%s, total_cost=%s,
-                        status='Completed', updated_at=NOW()
-                        WHERE transaction_id=%s AND status='Active'""",
-                    (meter_stop, energy_kwh, total_cost, transaction_id),
+                        status='Completed', auto_completed=1, updated_at=NOW()
+                        WHERE id=%s AND status='Active'""",
+                    (meter_stop, energy_kwh, total_cost, tx_pk),
                 )
 
-                cp = db_fetchone(
+                cp_row = db_fetchone(
                     "SELECT is_online FROM charge_points WHERE charge_point_id=%s",
                     (charge_point_id,),
                 )
@@ -211,9 +231,10 @@ async def auto_complete_stale_transactions():
                 )
 
                 logger.warning(
-                    "AutoComplete — transaksi %s (%s) di-complete otomatis. "
+                    "AutoComplete — transaksi ocpp_id=%s (pk=%s) (%s) di-complete otomatis. "
                     "Energi: %s kWh, meter_stop: %s",
-                    transaction_id,
+                    ocpp_transaction_id,
+                    tx_pk,
                     charge_point_id,
                     energy_kwh,
                     meter_stop,
@@ -224,7 +245,7 @@ async def auto_complete_stale_transactions():
                     charge_point_id,
                     {
                         "cp_status": "Available",
-                        "is_online": cp["is_online"] if cp else False,
+                        "is_online": cp_row["is_online"] if cp_row else False,
                     },
                 )
                 await broadcast(
@@ -232,7 +253,7 @@ async def auto_complete_stale_transactions():
                     charge_point_id,
                     {
                         "event": "stop",
-                        "transaction_id": transaction_id,
+                        "transaction_id": ocpp_transaction_id,
                         "meter_stop": meter_stop,
                         "energy_kwh": energy_kwh,
                         "total_cost": total_cost,
@@ -261,7 +282,7 @@ class ChargePoint(cp):
             logger.info("[%s] BootNotification DITERIMA! (Bypass mode aktif)", self.id)
             return call_result.BootNotification(
                 current_time=now.isoformat(),
-                interval=30,  # Hardcode dulu sementara
+                interval=30,
                 status=RegistrationStatus.accepted,
             )
         except Exception as e:
@@ -282,7 +303,6 @@ class ChargePoint(cp):
             {
                 "is_online": True,
                 "last_heartbeat": now.isoformat(),
-                # Tidak update cp_status di heartbeat — biarkan StatusNotification yang kontrol
             },
         )
         return call_result.Heartbeat(current_time=now.isoformat())
@@ -293,13 +313,14 @@ class ChargePoint(cp):
         logger.info("[%s] Authorize — id_tag: %s", self.id, id_tag)
         now = datetime.now(TZ_JAKARTA)
 
-        # 1. Cek customer dasar (status, expiry)
+        # [v0.5] Cek dari id_tags JOIN customers (bukan customers.id_tag_token)
         row = db_fetchone(
-            """SELECT c.status, c.expiry_date_time as expiry_date,
-                c.id as customer_id, c.charge_limit_enabled,
+            """SELECT t.status, t.expiry_date,
+                c.id AS customer_id, c.charge_limit_enabled,
                 c.monthly_charge_limit
-                FROM customers c
-                WHERE c.id_tag_token = %s""",
+                FROM id_tags t
+                LEFT JOIN customers c ON c.id = t.customer_id
+                WHERE t.id_tag = %s""",
             (id_tag,),
         )
 
@@ -321,33 +342,34 @@ class ChargePoint(cp):
                 id_tag_info={"status": AuthorizationStatus.expired}  # type: ignore
             )
 
-        # 2. Cek charging limit
+        # Cek charging limit
         auth_status = AuthorizationStatus.accepted
 
         if row.get("charge_limit_enabled", True):
-            # Ambil config global
-            cfg = db_fetchone(
-                "SELECT monthly_limit, is_enabled FROM charging_limit_config WHERE id=1"
+            # [v0.5] Baca dari tabel settings (bukan charging_limit_config)
+            cfg_enabled = db_fetchone(
+                "SELECT value FROM settings WHERE key_name='charge_limit_enabled'"
             )
-            global_enabled = cfg["is_enabled"] if cfg else True
-            global_limit = cfg["monthly_limit"] if cfg else 15
+            cfg_limit = db_fetchone(
+                "SELECT value FROM settings WHERE key_name='monthly_charge_limit'"
+            )
+            global_enabled = bool(int(cfg_enabled["value"])) if cfg_enabled else True
+            global_limit = int(cfg_limit["value"]) if cfg_limit else 15
 
             if global_enabled:
-                # Limit efektif: override per customer atau global
                 raw_limit = (
                     row["monthly_charge_limit"]
                     if row["monthly_charge_limit"] is not None
                     else global_limit
                 )
 
-                # Hitung pemakaian bulan ini
                 now_dt = now.replace(tzinfo=None)
                 month_start = now_dt.replace(
                     day=1, hour=0, minute=0, second=0, microsecond=0
                 )
 
                 used_row = db_fetchone(
-                    """SELECT COUNT(*) as cnt FROM transactions
+                    """SELECT COUNT(*) AS cnt FROM transactions
                         WHERE id_tag = %s
                         AND status = 'Completed'
                         AND start_timestamp >= %s""",
@@ -355,9 +377,8 @@ class ChargePoint(cp):
                 )
                 used = used_row["cnt"] if used_row else 0
 
-                # Cek extra sessions dari request yang di-approve bulan ini
                 extra_row = db_fetchone(
-                    """SELECT COALESCE(SUM(extra_sessions), 0) as extra
+                    """SELECT COALESCE(SUM(extra_sessions), 0) AS extra
                         FROM charge_limit_requests
                         WHERE customer_id = %s
                         AND status = 'Approved'
@@ -376,20 +397,23 @@ class ChargePoint(cp):
                         used,
                         effective_limit,
                     )
-                    # Auto-buat request sementara jika belum ada Pending
                     pending = db_fetchone(
                         """SELECT id FROM charge_limit_requests
                             WHERE customer_id = %s AND status = 'Pending'""",
                         (row["customer_id"],),
                     )
                     if not pending:
+                        # [v0.5] Sertakan charge_point_pk
+                        cp_pk = get_cp_pk(self.id)
                         db_execute(
                             """INSERT INTO charge_limit_requests
-                                (customer_id, id_tag, charge_point_id, reason, status, requested_at)
-                                VALUES (%s, %s, %s, %s, 'Pending', NOW())""",
+                                (customer_id, id_tag, charge_point_pk, charge_point_id,
+                                reason, status, requested_at)
+                                VALUES (%s, %s, %s, %s, %s, 'Pending', NOW())""",
                             (
                                 row["customer_id"],
                                 id_tag,
+                                cp_pk,
                                 self.id,
                                 f"Auto-request: limit bulanan ({effective_limit}x) tercapai",
                             ),
@@ -426,16 +450,19 @@ class ChargePoint(cp):
             error_code,
         )
 
+        cp_pk = get_cp_pk(self.id)
+
+        # [v0.5] Pakai charge_point_pk + last_status_at
         existing = db_fetchone(
-            "SELECT id FROM connectors WHERE charge_point_id=%s AND connector_id=%s",
-            (self.id, connector_id),
+            "SELECT id FROM connectors WHERE charge_point_pk=%s AND connector_id=%s",
+            (cp_pk, connector_id),
         )
 
         if existing:
             db_execute(
                 """UPDATE connectors SET status=%s, error_code=%s, vendor_id=%s,
-                    vendor_error_code=%s, info=%s, timestamp=%s, updated_at=NOW()
-                    WHERE charge_point_id=%s AND connector_id=%s""",
+                    vendor_error_code=%s, info=%s, last_status_at=%s, updated_at=NOW()
+                    WHERE charge_point_pk=%s AND connector_id=%s""",
                 (
                     status,
                     error_code,
@@ -443,17 +470,18 @@ class ChargePoint(cp):
                     vendor_error_code,
                     info,
                     now,
-                    self.id,
+                    cp_pk,
                     connector_id,
                 ),
             )
         else:
             db_execute(
                 """INSERT INTO connectors
-                    (charge_point_id, connector_id, status, error_code,
-                    vendor_id, vendor_error_code, info, timestamp)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    (charge_point_pk, charge_point_id, connector_id, status,
+                    error_code, vendor_id, vendor_error_code, info, last_status_at)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
                 (
+                    cp_pk,
                     self.id,
                     connector_id,
                     status,
@@ -473,10 +501,11 @@ class ChargePoint(cp):
         if error_code and error_code != "NoError":
             db_execute(
                 """INSERT INTO alerts
-                    (charge_point_id, connector_id, timestamp, status,
-                    error_code, vendor_id, vendor_error_code, info)
-                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
+                    (charge_point_pk, charge_point_id, connector_id, timestamp,
+                    status, error_code, vendor_id, vendor_error_code, info)
+                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
                 (
+                    cp_pk,
                     self.id,
                     connector_id,
                     now,
@@ -494,7 +523,6 @@ class ChargePoint(cp):
                 error_code,
             )
 
-        # Broadcast connector status ke frontend
         await broadcast("update_connector", self.id, connector_id, status)
         await broadcast(
             "update_cp_status",
@@ -503,10 +531,9 @@ class ChargePoint(cp):
         )
 
         # Auto-complete transaksi jika connector melaporkan Available saat masih ada transaksi Active
-        # Ini menangani kasus middleware tidak meneruskan StopTransaction ke Zeus
         if status == "Available" and connector_id == 1:
             active_tx = db_fetchone(
-                """SELECT transaction_id, meter_start, tariff_per_kwh
+                """SELECT id AS tx_pk, ocpp_transaction_id, meter_start, tariff_per_kwh
                     FROM transactions
                     WHERE charge_point_id=%s AND connector_id=%s AND status='Active'
                     ORDER BY id DESC LIMIT 1""",
@@ -514,10 +541,10 @@ class ChargePoint(cp):
             )
             if active_tx:
                 last_mv = db_fetchone(
-                    """SELECT MAX(value) as last_meter FROM meter_values
-                        WHERE transaction_id=%s
+                    """SELECT MAX(value) AS last_meter FROM meter_values
+                        WHERE transaction_pk=%s
                         AND measurand='Energy.Active.Import.Register'""",
-                    (active_tx["transaction_id"],),
+                    (active_tx["tx_pk"],),
                 )
                 meter_stop = (
                     int(last_mv["last_meter"])
@@ -538,9 +565,9 @@ class ChargePoint(cp):
                 db_execute(
                     """UPDATE transactions SET meter_stop=%s, stop_timestamp=NOW(),
                         stop_reason='StatusNotification', energy_consumed_kwh=%s,
-                        total_cost=%s, status='Completed', updated_at=NOW()
-                        WHERE transaction_id=%s AND status='Active'""",
-                    (meter_stop, energy_kwh, total_cost, active_tx["transaction_id"]),
+                        total_cost=%s, status='Completed', auto_completed=1, updated_at=NOW()
+                        WHERE id=%s AND status='Active'""",
+                    (meter_stop, energy_kwh, total_cost, active_tx["tx_pk"]),
                 )
                 db_execute(
                     "UPDATE charge_points SET cp_status='Available', updated_at=NOW() WHERE charge_point_id=%s",
@@ -551,7 +578,7 @@ class ChargePoint(cp):
                     self.id,
                     {
                         "event": "stop",
-                        "transaction_id": active_tx["transaction_id"],
+                        "transaction_id": active_tx["ocpp_transaction_id"],
                         "meter_stop": meter_stop,
                         "energy_kwh": energy_kwh,
                         "total_cost": total_cost,
@@ -564,10 +591,11 @@ class ChargePoint(cp):
                     {"cp_status": "Available", "is_online": True},
                 )
                 logger.info(
-                    "[%s] Transaksi %s di-complete via StatusNotification Available. "
+                    "[%s] Transaksi ocpp_id=%s (pk=%s) di-complete via StatusNotification Available. "
                     "Energi: %s kWh, meter_stop: %s",
                     self.id,
-                    active_tx["transaction_id"],
+                    active_tx["ocpp_transaction_id"],
+                    active_tx["tx_pk"],
                     energy_kwh,
                     meter_stop,
                 )
@@ -587,52 +615,87 @@ class ChargePoint(cp):
             meter_start,
         )
 
+        # [v0.5] Cek dari id_tags (bukan customers.id_tag_token)
         row = db_fetchone(
-            "SELECT id, status FROM customers WHERE id_tag_token = %s", (id_tag,)
+            """SELECT t.status, c.id AS customer_id
+                FROM id_tags t
+                LEFT JOIN customers c ON c.id = t.customer_id
+                WHERE t.id_tag = %s""",
+            (id_tag,),
         )
         id_tag_status = (
             AuthorizationStatus.accepted
             if (row and row["status"] == "Accepted")
             else AuthorizationStatus.invalid
         )
-        customer_id = row["id"] if row else None
+        customer_id = row["customer_id"] if row else None
 
+        # [v0.5] tariffs pakai charge_point_pk
+        cp_pk = get_cp_pk(self.id)
         tariff_row = db_fetchone(
-            "SELECT cost_per_kwh FROM tariffs WHERE charge_point_id=%s AND is_active=1 ORDER BY created_at DESC LIMIT 1",
-            (self.id,),
+            "SELECT cost_per_kwh FROM tariffs WHERE charge_point_pk=%s AND is_active=1 ORDER BY created_at DESC LIMIT 1",
+            (cp_pk,),
         )
         tariff = tariff_row["cost_per_kwh"] if tariff_row else None
 
+        ocpp_transaction_id = (
+            int(datetime.now().timestamp() * 10 + connector_id) % 2147483647
+        )
+
+        # Cek duplikat — transaksi Active di connector yang sama
         existing = db_fetchone(
-            """SELECT transaction_id FROM transactions
+            """SELECT id AS tx_pk, ocpp_transaction_id FROM transactions
                 WHERE charge_point_id=%s AND connector_id=%s
                 AND status='Active'""",
             (self.id, connector_id),
         )
         if existing:
             logger.warning(
-                "[%s] Duplikat StartTransaction diabaikan — meter_start=%s sudah ada (transaction_id=%s)",
+                "[%s] Duplikat StartTransaction diabaikan — meter_start=%s sudah ada (ocpp_transaction_id=%s)",
                 self.id,
                 meter_start,
-                existing["transaction_id"],
+                existing["ocpp_transaction_id"],
             )
             asyncio.create_task(self._trigger_status_after_reconnect(connector_id))
             return call_result.StartTransaction(
-                transaction_id=existing["transaction_id"],
+                transaction_id=existing["ocpp_transaction_id"],
                 id_tag_info={"status": AuthorizationStatus.accepted},  # type: ignore
             )
 
-        transaction_id = (
+        recent_completed = db_fetchone(
+            """SELECT ocpp_transaction_id FROM transactions
+                WHERE charge_point_id=%s AND connector_id=%s
+                AND meter_start=%s AND status='Completed'
+                AND stop_timestamp >= NOW() - INTERVAL 60 SECOND""",
+            (self.id, connector_id, meter_start),
+        )
+        if recent_completed:
+            logger.warning(
+                "[%s] StartTransaction diabaikan — transaksi dengan meter_start=%s "
+                "baru saja di-complete (ocpp_transaction_id=%s)",
+                self.id,
+                meter_start,
+                recent_completed["ocpp_transaction_id"],
+            )
+            return call_result.StartTransaction(
+                transaction_id=recent_completed["ocpp_transaction_id"],
+                id_tag_info={"status": "Accepted"},  # type: ignore
+            )
+
+        ocpp_transaction_id = (
             int(datetime.now().timestamp() * 10 + connector_id) % 2147483647
         )
 
+        # [v0.5] Sertakan charge_point_pk dan ocpp_transaction_id
         db_execute(
             """INSERT INTO transactions
-                (transaction_id, charge_point_id, connector_id, id_tag,
-                customer_id, start_timestamp, meter_start, tariff_per_kwh, status)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,'Active')""",
+                (ocpp_transaction_id, charge_point_pk, charge_point_id,
+                connector_id, id_tag, customer_id,
+                start_timestamp, meter_start, tariff_per_kwh, status)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,'Active')""",
             (
-                transaction_id,
+                ocpp_transaction_id,
+                cp_pk,
                 self.id,
                 connector_id,
                 id_tag,
@@ -644,16 +707,17 @@ class ChargePoint(cp):
         )
 
         logger.info(
-            "[%s] Transaksi dimulai — transaction_id: %s", self.id, transaction_id
+            "[%s] Transaksi dimulai — ocpp_transaction_id: %s",
+            self.id,
+            ocpp_transaction_id,
         )
 
-        # Broadcast ke frontend
         await broadcast(
             "update_transaction",
             self.id,
             {
                 "event": "start",
-                "transaction_id": transaction_id,
+                "transaction_id": ocpp_transaction_id,
                 "connector_id": connector_id,
                 "id_tag": id_tag,
                 "meter_start": meter_start,
@@ -671,12 +735,12 @@ class ChargePoint(cp):
                 "id_tag": id_tag,
                 "meter_start_wh": meter_start,
                 "timestamp": timestamp,
-                "transaction_id": transaction_id,
+                "transaction_id": ocpp_transaction_id,
             }
         )
 
         return call_result.StartTransaction(
-            transaction_id=transaction_id,
+            transaction_id=ocpp_transaction_id,
             id_tag_info={"status": id_tag_status},  # type: ignore
         )
 
@@ -687,25 +751,27 @@ class ChargePoint(cp):
     ):
         reason = kwargs.get("reason", "Local")
         logger.info(
-            "[%s] StopTransaction — transaction_id: %s, meter_stop: %s Wh, reason: %s",
+            "[%s] StopTransaction — ocpp_transaction_id: %s, meter_stop: %s Wh, reason: %s",
             self.id,
             transaction_id,
             meter_stop,
             reason,
         )
 
-        # Cari transaksi — coba dengan transaction_id dulu (harus Active)
+        # [v0.5] Cari via ocpp_transaction_id
         tx = db_fetchone(
-            """SELECT meter_start, tariff_per_kwh, connector_id, transaction_id
+            """SELECT id AS tx_pk, meter_start, tariff_per_kwh,
+                connector_id, ocpp_transaction_id
                 FROM transactions
-                WHERE transaction_id=%s AND charge_point_id=%s AND status='Active'""",
+                WHERE ocpp_transaction_id=%s AND charge_point_id=%s AND status='Active'""",
             (transaction_id, self.id),
         )
 
         # Fallback: charger reconnect bisa kirim transaction_id lama atau -1
         if not tx:
             tx = db_fetchone(
-                """SELECT meter_start, tariff_per_kwh, connector_id, transaction_id
+                """SELECT id AS tx_pk, meter_start, tariff_per_kwh,
+                    connector_id, ocpp_transaction_id
                     FROM transactions
                     WHERE charge_point_id=%s AND status='Active'
                     ORDER BY id DESC LIMIT 1""",
@@ -713,17 +779,17 @@ class ChargePoint(cp):
             )
             if tx:
                 logger.warning(
-                    "[%s] StopTransaction — transaction_id=%s tidak cocok, "
-                    "fallback ke transaksi aktif: %s",
+                    "[%s] StopTransaction — ocpp_transaction_id=%s tidak cocok, "
+                    "fallback ke transaksi aktif: ocpp_id=%s (pk=%s)",
                     self.id,
                     transaction_id,
-                    tx["transaction_id"],
+                    tx["ocpp_transaction_id"],
+                    tx["tx_pk"],
                 )
-                transaction_id = tx["transaction_id"]
 
         if not tx:
             logger.warning(
-                "[%s] StopTransaction — tidak ada transaksi Active (transaction_id=%s). Diabaikan.",
+                "[%s] StopTransaction — tidak ada transaksi Active (ocpp_transaction_id=%s). Diabaikan.",
                 self.id,
                 transaction_id,
             )
@@ -741,22 +807,24 @@ class ChargePoint(cp):
                 "[%s] Energi: %s kWh, biaya: %s", self.id, energy_kwh, total_cost
             )
 
+        # [v0.5] Update via PK internal (id)
         db_execute(
             """UPDATE transactions SET meter_stop=%s, stop_timestamp=%s, stop_reason=%s,
                 energy_consumed_kwh=%s, total_cost=%s, status='Completed', updated_at=NOW()
-                WHERE transaction_id=%s AND charge_point_id=%s""",
+                WHERE id=%s AND charge_point_id=%s""",
             (
                 meter_stop,
                 parse_timestamp(timestamp),
                 reason,
                 energy_kwh,
                 total_cost,
-                transaction_id,
+                tx["tx_pk"],
                 self.id,
             ),
         )
 
         connector_id = tx["connector_id"]
+        ocpp_transaction_id = tx["ocpp_transaction_id"]
 
         db_execute(
             "UPDATE charge_points SET cp_status='Available', updated_at=NOW() WHERE charge_point_id=%s",
@@ -768,7 +836,7 @@ class ChargePoint(cp):
             self.id,
             {
                 "event": "stop",
-                "transaction_id": transaction_id,
+                "transaction_id": ocpp_transaction_id,
                 "meter_stop": meter_stop,
                 "energy_kwh": energy_kwh,
                 "total_cost": total_cost,
@@ -780,7 +848,7 @@ class ChargePoint(cp):
             {
                 "event": "transaction_stop",
                 "cp_id": self.id,
-                "transaction_id": transaction_id,
+                "transaction_id": ocpp_transaction_id,
                 "connector_id": connector_id,
                 "meter_stop_wh": meter_stop,
                 "energy_kwh": energy_kwh,
@@ -800,31 +868,42 @@ class ChargePoint(cp):
     # ── 7. MeterValues ───────────────────────────────────────
     @on(Action.meter_values)
     async def on_meter_values(self, connector_id, meter_value, **kwargs):
-        transaction_id = kwargs.get("transaction_id")
+        ocpp_tx_id = kwargs.get("transaction_id")
 
-        # Cari transaction_id aktif jika tidak dikirim CS
-        if transaction_id is None or transaction_id < 0:
+        # Resolve transaction_pk (PK internal) dari ocpp_transaction_id
+        tx_pk = None
+        if ocpp_tx_id is None or ocpp_tx_id < 0:
             active_tx = db_fetchone(
-                """SELECT transaction_id FROM transactions 
-                    WHERE charge_point_id=%s AND connector_id=%s 
+                """SELECT id AS tx_pk, ocpp_transaction_id FROM transactions
+                    WHERE charge_point_id=%s AND connector_id=%s
                     AND status='Active' ORDER BY id DESC LIMIT 1""",
                 (self.id, connector_id),
             )
             if active_tx:
-                transaction_id = active_tx["transaction_id"]
+                tx_pk = active_tx["tx_pk"]
+                ocpp_tx_id = active_tx["ocpp_transaction_id"]
                 logger.debug(
-                    "[%s] MeterValues — transaction_id=%s ditemukan dari DB (connector=%s)",
+                    "[%s] MeterValues — resolve tx_pk=%s (ocpp_id=%s) dari DB (connector=%s)",
                     self.id,
-                    transaction_id,
+                    tx_pk,
+                    ocpp_tx_id,
                     connector_id,
                 )
             else:
                 logger.debug(
-                    "[%s] MeterValues diabaikan — tidak ada transaksi aktif (transaction_id=%s)",
+                    "[%s] MeterValues diabaikan — tidak ada transaksi aktif (ocpp_tx_id=%s)",
                     self.id,
-                    transaction_id,
+                    ocpp_tx_id,
                 )
                 return call_result.MeterValues()
+        else:
+            tx_row = db_fetchone(
+                "SELECT id AS tx_pk FROM transactions WHERE ocpp_transaction_id=%s AND charge_point_id=%s",
+                (ocpp_tx_id, self.id),
+            )
+            tx_pk = tx_row["tx_pk"] if tx_row else None
+
+        cp_pk = get_cp_pk(self.id)
 
         for mv in meter_value:
             timestamp = parse_timestamp(mv.get("timestamp"))
@@ -841,11 +920,12 @@ class ChargePoint(cp):
                     "[%s] MeterValue — %s: %s %s", self.id, measurand, value, unit
                 )
 
+                # [v0.5] Dedup check pakai transaction_pk
                 existing_mv = db_fetchone(
-                    """SELECT id FROM meter_values 
-                        WHERE transaction_id=%s AND timestamp=%s 
-                        AND measurand=%s AND charge_point_id=%s""",
-                    (transaction_id, timestamp, measurand, self.id),
+                    """SELECT id FROM meter_values
+                        WHERE transaction_pk=%s AND timestamp=%s
+                        AND measurand=%s AND charge_point_pk=%s""",
+                    (tx_pk, timestamp, measurand, cp_pk),
                 )
                 if existing_mv:
                     logger.debug(
@@ -856,13 +936,18 @@ class ChargePoint(cp):
                     )
                     continue
 
+                # [v0.5] INSERT dengan transaction_pk + ocpp_transaction_id + charge_point_pk
                 db_execute(
                     """INSERT INTO meter_values
-                        (transaction_id, charge_point_id, connector_id, timestamp,
+                        (transaction_pk, ocpp_transaction_id,
+                        charge_point_pk, charge_point_id,
+                        connector_id, timestamp,
                         measurand, value, unit, context, format, phase, location)
-                        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
                     (
-                        transaction_id,
+                        tx_pk,
+                        ocpp_tx_id,
+                        cp_pk,
                         self.id,
                         connector_id,
                         timestamp,
@@ -881,7 +966,7 @@ class ChargePoint(cp):
                     self.id,
                     {
                         "connector_id": connector_id,
-                        "transaction_id": transaction_id,
+                        "transaction_id": ocpp_tx_id,
                         "measurand": measurand,
                         "value": value,
                         "unit": unit,
@@ -899,7 +984,7 @@ class ChargePoint(cp):
                             "event": "meter_values",
                             "cp_id": self.id,
                             "connector_id": connector_id,
-                            "transaction_id": transaction_id,
+                            "transaction_id": ocpp_tx_id,
                             "energy_kwh": energy_kwh,
                             "unit": unit,
                             "timestamp": str(timestamp),
@@ -1188,7 +1273,6 @@ async def on_connect(websocket, path=None):
         )
 
     # 2. Ambil Charge Point ID dari URL
-    # Menggunakan getattr sebagai pengaman jika atribut path berpindah lokasi
     raw_path = path if path else getattr(websocket, "path", "/")
     charge_point_id = raw_path.strip("/")
 
@@ -1202,9 +1286,8 @@ async def on_connect(websocket, path=None):
 
     # 3. Update Database Status Online
     try:
-        # Cek apakah ada transaksi aktif sebelum override status
         active_tx_on_connect = db_fetchone(
-            """SELECT transaction_id FROM transactions
+            """SELECT ocpp_transaction_id FROM transactions
                 WHERE charge_point_id=%s AND status='Active'
                 ORDER BY id DESC LIMIT 1""",
             (charge_point_id,),
@@ -1212,10 +1295,10 @@ async def on_connect(websocket, path=None):
         reconnect_status = "Charging" if active_tx_on_connect else "Available"
         if active_tx_on_connect:
             logger.info(
-                "Charge point %s reconnect — transaksi %s masih Active, "
+                "Charge point %s reconnect — transaksi ocpp_id=%s masih Active, "
                 "status dipertahankan: Charging",
                 charge_point_id,
-                active_tx_on_connect["transaction_id"],
+                active_tx_on_connect["ocpp_transaction_id"],
             )
         db_execute(
             "UPDATE charge_points SET is_online=1, updated_at=NOW() WHERE charge_point_id=%s",
@@ -1238,7 +1321,6 @@ async def on_connect(websocket, path=None):
     logger.info(f"Registry updated: {list(_cp_registry.keys())}")
 
     try:
-        # Menjalankan loop utama OCPP (Mendengarkan BootNotification, dll)
         await charge_point.start()
     except Exception as e:
         logger.error(f"Error pada koneksi {charge_point_id}: {e}")
@@ -1248,17 +1330,16 @@ async def on_connect(websocket, path=None):
         logger.info(f"Charge point terputus: {charge_point_id}")
 
         try:
-            # Cek transaksi Active — jika ada, charger akan reconnect, jangan set Unavailable
             active_tx = db_fetchone(
-                "SELECT transaction_id FROM transactions "
+                "SELECT ocpp_transaction_id FROM transactions "
                 "WHERE charge_point_id=%s AND status='Active' ORDER BY id DESC LIMIT 1",
                 (charge_point_id,),
             )
             if active_tx:
                 logger.warning(
-                    "Charge point %s terputus saat transaksi %s masih Active. Menunggu reconnect...",
+                    "Charge point %s terputus saat transaksi ocpp_id=%s masih Active. Menunggu reconnect...",
                     charge_point_id,
-                    active_tx["transaction_id"],
+                    active_tx["ocpp_transaction_id"],
                 )
                 db_execute(
                     "UPDATE charge_points SET is_online=0, updated_at=NOW() WHERE charge_point_id=%s",
@@ -1297,6 +1378,8 @@ async def main():
     except Exception as e:
         logger.error("Gagal koneksi ke database: %s", e)
         return
+
+    asyncio.ensure_future(auto_complete_stale_transactions())
 
     server = await websockets.serve(
         on_connect,

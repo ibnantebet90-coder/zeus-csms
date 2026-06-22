@@ -13,7 +13,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api import (
     auth,
     charge_points,
-    customers,
     transactions,
     alerts,
     users,
@@ -24,16 +23,18 @@ from app.api import (
     energy_monitoring,
     remote_commands,
     report,
-    charging_limit,
     external_ws,
 )
+
+# [v0.5] customers dan charging_limit digabung dalam satu file
+from app.api.customers import customer_router, limit_router
 
 logger = logging.getLogger("zeus.main")
 
 app = FastAPI(
     title="ZEUS CSMS API",
     description="Charging Station Management System — OCPP 1.6",
-    version="0.3.0",
+    version="0.5.0",
     docs_url="/docs",
     redoc_url="/redoc",
 )
@@ -54,7 +55,8 @@ app.add_middleware(
 # ── Routers ───────────────────────────────────────────────────
 app.include_router(auth.router)
 app.include_router(charge_points.router)
-app.include_router(customers.router)
+app.include_router(customer_router)
+app.include_router(limit_router)
 app.include_router(transactions.router)
 app.include_router(alerts.router)
 app.include_router(users.router)
@@ -65,7 +67,6 @@ app.include_router(forecasting_io.router)
 app.include_router(energy_monitoring.router)
 app.include_router(remote_commands.router)
 app.include_router(report.router)
-app.include_router(charging_limit.router)
 app.include_router(external_ws.router)
 
 
@@ -83,7 +84,6 @@ async def start_ocpp_server():
         ocpp_host = "0.0.0.0"
         ocpp_port = 9000
 
-        # Sesudah
         server = await websockets.serve(
             on_connect,
             ocpp_host,
@@ -94,10 +94,8 @@ async def start_ocpp_server():
 
         logger.info("OCPP server berjalan di ws://%s:%s", ocpp_host, ocpp_port)
 
-        # Simpan reference agar tidak di-GC
         app.state.ocpp_server = server
 
-        # Jalankan auto-complete job
         asyncio.create_task(auto_complete_stale_transactions())
 
     except Exception as e:
@@ -114,7 +112,7 @@ async def stop_ocpp_server():
 
 @app.get("/", tags=["Health"])
 def root():
-    return {"status": "ok", "app": "ZEUS CSMS", "version": "0.3.0"}
+    return {"status": "ok", "app": "ZEUS CSMS", "version": "0.5.0"}
 
 
 @app.get("/health", tags=["Health"])

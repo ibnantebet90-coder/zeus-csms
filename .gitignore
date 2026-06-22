@@ -25,3 +25,6 @@ dist/
 
 # Sistem Operasi Mac (karena kamu pakai MacBook Pro)
 .DS_Store
+
+*.log
+*.sql

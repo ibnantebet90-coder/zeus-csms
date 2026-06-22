@@ -1,6 +1,15 @@
 """
-ZEUS CSMS — Pydantic Schemas
+ZEUS CSMS — Pydantic Schemas  (v0.5)
 Validasi request & response untuk semua endpoint.
+
+Perubahan dari v0.4:
+- CustomerCreate: hapus id_tag_token, expiry_date_time; tambah charge_limit_enabled, monthly_charge_limit
+- CustomerUpdate: hapus status (pindah ke id_tags)
+- CustomerResponse: hapus id_tag_token, status; tambah charge_limit_enabled, monthly_charge_limit
+- ChargePointCreate/Update/Response: hapus tariff_per_kwh
+- TransactionResponse: rename transaction_id → ocpp_transaction_id; tambah auto_completed
+- ConnectorOut: rename timestamp → last_status_at
+- TariffCreate/Response: charge_point_id tetap ada (denormalized field)
 """
 
 from datetime import datetime
@@ -58,8 +67,8 @@ class CustomerCreate(BaseModel):
     car_brand: Optional[str] = None
     car_model: Optional[str] = None
     car_type: str = "private"
-    id_tag_token: str
-    expiry_date_time: Optional[datetime] = None
+    charge_limit_enabled: bool = True
+    monthly_charge_limit: Optional[int] = None
 
 
 class CustomerUpdate(BaseModel):
@@ -67,7 +76,8 @@ class CustomerUpdate(BaseModel):
     phone: Optional[str] = None
     car_brand: Optional[str] = None
     car_model: Optional[str] = None
-    status: Optional[str] = None
+    charge_limit_enabled: Optional[bool] = None
+    monthly_charge_limit: Optional[int] = None
 
 
 class CustomerResponse(BaseModel):
@@ -78,8 +88,8 @@ class CustomerResponse(BaseModel):
     car_brand: Optional[str]
     car_model: Optional[str]
     car_type: str
-    id_tag_token: str
-    status: str
+    charge_limit_enabled: bool
+    monthly_charge_limit: Optional[int]
     created_at: datetime
 
     class Config:
@@ -98,7 +108,6 @@ class ChargePointCreate(BaseModel):
     latitude: Optional[float] = None
     longitude: Optional[float] = None
     number_of_connectors: int = 1
-    tariff_per_kwh: float = 0.0
 
 
 class ChargePointUpdate(BaseModel):
@@ -106,13 +115,13 @@ class ChargePointUpdate(BaseModel):
     address: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
-    tariff_per_kwh: Optional[float] = None
 
 
 class ConnectorOut(BaseModel):
     connector_id: int
     status: str
     error_code: Optional[str]
+    last_status_at: Optional[datetime]
 
     class Config:
         from_attributes = True
@@ -126,12 +135,12 @@ class ChargePointResponse(BaseModel):
     latitude: Optional[float]
     longitude: Optional[float]
     number_of_connectors: int
-    tariff_per_kwh: float
     cp_status: str
     is_online: bool
     last_heartbeat: Optional[datetime]
     vendor_name: Optional[str]
     model: Optional[str]
+    serial_number: Optional[str]
     connectors: List[ConnectorOut] = []
 
     class Config:
@@ -145,7 +154,7 @@ class ChargePointResponse(BaseModel):
 
 class TransactionResponse(BaseModel):
     id: int
-    transaction_id: int
+    ocpp_transaction_id: int
     charge_point_id: str
     connector_id: int
     id_tag: Optional[str]
@@ -158,6 +167,7 @@ class TransactionResponse(BaseModel):
     total_cost: Optional[float]
     stop_reason: Optional[str]
     status: str
+    auto_completed: bool
 
     class Config:
         from_attributes = True

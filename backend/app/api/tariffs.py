@@ -12,7 +12,7 @@ from typing import List
 
 from app.api.deps import get_current_user, require_admin
 from app.core.database import get_db
-from app.models.models import Tariff, User
+from app.models.models import ChargePoint, Tariff, User
 from app.schemas.schemas import TariffCreate, TariffResponse
 
 router = APIRouter(prefix="/api/tariffs", tags=["Tariffs"])
@@ -32,13 +32,30 @@ def create_tariff(
     db: Session = Depends(get_db),
     _: User = Depends(require_admin),
 ):
+    # [v0.5] Lookup charge_point_pk dari charge_point_id string
+    cp = (
+        db.query(ChargePoint)
+        .filter(ChargePoint.charge_point_id == body.charge_point_id)
+        .first()
+    )
+    if not cp:
+        raise HTTPException(status_code=404, detail="Charge point tidak ditemukan")
+
     # Nonaktifkan tarif lama untuk CP yang sama
     db.query(Tariff).filter(
-        Tariff.charge_point_id == body.charge_point_id,
+        Tariff.charge_point_pk == cp.id,
         Tariff.is_active == True,
     ).update({"is_active": False})
 
-    tariff = Tariff(**body.model_dump())
+    tariff = Tariff(
+        charge_point_pk=cp.id,
+        charge_point_id=body.charge_point_id,
+        cost_per_kwh=body.cost_per_kwh,
+        currency=body.currency,
+        valid_from=body.valid_from,
+        valid_until=body.valid_until,
+        is_active=True,
+    )
     db.add(tariff)
     db.commit()
     db.refresh(tariff)
@@ -57,7 +74,7 @@ def activate_tariff(
 
     # Nonaktifkan tarif lain untuk CP yang sama
     db.query(Tariff).filter(
-        Tariff.charge_point_id == tariff.charge_point_id,
+        Tariff.charge_point_pk == tariff.charge_point_pk,
         Tariff.is_active == True,
     ).update({"is_active": False})
 

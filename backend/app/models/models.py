@@ -44,12 +44,6 @@ class Customer(Base):
     car_brand = Column(String(64))
     car_model = Column(String(64))
     car_type = Column(Enum("private", "public"), default="private")
-    id_tag_token = Column(String(64), unique=True, nullable=False)
-    expiry_date_time = Column(DateTime)
-    status = Column(
-        Enum("Accepted", "Blocked", "Expired", "Invalid", "ConcurrentTx"),
-        default="Accepted",
-    )
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -69,7 +63,6 @@ class ChargePoint(Base):
     latitude = Column(Numeric(10, 7))
     longitude = Column(Numeric(10, 7))
     number_of_connectors = Column(SmallInteger, default=1)
-    tariff_per_kwh = Column(Numeric(10, 2), default=0)
     cp_status = Column(String(32), default="Unknown")
     is_online = Column(Boolean, default=False)
     last_heartbeat = Column(DateTime)
@@ -92,16 +85,15 @@ class Connector(Base):
     __tablename__ = "connectors"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    charge_point_id = Column(
-        String(64), ForeignKey("charge_points.charge_point_id"), nullable=False
-    )
+    charge_point_pk = Column(Integer, ForeignKey("charge_points.id"), nullable=False)
+    charge_point_id = Column(String(64), nullable=False)
     connector_id = Column(SmallInteger, nullable=False)
     status = Column(String(32), default="Unknown")
     error_code = Column(String(64))
     vendor_id = Column(String(64))
     vendor_error_code = Column(String(64))
     info = Column(String(255))
-    timestamp = Column(DateTime)
+    last_status_at = Column(DateTime)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -112,9 +104,8 @@ class Alert(Base):
     __tablename__ = "alerts"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    charge_point_id = Column(
-        String(64), ForeignKey("charge_points.charge_point_id"), nullable=False
-    )
+    charge_point_pk = Column(Integer, ForeignKey("charge_points.id"), nullable=False)
+    charge_point_id = Column(String(64), nullable=False)
     connector_id = Column(SmallInteger)
     timestamp = Column(DateTime, default=datetime.utcnow)
     status = Column(String(64), nullable=False)
@@ -148,10 +139,9 @@ class Transaction(Base):
     __tablename__ = "transactions"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    transaction_id = Column(Integer, nullable=False)
-    charge_point_id = Column(
-        String(64), ForeignKey("charge_points.charge_point_id"), nullable=False
-    )
+    ocpp_transaction_id = Column(Integer, nullable=False)
+    charge_point_pk = Column(Integer, ForeignKey("charge_points.id"), nullable=False)
+    charge_point_id = Column(String(64), nullable=False)
     connector_id = Column(SmallInteger, nullable=False)
     id_tag = Column(String(64))
     customer_id = Column(Integer, ForeignKey("customers.id"))
@@ -164,6 +154,7 @@ class Transaction(Base):
     tariff_per_kwh = Column(Numeric(10, 2))
     total_cost = Column(Numeric(12, 2))
     status = Column(Enum("Active", "Completed", "Invalid"), default="Active")
+    auto_completed = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -171,14 +162,15 @@ class Transaction(Base):
     customer = relationship("Customer", back_populates="transactions")
 
 
-class ChargingLimitConfig(Base):
-    """Konfigurasi limit global — selalu hanya 1 baris (id=1)."""
+class Setting(Base):
+    """Konfigurasi sistem global sebagai key-value."""
 
-    __tablename__ = "charging_limit_config"
+    __tablename__ = "settings"
 
-    id = Column(Integer, primary_key=True, default=1)
-    monthly_limit = Column(Integer, nullable=False, default=15)
-    is_enabled = Column(Boolean, default=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    key_name = Column(String(64), unique=True, nullable=False)
+    value = Column(String(255), nullable=False)
+    description = Column(String(255))
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
@@ -187,29 +179,30 @@ class ChargeLimitRequest(Base):
 
     __tablename__ = "charge_limit_requests"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False)
-    id_tag = Column(String(64), nullable=False)
+    id_tag = Column(String(64), nullable=True)
+    charge_point_pk = Column(Integer, ForeignKey("charge_points.id"), nullable=True)
     charge_point_id = Column(String(64), nullable=True)
     reason = Column(Text, nullable=True)
     status = Column(Enum("Pending", "Approved", "Rejected"), default="Pending")
-    extra_sessions = Column(Integer, default=1)
-    approved_by = Column(Integer, ForeignKey("users.id"), nullable=True)
+    extra_sessions = Column(SmallInteger, default=0)
     requested_at = Column(DateTime, default=datetime.utcnow)
     resolved_at = Column(DateTime, nullable=True)
+    resolved_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
     customer = relationship("Customer", foreign_keys=[customer_id])
-    approver = relationship("User", foreign_keys=[approved_by])
+    resolver = relationship("User", foreign_keys=[resolved_by_user_id])
 
 
 class MeterValue(Base):
     __tablename__ = "meter_values"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
-    transaction_id = Column(Integer)
-    charge_point_id = Column(
-        String(64), ForeignKey("charge_points.charge_point_id"), nullable=False
-    )
+    transaction_pk = Column(BigInteger, ForeignKey("transactions.id"), nullable=True)
+    ocpp_transaction_id = Column(Integer, nullable=True)
+    charge_point_pk = Column(Integer, ForeignKey("charge_points.id"), nullable=False)
+    charge_point_id = Column(String(64), nullable=False)
     connector_id = Column(SmallInteger, nullable=False)
     timestamp = Column(DateTime, nullable=False)
     measurand = Column(String(64), default="Energy.Active.Import.Register")
@@ -225,9 +218,8 @@ class Tariff(Base):
     __tablename__ = "tariffs"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    charge_point_id = Column(
-        String(64), ForeignKey("charge_points.charge_point_id"), nullable=False
-    )
+    charge_point_pk = Column(Integer, ForeignKey("charge_points.id"), nullable=False)
+    charge_point_id = Column(String(64), nullable=False)
     cost_per_kwh = Column(Numeric(10, 2), nullable=False)
     currency = Column(String(8), default="IDR")
     valid_from = Column(DateTime)
@@ -242,6 +234,7 @@ class SendCommand(Base):
     __tablename__ = "send_commands"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
+    charge_point_pk = Column(Integer, ForeignKey("charge_points.id"), nullable=False)
     charge_point_id = Column(String(64), nullable=False)
     command = Column(String(64), nullable=False)
     payload = Column(JSON)
