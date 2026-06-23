@@ -132,6 +132,16 @@ class ConnectionManager:
             }
         )
 
+    async def update_meter_value(self, charge_point_id: str, data: dict):
+        """Broadcast update meter value real-time ke frontend."""
+        await self.broadcast(
+            {
+                "type": "meter_value_update",
+                "charge_point_id": charge_point_id,
+                "data": data,
+            }
+        )
+
 
 # ── Singleton instance — dipakai oleh OCPP server & FastAPI ──
 ws_manager = ConnectionManager()

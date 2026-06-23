@@ -49,6 +49,7 @@ from ocpp.v16 import call_result
 from ocpp.v16.enums import (
     Action,
     AuthorizationStatus,
+    DataTransferStatus,
     RegistrationStatus,
 )
 
@@ -69,8 +70,8 @@ DB_PORT = int(os.getenv("DB_PORT", "3306"))
 DB_USER = os.getenv("DB_USER", "zeus_user")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "zeus_password")
 DB_NAME = os.getenv("DB_NAME", "zeus_csms")
-OCPP_HOST = os.getenv("OCPP_HOST", "10.10.204.205")
-OCPP_PORT = int(os.getenv("OCPP_PORT", "9000"))
+OCPP_HOST = os.getenv("OCPP_HOST", "0.0.0.0")
+OCPP_PORT = int(os.getenv("OCPP_PORT", "8887"))
 HEARTBEAT_INTERVAL = int(os.getenv("HEARTBEAT_INTERVAL", "30"))
 
 # ── CP Registry — singleton di-share dengan remote_commands ──
@@ -278,20 +279,50 @@ class ChargePoint(cp):
         self, charge_point_vendor, charge_point_model, **kwargs
     ):
         try:
-            now = datetime.now(TZ_JAKARTA)
+            now_utc = datetime.now(timezone.utc)
             logger.info("[%s] BootNotification DITERIMA! (Bypass mode aktif)", self.id)
             return call_result.BootNotification(
-                current_time=now.isoformat(),
+                current_time=now_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
                 interval=30,
                 status=RegistrationStatus.accepted,
             )
         except Exception as e:
             logger.error(f"Gagal membalas BootNotification: {e}")
 
+        cp_pk = get_cp_pk(self.id)
+        if cp_pk is None:
+            db_execute(
+                """INSERT IGNORE INTO charge_points
+                    (charge_point_id, name, vendor_name, model,
+                    cp_status, is_online, created_at, updated_at)
+                    VALUES (%s, %s, %s, %s, 'Available', 1, NOW(), NOW())""",
+                (
+                    self.id,
+                    self.id,
+                    charge_point_vendor,
+                    charge_point_model,
+                ),
+            )
+            logger.info(
+                "[%s] Auto-registered ke DB (vendor=%s, model=%s)",
+                self.id,
+                charge_point_vendor,
+                charge_point_model,
+            )
+            db_execute(
+                """INSERT IGNORE INTO configuration_keys
+                    (charge_point_id, key_name, value, readonly, created_at)
+                    VALUES (%s, 'SupportedFeatureProfiles',
+                            'Core,FirmwareManagement,RemoteTrigger', 0, NOW())
+                    ON DUPLICATE KEY UPDATE value=VALUES(value)""",
+                (self.id,),
+            )
+
     # ── 2. Heartbeat ─────────────────────────────────────────
     @on(Action.heartbeat)
     async def on_heartbeat(self, **kwargs):
         now = datetime.now(TZ_JAKARTA)
+        now_utc = datetime.now(timezone.utc)
         logger.info("[%s] Heartbeat", self.id)
         db_execute(
             "UPDATE charge_points SET last_heartbeat=%s, is_online=1, updated_at=%s WHERE charge_point_id=%s",
@@ -305,7 +336,9 @@ class ChargePoint(cp):
                 "last_heartbeat": now.isoformat(),
             },
         )
-        return call_result.Heartbeat(current_time=now.isoformat())
+        return call_result.Heartbeat(
+            current_time=now_utc.strftime("%Y-%m-%dT%H:%M:%SZ")
+        )
 
     # ── 3. Authorize ─────────────────────────────────────────
     @on(Action.authorize)
@@ -451,6 +484,18 @@ class ChargePoint(cp):
         )
 
         cp_pk = get_cp_pk(self.id)
+
+        if cp_pk is None:
+            db_execute(
+                """INSERT IGNORE INTO charge_points
+                    (charge_point_id, name, cp_status, is_online, created_at, updated_at)
+                    VALUES (%s, %s, 'Available', 1, NOW(), NOW())""",
+                (self.id, self.id),
+            )
+            cp_pk = get_cp_pk(self.id)
+            if cp_pk is None:
+                logger.error("[%s] Gagal auto-register charge point ke DB", self.id)
+                return call_result.StatusNotification()
 
         # [v0.5] Pakai charge_point_pk + last_status_at
         existing = db_fetchone(
@@ -993,6 +1038,107 @@ class ChargePoint(cp):
 
         return call_result.MeterValues()
 
+    # ── 8. DataTransfer (inbound: CP → CS) ──────────────────
+    @on(Action.DataTransfer)
+    async def on_data_transfer(self, vendor_id: str, **kwargs):
+        """
+        Menerima DataTransfer dari charger (vendor-specific message).
+        Spec OCPP 1.6 §4.3 — Core Profile.
+        Response: Accepted jika vendorId dikenal, UnknownVendorId jika tidak.
+        """
+        message_id = kwargs.get("message_id", "")
+        data = kwargs.get("data", "")
+
+        logger.info(
+            "[%s] DataTransfer — vendor: %s, message_id: %s, data: %s",
+            self.id,
+            vendor_id,
+            message_id,
+            data,
+        )
+
+        # Simpan ke DB untuk audit — kolom ocpp_messages jika ada,
+        # atau cukup log untuk sekarang
+        cp_pk = get_cp_pk(self.id)
+        db_execute(
+            """INSERT IGNORE INTO ocpp_raw_messages
+                (charge_point_pk, charge_point_id, direction, action,
+                 payload, received_at)
+                VALUES (%s, %s, 'inbound', 'DataTransfer', %s, NOW())""",
+            (
+                cp_pk,
+                self.id,
+                str({"vendor_id": vendor_id, "message_id": message_id, "data": data}),
+            ),
+        )
+
+        # Jika vendorId tidak dikenal, balas UnknownVendorId
+        # Untuk sekarang semua vendor diterima (Accepted)
+        return call_result.DataTransferPayload(
+            status=DataTransferStatus.accepted,
+        )
+
+    # ── 9. DiagnosticsStatusNotification (inbound: CP → CS) ─
+    @on(Action.DiagnosticsStatusNotification)
+    async def on_diagnostics_status_notification(self, status: str, **kwargs):
+        """
+        Charger melaporkan status upload diagnostics.
+        Spec OCPP 1.6 §4.4 — Firmware Management Profile.
+        Status: Idle | Uploading | Uploaded | UploadFailed
+        """
+        logger.info(
+            "[%s] DiagnosticsStatusNotification — status: %s",
+            self.id,
+            status,
+        )
+
+        cp_pk = get_cp_pk(self.id)
+        db_execute(
+            """UPDATE charge_points
+                SET diagnostics_status=%s, updated_at=NOW()
+                WHERE id=%s""",
+            (status, cp_pk),
+        )
+
+        await broadcast(
+            "update_cp_status",
+            self.id,
+            {"diagnostics_status": status},
+        )
+
+        return call_result.DiagnosticsStatusNotificationPayload()
+
+    # ── 10. FirmwareStatusNotification (inbound: CP → CS) ───
+    @on(Action.FirmwareStatusNotification)
+    async def on_firmware_status_notification(self, status: str, **kwargs):
+        """
+        Charger melaporkan status update firmware.
+        Spec OCPP 1.6 §4.5 — Firmware Management Profile.
+        Status: Downloaded | DownloadFailed | Downloading |
+                Idle | InstallationFailed | Installing | Installed
+        """
+        logger.info(
+            "[%s] FirmwareStatusNotification — status: %s",
+            self.id,
+            status,
+        )
+
+        cp_pk = get_cp_pk(self.id)
+        db_execute(
+            """UPDATE charge_points
+                SET firmware_status=%s, updated_at=NOW()
+                WHERE id=%s""",
+            (status, cp_pk),
+        )
+
+        await broadcast(
+            "update_cp_status",
+            self.id,
+            {"firmware_status": status},
+        )
+
+        return call_result.FirmwareStatusNotificationPayload()
+
     # ════════════════════════════════════════════════════════
     #  REMOTE COMMAND METHODS — dipanggil oleh remote_commands.py
     # ════════════════════════════════════════════════════════
@@ -1208,7 +1354,10 @@ class ChargePoint(cp):
 
         msg_map = {
             "BootNotification": MessageTrigger.boot_notification,
+            "DiagnosticsStatusNotification": MessageTrigger.diagnostics_status_notification,
+            "FirmwareStatusNotification": MessageTrigger.firmware_status_notification,
             "Heartbeat": MessageTrigger.heartbeat,
+            "MeterValues": MessageTrigger.meter_values,
             "StatusNotification": MessageTrigger.status_notification,
         }
         trigger = msg_map.get(requested_message, MessageTrigger.heartbeat)
@@ -1264,13 +1413,16 @@ class ChargePoint(cp):
 # ════════════════════════════════════════════════════════════
 
 
-async def on_connect(websocket, path=None):
+async def on_connect(websocket, path):
     # 1. Cek Subprotocol
-    if not websocket.subprotocol:
-        logger.warning(
-            "[%s] Tidak ada subprotocol — melanjutkan sebagai ocpp1.6 (charger non-standard).",
-            getattr(websocket, "path", "unknown"),
+    if websocket.subprotocol and websocket.subprotocol != "ocpp1.6":
+        logger.error(
+            "[%s] Koneksi ditolak: subprotocol tidak didukung: %s",
+            path,
+            websocket.subprotocol,
         )
+        await websocket.close(1002, "Unsupported subprotocol")
+        return
 
     # 2. Ambil Charge Point ID dari URL
     raw_path = path if path else getattr(websocket, "path", "/")

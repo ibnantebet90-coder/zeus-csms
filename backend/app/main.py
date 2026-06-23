@@ -6,9 +6,13 @@ sehingga ws_manager bisa di-share untuk real-time broadcast.
 
 import asyncio
 import logging
+import os
+from dotenv import load_dotenv
 from ocpp_server.central_system import auto_complete_stale_transactions
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
 from app.api import (
     auth,
@@ -81,8 +85,8 @@ async def start_ocpp_server():
         import websockets
         from ocpp_server.central_system import on_connect
 
-        ocpp_host = "0.0.0.0"
-        ocpp_port = 9000
+        ocpp_host = os.getenv("OCPP_HOST", "0.0.0.0")
+        ocpp_port = int(os.getenv("OCPP_PORT", "8887"))
 
         server = await websockets.serve(
             on_connect,

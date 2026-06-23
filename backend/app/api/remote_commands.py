@@ -96,6 +96,12 @@ def _log_command(
     status: str,
     user_id: int,
 ) -> int:
+    from app.models.models import ChargePoint as CPModel
+
+    cp_row = (
+        db.query(CPModel).filter(CPModel.charge_point_id == charge_point_id).first()
+    )
+    cp_pk = cp_row.id if cp_row else None
     log = SendCommand(
         charge_point_id=charge_point_id,
         command=command,
@@ -142,7 +148,7 @@ def get_active_transactions(
     # Join ke customers untuk tampilkan nama pelanggan di dropdown
     results = (
         db.query(
-            Transaction.transaction_id,
+            Transaction.ocpp_transaction_id,
             Transaction.connector_id,
             Transaction.id_tag,
             Transaction.start_timestamp,
@@ -160,7 +166,7 @@ def get_active_transactions(
 
     return [
         ActiveTransactionResponse(
-            transaction_id=row.transaction_id,
+            transaction_id=row.ocpp_transaction_id,
             connector_id=row.connector_id,
             id_tag=row.id_tag,
             customer_name=row.customer_name,
