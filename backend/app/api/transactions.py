@@ -13,24 +13,29 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
 from app.core.database import get_db
-from app.models.models import ChargePoint, Transaction, User
-from app.schemas.schemas import DashboardSummary, TransactionResponse
+from app.models.models import ChargePoint, Transaction, MeterValue, User
+from app.schemas.schemas import (
+    DashboardSummary,
+    TransactionResponse,
+    MeterValueResponse,
+)
 
 router = APIRouter(tags=["Transactions & Dashboard"])
 
 
 # ── Transactions ─────────────────────────────────────────────
 
+
 @router.get("/api/transactions", response_model=List[TransactionResponse])
 def list_transactions(
     charge_point_id: Optional[str] = Query(None),
-    status: Optional[str]          = Query(None),
-    date_from: Optional[date]      = Query(None),
-    date_to: Optional[date]        = Query(None),
-    limit: int                     = Query(50, le=500),
-    offset: int                    = Query(0),
-    db: Session                    = Depends(get_db),
-    _: User                        = Depends(get_current_user),
+    status: Optional[str] = Query(None),
+    date_from: Optional[date] = Query(None),
+    date_to: Optional[date] = Query(None),
+    limit: int = Query(50, le=500),
+    offset: int = Query(0),
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
 ):
     q = db.query(Transaction)
     if charge_point_id:
@@ -38,60 +43,103 @@ def list_transactions(
     if status:
         q = q.filter(Transaction.status == status)
     if date_from:
-        q = q.filter(Transaction.start_timestamp >= datetime.combine(date_from, datetime.min.time()))
+        q = q.filter(
+            Transaction.start_timestamp
+            >= datetime.combine(date_from, datetime.min.time())
+        )
     if date_to:
-        q = q.filter(Transaction.start_timestamp <= datetime.combine(date_to, datetime.max.time()))
-    return q.order_by(Transaction.start_timestamp.desc()).offset(offset).limit(limit).all()
+        q = q.filter(
+            Transaction.start_timestamp
+            <= datetime.combine(date_to, datetime.max.time())
+        )
+    return (
+        q.order_by(Transaction.start_timestamp.desc()).offset(offset).limit(limit).all()
+    )
 
 
 @router.get("/api/transactions/{transaction_id}", response_model=TransactionResponse)
 def get_transaction(
     transaction_id: int,
     db: Session = Depends(get_db),
-    _: User     = Depends(get_current_user),
+    _: User = Depends(get_current_user),
 ):
     tx = db.query(Transaction).filter(Transaction.id == transaction_id).first()
     if not tx:
         from fastapi import HTTPException
+
         raise HTTPException(status_code=404, detail="Transaksi tidak ditemukan")
     return tx
 
 
+@router.get(
+    "/api/transactions/{transaction_id}/meter-values",
+    response_model=List[MeterValueResponse],
+)
+def get_transaction_meter_values(
+    transaction_id: int,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+):
+    """Histori lengkap meter_values untuk satu transaksi — dipakai chart monitoring realtime."""
+    return (
+        db.query(MeterValue)
+        .filter(MeterValue.transaction_pk == transaction_id)
+        .order_by(MeterValue.timestamp.asc())
+        .all()
+    )
+
+
 # ── Dashboard Summary ────────────────────────────────────────
+
 
 @router.get("/api/dashboard/summary", response_model=DashboardSummary)
 def dashboard_summary(
     db: Session = Depends(get_db),
-    _: User     = Depends(get_current_user),
+    _: User = Depends(get_current_user),
 ):
     today_start = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
 
-    total_cp  = db.query(func.count(ChargePoint.id)).scalar() or 0
-    online_cp = db.query(func.count(ChargePoint.id)).filter(
-        ChargePoint.is_online == True
-    ).scalar() or 0
+    total_cp = db.query(func.count(ChargePoint.id)).scalar() or 0
+    online_cp = (
+        db.query(func.count(ChargePoint.id))
+        .filter(ChargePoint.is_online == True)
+        .scalar()
+        or 0
+    )
 
-    active_tx = db.query(func.count(Transaction.id)).filter(
-        Transaction.status == "Active"
-    ).scalar() or 0
+    active_tx = (
+        db.query(func.count(Transaction.id))
+        .filter(Transaction.status == "Active")
+        .scalar()
+        or 0
+    )
 
-    today_tx = db.query(func.count(Transaction.id)).filter(
-        Transaction.start_timestamp >= today_start
-    ).scalar() or 0
+    today_tx = (
+        db.query(func.count(Transaction.id))
+        .filter(Transaction.start_timestamp >= today_start)
+        .scalar()
+        or 0
+    )
 
-    today_energy = db.query(
-        func.coalesce(func.sum(Transaction.energy_consumed_kwh), 0)
-    ).filter(
-        Transaction.start_timestamp >= today_start,
-        Transaction.status == "Completed",
-    ).scalar() or 0
+    today_energy = (
+        db.query(func.coalesce(func.sum(Transaction.energy_consumed_kwh), 0))
+        .filter(
+            Transaction.start_timestamp >= today_start,
+            Transaction.status == "Completed",
+        )
+        .scalar()
+        or 0
+    )
 
-    today_revenue = db.query(
-        func.coalesce(func.sum(Transaction.total_cost), 0)
-    ).filter(
-        Transaction.start_timestamp >= today_start,
-        Transaction.status == "Completed",
-    ).scalar() or 0
+    today_revenue = (
+        db.query(func.coalesce(func.sum(Transaction.total_cost), 0))
+        .filter(
+            Transaction.start_timestamp >= today_start,
+            Transaction.status == "Completed",
+        )
+        .scalar()
+        or 0
+    )
 
     return DashboardSummary(
         total_charge_points=total_cp,

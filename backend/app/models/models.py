@@ -186,6 +186,27 @@ class Transaction(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    # [Billing v0.5] Komponen biaya — diisi billing_calculator saat StopTransaction
+    pricing_scheme = Column(
+        Enum("free", "subsidized", "commercial"), default="commercial"
+    )
+    energy_cost = Column(Numeric(12, 2))
+    pbjt_rate = Column(Numeric(5, 4))
+    pbjt_amount = Column(Numeric(12, 2))
+    service_fee_per_kwh = Column(Numeric(10, 2))
+    service_fee_amount = Column(Numeric(12, 2))
+    subtotal = Column(Numeric(12, 2))
+    ppn_rate = Column(Numeric(5, 4))
+    ppn_base = Column(Numeric(12, 2))
+    ppn_amount = Column(Numeric(12, 2))
+    total_amount = Column(Numeric(12, 2))
+
+    # [Billing v0.5] Voucher/diskon
+    voucher_code = Column(String(64))
+    discount_type = Column(Enum("percent", "fixed"))
+    discount_value = Column(Numeric(10, 2))
+    discount_amount = Column(Numeric(12, 2))
+
     charge_point = relationship("ChargePoint", back_populates="transactions")
     customer = relationship("Customer", back_populates="transactions")
 

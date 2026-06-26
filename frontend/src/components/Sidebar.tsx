@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, BatteryCharging, Users, Receipt,
   Bell, LogOut, Settings, Map, Activity, TrendingUp,
-  BarChart3, Terminal, FileBarChart2,
+  BarChart3, Terminal, FileBarChart2, Ticket,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
@@ -16,6 +16,7 @@ const navItems = [
   { href: "/dashboard/map", icon: Map, label: "Peta Lokasi" },
   { href: "/dashboard/customers", icon: Users, label: "Customers" },
   { href: "/dashboard/transactions", icon: Receipt, label: "Transaksi" },
+  { href: "/dashboard/vouchers", icon: Ticket, label: "Voucher" },
   { href: "/dashboard/report", icon: FileBarChart2, label: "Laporan" },
   { href: "/dashboard/alerts", icon: Bell, label: "Alerts" },
   { href: "/dashboard/energy", icon: BarChart3, label: "Energi" },

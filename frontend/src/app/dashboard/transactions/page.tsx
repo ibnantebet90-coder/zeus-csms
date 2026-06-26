@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Receipt, RefreshCw, Download, X, ChevronRight,
-  Zap, Clock, BatteryCharging, Filter,
+  Zap, Clock, BatteryCharging, Filter, Ticket, Check,
 } from "lucide-react";
 import api from "@/lib/axios";
 
@@ -24,6 +24,23 @@ interface Transaction {
   total_cost: number | null;
   stop_reason: string | null;
   status: string;
+
+  // [Billing v0.5]
+  pricing_scheme: string | null;
+  energy_cost: number | null;
+  pbjt_rate: number | null;
+  pbjt_amount: number | null;
+  service_fee_per_kwh: number | null;
+  service_fee_amount: number | null;
+  subtotal: number | null;
+  ppn_rate: number | null;
+  ppn_base: number | null;
+  ppn_amount: number | null;
+  total_amount: number | null;
+  voucher_code: string | null;
+  discount_type: string | null;
+  discount_value: number | null;
+  discount_amount: number | null;
 }
 
 // ── Helpers ───────────────────────────────────────────────────
@@ -42,13 +59,73 @@ const formatDuration = (start: string | null, stop: string | null) => {
 };
 
 const statusStyle: Record<string, string> = {
-  Active:    "text-blue-400 bg-blue-500/10 border-blue-500/20",
+  Active: "text-blue-400 bg-blue-500/10 border-blue-500/20",
   Completed: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
-  Invalid:   "text-gray-400 bg-gray-700/50 border-gray-600/20",
+  Invalid: "text-gray-400 bg-gray-700/50 border-gray-600/20",
 };
+
+// ── Apply Voucher ─────────────────────────────────────────────
+function ApplyVoucherForm({ tx }: { tx: Transaction }) {
+  const qc = useQueryClient();
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+
+  const applyMut = useMutation({
+    mutationFn: (voucher_code: string) =>
+      api.post("/api/vouchers/apply", { transaction_id: tx.id, voucher_code }),
+    onSuccess: () => {
+      setError("");
+      setSuccess(true);
+      qc.invalidateQueries({ queryKey: ["transactions"] });
+    },
+    onError: (err: any) => {
+      setSuccess(false);
+      setError(err.response?.data?.detail ?? "Gagal menerapkan voucher");
+    },
+  });
+
+  if (success) {
+    return (
+      <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-3 py-2.5">
+        <Check className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+        <p className="text-xs text-emerald-400">Voucher berhasil diterapkan. Tutup dan buka kembali detail untuk lihat total terbaru.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-gray-800/50 rounded-xl p-4 space-y-2.5">
+      <p className="text-xs font-medium text-gray-400 flex items-center gap-1.5">
+        <Ticket className="w-3.5 h-3.5" /> Pakai Voucher
+      </p>
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+          <p className="text-xs text-red-400">{error}</p>
+        </div>
+      )}
+      <div className="flex gap-2">
+        <input
+          value={code}
+          onChange={(e) => setCode(e.target.value.toUpperCase())}
+          placeholder="Kode voucher"
+          className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500 transition-colors font-mono"
+        />
+        <button
+          onClick={() => code && applyMut.mutate(code)}
+          disabled={!code || applyMut.isPending}
+          className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 text-gray-950 font-semibold text-xs rounded-lg transition-colors flex-shrink-0">
+          {applyMut.isPending ? "..." : "Terapkan"}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 // ── Detail Panel ──────────────────────────────────────────────
 function DetailPanel({ tx, onClose }: { tx: Transaction; onClose: () => void }) {
+  const displayTotal = tx.total_amount ?? tx.total_cost;
+
   return (
     <div className="fixed inset-0 z-50 flex">
       <div className="flex-1 bg-black/60" onClick={onClose} />
@@ -83,7 +160,7 @@ function DetailPanel({ tx, onClose }: { tx: Transaction; onClose: () => void }) 
             <div className="bg-gray-800 rounded-xl p-3 text-center">
               <Receipt className="w-4 h-4 text-amber-400 mx-auto mb-1" />
               <p className="text-lg font-bold text-white">
-                {tx.total_cost ? formatIDR(tx.total_cost) : "-"}
+                {displayTotal != null ? formatIDR(displayTotal) : "-"}
               </p>
               <p className="text-xs text-gray-500">Total Biaya</p>
             </div>
@@ -102,6 +179,59 @@ function DetailPanel({ tx, onClose }: { tx: Transaction; onClose: () => void }) 
               <p className="text-xs text-gray-500">Tarif/kWh</p>
             </div>
           </div>
+
+          {/* Rincian Biaya */}
+          {tx.total_amount != null && (
+            <div className="bg-gray-800/50 rounded-xl p-4 space-y-2">
+              <p className="text-xs font-medium text-gray-400 mb-2">Rincian Biaya</p>
+              {[
+                { label: "Biaya Energi", value: tx.energy_cost },
+                { label: `PBJT-TL (${tx.pbjt_rate != null ? (tx.pbjt_rate * 100).toFixed(0) : "-"}%)`, value: tx.pbjt_amount },
+                { label: "Service Fee", value: tx.service_fee_amount },
+                { label: "Subtotal", value: tx.subtotal, bold: true },
+              ].map(({ label, value, bold }) => (
+                <div key={label} className="flex items-center justify-between">
+                  <span className="text-xs text-gray-500">{label}</span>
+                  <span className={`text-xs ${bold ? "font-semibold text-white" : "text-gray-300"}`}>
+                    {value != null ? formatIDR(value) : "-"}
+                  </span>
+                </div>
+              ))}
+
+              {tx.voucher_code && (
+                <div className="flex items-center justify-between pt-1 border-t border-gray-700/50">
+                  <span className="text-xs text-emerald-400">
+                    Voucher {tx.voucher_code}
+                    {tx.discount_type === "percent" && tx.discount_value != null && ` (-${tx.discount_value}%)`}
+                  </span>
+                  <span className="text-xs text-emerald-400">
+                    -{formatIDR(tx.discount_amount ?? 0)}
+                  </span>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-500">
+                  PPN ({tx.ppn_rate != null ? (tx.ppn_rate * 100).toFixed(0) : "-"}%)
+                </span>
+                <span className="text-xs text-gray-300">
+                  {tx.ppn_amount != null ? formatIDR(tx.ppn_amount) : "-"}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-gray-700">
+                <span className="text-xs font-semibold text-white">Total Bayar</span>
+                <span className="text-sm font-bold text-emerald-400">
+                  {formatIDR(tx.total_amount)}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Pakai Voucher — hanya untuk transaksi Completed yang belum pakai voucher */}
+          {tx.status === "Completed" && !tx.voucher_code && (
+            <ApplyVoucherForm tx={tx} />
+          )}
 
           {/* Detail rows */}
           <div className="space-y-3">
@@ -135,24 +265,30 @@ function exportCSV(data: Transaction[]) {
   const headers = [
     "ID", "Transaction ID", "Charge Point", "Konektor", "ID Tag",
     "Mulai", "Selesai", "Durasi", "Meter Start (Wh)", "Meter Stop (Wh)",
-    "Energi (kWh)", "Tarif (Rp/kWh)", "Total (Rp)", "Stop Reason", "Status",
+    "Energi (kWh)", "Tarif (Rp/kWh)",
+    "Biaya Energi", "PBJT", "Service Fee", "Subtotal",
+    "Voucher", "Diskon", "PPN", "Total (Rp)",
+    "Stop Reason", "Status",
   ];
   const rows = data.map((tx) => [
     tx.id, tx.transaction_id, tx.charge_point_id, tx.connector_id,
     tx.id_tag ?? "",
     tx.start_timestamp ? new Date(tx.start_timestamp).toLocaleString("id-ID") : "",
-    tx.stop_timestamp  ? new Date(tx.stop_timestamp).toLocaleString("id-ID")  : "",
+    tx.stop_timestamp ? new Date(tx.stop_timestamp).toLocaleString("id-ID") : "",
     formatDuration(tx.start_timestamp, tx.stop_timestamp),
     tx.meter_start ?? "", tx.meter_stop ?? "",
     tx.energy_consumed_kwh ?? "", tx.tariff_per_kwh ?? "",
-    tx.total_cost ?? "", tx.stop_reason ?? "", tx.status,
+    tx.energy_cost ?? "", tx.pbjt_amount ?? "", tx.service_fee_amount ?? "", tx.subtotal ?? "",
+    tx.voucher_code ?? "", tx.discount_amount ?? "", tx.ppn_amount ?? "",
+    tx.total_amount ?? tx.total_cost ?? "",
+    tx.stop_reason ?? "", tx.status,
   ]);
 
   const csv = [headers, ...rows].map((r) => r.map((v) => `"${v}"`).join(",")).join("\n");
   const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement("a");
-  a.href     = url;
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
   a.download = `transaksi_zeus_${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
@@ -160,21 +296,21 @@ function exportCSV(data: Transaction[]) {
 
 // ── Main Page ─────────────────────────────────────────────────
 export default function TransactionsPage() {
-  const [selected, setSelected]     = useState<Transaction | null>(null);
-  const [statusFilter, setStatus]   = useState("all");
-  const [cpFilter, setCp]           = useState("");
-  const [dateFrom, setDateFrom]     = useState("");
-  const [dateTo, setDateTo]         = useState("");
+  const [selected, setSelected] = useState<Transaction | null>(null);
+  const [statusFilter, setStatus] = useState("all");
+  const [cpFilter, setCp] = useState("");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
   const [showFilter, setShowFilter] = useState(false);
-  const [limit, setLimit]           = useState(50);
+  const [limit, setLimit] = useState(50);
 
   // Build query params
   const params = new URLSearchParams();
   params.set("limit", String(limit));
   if (statusFilter !== "all") params.set("status", statusFilter);
-  if (cpFilter)  params.set("charge_point_id", cpFilter);
-  if (dateFrom)  params.set("date_from", dateFrom);
-  if (dateTo)    params.set("date_to", dateTo);
+  if (cpFilter) params.set("charge_point_id", cpFilter);
+  if (dateFrom) params.set("date_from", dateFrom);
+  if (dateTo) params.set("date_to", dateTo);
 
   const { data: transactions = [], isLoading, refetch } = useQuery<Transaction[]>({
     queryKey: ["transactions", statusFilter, cpFilter, dateFrom, dateTo, limit],
@@ -183,11 +319,11 @@ export default function TransactionsPage() {
   });
 
   // Stats
-  const total     = transactions.length;
-  const active    = transactions.filter((t) => t.status === "Active").length;
+  const total = transactions.length;
+  const active = transactions.filter((t) => t.status === "Active").length;
   const completed = transactions.filter((t) => t.status === "Completed").length;
-  const totalEnergy  = transactions.reduce((s, t) => s + (t.energy_consumed_kwh ?? 0), 0);
-  const totalRevenue = transactions.reduce((s, t) => s + (t.total_cost ?? 0), 0);
+  const totalEnergy = transactions.reduce((s, t) => s + (t.energy_consumed_kwh ?? 0), 0);
+  const totalRevenue = transactions.reduce((s, t) => s + (t.total_amount ?? t.total_cost ?? 0), 0);
 
   const hasFilter = statusFilter !== "all" || cpFilter || dateFrom || dateTo;
 
@@ -205,11 +341,10 @@ export default function TransactionsPage() {
         </div>
         <div className="flex items-center gap-2">
           <button onClick={() => setShowFilter(!showFilter)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
-              showFilter || hasFilter
-                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                : "bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white"
-            }`}>
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${showFilter || hasFilter
+              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+              : "bg-gray-800 hover:bg-gray-700 text-gray-400 hover:text-white"
+              }`}>
             <Filter className="w-4 h-4" />
             Filter {hasFilter && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
           </button>
@@ -227,10 +362,10 @@ export default function TransactionsPage() {
       {/* Summary */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
         {[
-          { label: "Aktif",     value: active,                             color: "text-blue-400"    },
-          { label: "Selesai",   value: completed,                          color: "text-emerald-400" },
-          { label: "Total Energi", value: `${totalEnergy.toFixed(1)} kWh`, color: "text-amber-400"  },
-          { label: "Total Pendapatan", value: formatIDR(totalRevenue),     color: "text-purple-400" },
+          { label: "Aktif", value: active, color: "text-blue-400" },
+          { label: "Selesai", value: completed, color: "text-emerald-400" },
+          { label: "Total Energi", value: `${totalEnergy.toFixed(1)} kWh`, color: "text-amber-400" },
+          { label: "Total Pendapatan", value: formatIDR(totalRevenue), color: "text-purple-400" },
         ].map((s) => (
           <div key={s.label} className="bg-gray-900 border border-gray-800 rounded-xl p-4">
             <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
@@ -335,7 +470,7 @@ export default function TransactionsPage() {
                       {tx.energy_consumed_kwh != null ? `${tx.energy_consumed_kwh} kWh` : "-"}
                     </td>
                     <td className="px-4 py-3 text-xs text-right text-white">
-                      {tx.total_cost != null ? formatIDR(tx.total_cost) : "-"}
+                      {(tx.total_amount ?? tx.total_cost) != null ? formatIDR(tx.total_amount ?? tx.total_cost!) : "-"}
                     </td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-0.5 rounded-md text-xs font-medium border ${statusStyle[tx.status] ?? statusStyle.Invalid}`}>

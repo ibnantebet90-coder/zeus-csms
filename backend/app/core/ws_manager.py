@@ -56,12 +56,6 @@ class ConnectionManager:
         text = json.dumps(message)
         dead = set()
         for ws in self.active.copy():
-
-            try:
-                await ws.send_text(message)  # type: ignore
-            except Exception:
-                pass
-
             try:
                 await ws.send_text(text)
             except Exception:
@@ -180,16 +174,10 @@ class ExternalWSManager:
         text = json.dumps(data)
         dead = set()
         for ws in self.active.copy():
-
-            try:
-                await ws.send_text(message)
-            except Exception:
-                # koneksi sudah closed, skip
-                pass
-
             try:
                 await ws.send_text(text)
             except Exception:
+                # koneksi sudah closed, skip
                 dead.add(ws)
         for ws in dead:
             self.active.discard(ws)

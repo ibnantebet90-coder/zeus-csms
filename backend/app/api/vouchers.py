@@ -11,7 +11,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 from app.core.database import get_db
-from app.core.auth import get_current_user
+from app.api.deps import get_current_user
 from app.core.billing_calculator import calculate_billing
 
 router = APIRouter(prefix="/api/vouchers", tags=["Vouchers"])

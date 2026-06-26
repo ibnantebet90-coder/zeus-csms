@@ -169,6 +169,47 @@ class TransactionResponse(BaseModel):
     status: str
     auto_completed: bool
 
+    # [Billing v0.5]
+    pricing_scheme: Optional[str] = None
+    energy_cost: Optional[float] = None
+    pbjt_rate: Optional[float] = None
+    pbjt_amount: Optional[float] = None
+    service_fee_per_kwh: Optional[float] = None
+    service_fee_amount: Optional[float] = None
+    subtotal: Optional[float] = None
+    ppn_rate: Optional[float] = None
+    ppn_base: Optional[float] = None
+    ppn_amount: Optional[float] = None
+    total_amount: Optional[float] = None
+    voucher_code: Optional[str] = None
+    discount_type: Optional[str] = None
+    discount_value: Optional[float] = None
+    discount_amount: Optional[float] = None
+
+    class Config:
+        from_attributes = True
+
+
+# ════════════════════════════════════════════════════════════
+#  METER VALUES (Monitoring Realtime)
+# ════════════════════════════════════════════════════════════
+
+
+class MeterValueResponse(BaseModel):
+    id: int
+    transaction_pk: Optional[int]
+    ocpp_transaction_id: Optional[int]
+    charge_point_id: str
+    connector_id: int
+    timestamp: datetime
+    measurand: str
+    value: Optional[float]
+    unit: Optional[str]
+    context: Optional[str]
+    format: Optional[str]
+    phase: Optional[str]
+    location: Optional[str]
+
     class Config:
         from_attributes = True
 
