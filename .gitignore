@@ -30,3 +30,4 @@ backend/csms.log
 backend/*.log
 
 backend/frontend/
+zeus_csms_backup_*.sql
