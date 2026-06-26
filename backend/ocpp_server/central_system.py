@@ -205,7 +205,9 @@ async def auto_complete_stale_transactions():
                     int(tx["last_meter"]) if tx["last_meter"] else tx["meter_start"]
                 )
                 energy_kwh = None
-                total_cost = None
+                billing = None
+                stop_ts = datetime.now(TZ_JAKARTA).replace(tzinfo=None)
+                cp_pk = get_cp_pk(charge_point_id)
 
                 if tx["meter_start"] and meter_stop:
                     energy_kwh = round((meter_stop - tx["meter_start"]) / 1000, 3)
@@ -232,8 +234,6 @@ async def auto_complete_stale_transactions():
                                 ppn_rate=float(tariff_row["ppn_rate"]),
                                 pricing_scheme="commercial",
                             )
-                        else:
-                            billing = None
 
                 db_execute(
                     """UPDATE transactions SET
@@ -249,7 +249,7 @@ async def auto_complete_stale_transactions():
                     (
                         meter_stop,
                         stop_ts,
-                        reason,
+                        "AutoComplete",
                         energy_kwh,
                         float(billing.tariff_per_kwh) if billing else None,
                         float(billing.energy_cost) if billing else None,
@@ -263,13 +263,13 @@ async def auto_complete_stale_transactions():
                         float(billing.ppn_amount) if billing else None,
                         float(billing.total_amount) if billing else None,
                         float(billing.total_amount) if billing else None,
-                        tx["tx_pk"],
+                        tx_pk,
                     ),
                 )
 
                 logger.info(
                     "[%s] Billing — energi: %.3f kWh, subtotal: %s, diskon: %s, PPN: %s, total: %s",
-                    self.id,
+                    charge_point_id,
                     energy_kwh,
                     billing.subtotal if billing else "-",
                     billing.discount_amount if billing else "-",
@@ -313,7 +313,7 @@ async def auto_complete_stale_transactions():
                         "transaction_id": ocpp_transaction_id,
                         "meter_stop": meter_stop,
                         "energy_kwh": energy_kwh,
-                        "total_cost": total_cost,
+                        "total_cost": float(billing.total_amount) if billing else None,
                         "status": "Completed",
                     },
                 )
@@ -696,15 +696,35 @@ class ChargePoint(cp):
                     if last_mv and last_mv["last_meter"]
                     else active_tx["meter_start"]
                 )
+                from app.core.billing_calculator import calculate_billing
+
+                stop_ts = parse_timestamp(kwargs.get("timestamp"))
                 energy_kwh = None
-                total_cost = None
+                billing = None
+
                 if active_tx["meter_start"] is not None:
                     energy_kwh = round(
                         (meter_stop - active_tx["meter_start"]) / 1000, 3
                     )
-                    if active_tx["tariff_per_kwh"]:
-                        total_cost = round(
-                            energy_kwh * float(active_tx["tariff_per_kwh"]), 2
+
+                    tariff_row = db_fetchone(
+                        """SELECT cost_per_kwh, pbjt_rate, service_fee_per_kwh, ppn_rate
+                        FROM tariffs
+                        WHERE charge_point_pk = %s AND is_active = 1
+                        ORDER BY created_at DESC LIMIT 1""",
+                        (cp_pk,),
+                    )
+
+                    if tariff_row and energy_kwh > 0:
+                        billing = calculate_billing(
+                            energy_kwh=energy_kwh,
+                            tariff_per_kwh=float(tariff_row["cost_per_kwh"]),
+                            pbjt_rate=float(tariff_row["pbjt_rate"]),
+                            service_fee_per_kwh=float(
+                                tariff_row["service_fee_per_kwh"]
+                            ),
+                            ppn_rate=float(tariff_row["ppn_rate"]),
+                            pricing_scheme="commercial",
                         )
 
                 db_execute(
@@ -721,7 +741,7 @@ class ChargePoint(cp):
                     (
                         meter_stop,
                         stop_ts,
-                        reason,
+                        "StatusNotification",
                         energy_kwh,
                         float(billing.tariff_per_kwh) if billing else None,
                         float(billing.energy_cost) if billing else None,
@@ -735,7 +755,7 @@ class ChargePoint(cp):
                         float(billing.ppn_amount) if billing else None,
                         float(billing.total_amount) if billing else None,
                         float(billing.total_amount) if billing else None,
-                        tx["tx_pk"],
+                        active_tx["tx_pk"],
                     ),
                 )
 
@@ -761,7 +781,7 @@ class ChargePoint(cp):
                         "transaction_id": active_tx["ocpp_transaction_id"],
                         "meter_stop": meter_stop,
                         "energy_kwh": energy_kwh,
-                        "total_cost": total_cost,
+                        "total_cost": float(billing.total_amount) if billing else None,
                         "status": "Completed",
                     },
                 )
@@ -975,14 +995,17 @@ class ChargePoint(cp):
             )
             return call_result.StopTransaction()
 
+        from app.core.billing_calculator import calculate_billing
+
+        stop_ts = parse_timestamp(timestamp)
+        cp_pk = get_cp_pk(self.id)
+
         energy_kwh = None
-        total_cost = None
+        billing = None
 
         if tx["meter_start"] is not None:
             energy_wh = meter_stop - tx["meter_start"]
             energy_kwh = round(energy_wh / 1000, 3)
-            if tx["tariff_per_kwh"]:
-                from app.core.billing_calculator import calculate_billing
 
             # Ambil tarif lengkap dari DB
             tariff_row = db_fetchone(
@@ -1002,10 +1025,12 @@ class ChargePoint(cp):
                     ppn_rate=float(tariff_row["ppn_rate"]),
                     pricing_scheme="commercial",
                 )
-            else:
-                billing = None
+
             logger.info(
-                "[%s] Energi: %s kWh, biaya: %s", self.id, energy_kwh, total_cost
+                "[%s] Energi: %s kWh, total: %s",
+                self.id,
+                energy_kwh,
+                billing.total_amount if billing else None,
             )
 
         # [v0.5] Update via PK internal (id)
@@ -1067,7 +1092,7 @@ class ChargePoint(cp):
                 "transaction_id": ocpp_transaction_id,
                 "meter_stop": meter_stop,
                 "energy_kwh": energy_kwh,
-                "total_cost": total_cost,
+                "total_cost": float(billing.total_amount) if billing else None,
                 "status": "Completed",
             },
         )
@@ -1080,7 +1105,7 @@ class ChargePoint(cp):
                 "connector_id": connector_id,
                 "meter_stop_wh": meter_stop,
                 "energy_kwh": energy_kwh,
-                "total_cost": total_cost,
+                "total_cost": float(billing.total_amount) if billing else None,
                 "timestamp": timestamp,
             }
         )
