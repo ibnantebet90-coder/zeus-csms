@@ -28,6 +28,7 @@ from app.api import (
     remote_commands,
     report,
     external_ws,
+    vouchers,
 )
 
 # [v0.5] customers dan charging_limit digabung dalam satu file
@@ -72,6 +73,7 @@ app.include_router(energy_monitoring.router)
 app.include_router(remote_commands.router)
 app.include_router(report.router)
 app.include_router(external_ws.router)
+app.include_router(vouchers.router)
 
 
 # ── Background task — jalankan OCPP server dalam proses yang sama ──

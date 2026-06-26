@@ -103,6 +103,7 @@ def _log_command(
     )
     cp_pk = cp_row.id if cp_row else None
     log = SendCommand(
+        charge_point_pk=cp_pk,
         charge_point_id=charge_point_id,
         command=command,
         payload=payload,

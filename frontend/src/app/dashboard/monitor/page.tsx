@@ -70,7 +70,8 @@ export default function MonitorPage() {
     function connect() {
       if (destroyed) return;
       if (ws && (ws.readyState === WebSocket.CONNECTING || ws.readyState === WebSocket.OPEN)) return;
-      ws = new WebSocket("ws://127.0.0.1:8000/ws/monitor");
+      const wsBase = process.env.NEXT_PUBLIC_WS_URL || "ws://127.0.0.1:8000";
+      ws = new WebSocket(`${wsBase}/ws/monitor`);
 
       ws.onopen = () => { if (!destroyed) setWsConnected(true); };
       ws.onclose = () => { if (!destroyed) { setWsConnected(false); setTimeout(connect, 3000); } };
@@ -154,6 +155,19 @@ export default function MonitorPage() {
             qc.invalidateQueries({ queryKey: ["transactions"] });
             qc.invalidateQueries({ queryKey: ["transactions-recent"] });
             qc.invalidateQueries({ queryKey: ["dashboard-summary"] });
+          }
+
+          if (msg.type === "meter_value_update") {
+            setCpStates(prev => {
+              const cpId = msg.charge_point_id;
+              if (!prev[cpId]) return prev;
+              return {
+                ...prev, [cpId]: {
+                  ...prev[cpId],
+                  last_meter: msg.data,
+                }
+              };
+            });
           }
         } catch { }
       };

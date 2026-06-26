@@ -4,6 +4,7 @@ Broadcast real-time status charge point ke semua client frontend.
 """
 
 import asyncio
+from email import message
 import json
 import logging
 from typing import Dict, Set
@@ -55,6 +56,12 @@ class ConnectionManager:
         text = json.dumps(message)
         dead = set()
         for ws in self.active.copy():
+
+            try:
+                await ws.send_text(message)  # type: ignore
+            except Exception:
+                pass
+
             try:
                 await ws.send_text(text)
             except Exception:
@@ -173,6 +180,13 @@ class ExternalWSManager:
         text = json.dumps(data)
         dead = set()
         for ws in self.active.copy():
+
+            try:
+                await ws.send_text(message)
+            except Exception:
+                # koneksi sudah closed, skip
+                pass
+
             try:
                 await ws.send_text(text)
             except Exception:

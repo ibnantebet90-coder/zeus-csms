@@ -63,7 +63,21 @@ class ChargePoint(Base):
     latitude = Column(Numeric(10, 7))
     longitude = Column(Numeric(10, 7))
     number_of_connectors = Column(SmallInteger, default=1)
-    cp_status = Column(String(32), default="Unknown")
+    cp_status = Column(
+        Enum(
+            "Available",
+            "Preparing",
+            "Charging",
+            "SuspendedEVSE",
+            "SuspendedEV",
+            "Finishing",
+            "Reserved",
+            "Unavailable",
+            "Faulted",
+            "Unknown",
+        ),
+        default="Unknown",
+    )
     is_online = Column(Boolean, default=False)
     last_heartbeat = Column(DateTime)
     vendor_name = Column(String(64))
@@ -88,7 +102,21 @@ class Connector(Base):
     charge_point_pk = Column(Integer, ForeignKey("charge_points.id"), nullable=False)
     charge_point_id = Column(String(64), nullable=False)
     connector_id = Column(SmallInteger, nullable=False)
-    status = Column(String(32), default="Unknown")
+    status = Column(
+        Enum(
+            "Available",
+            "Preparing",
+            "Charging",
+            "SuspendedEVSE",
+            "SuspendedEV",
+            "Finishing",
+            "Reserved",
+            "Unavailable",
+            "Faulted",
+            "Unknown",
+        ),
+        default="Unknown",
+    )
     error_code = Column(String(64))
     vendor_id = Column(String(64))
     vendor_error_code = Column(String(64))

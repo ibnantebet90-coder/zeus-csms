@@ -210,15 +210,71 @@ async def auto_complete_stale_transactions():
                 if tx["meter_start"] and meter_stop:
                     energy_kwh = round((meter_stop - tx["meter_start"]) / 1000, 3)
                     if tx["tariff_per_kwh"]:
-                        total_cost = round(energy_kwh * float(tx["tariff_per_kwh"]), 2)
+                        from app.core.billing_calculator import calculate_billing
+
+                        # Ambil tarif lengkap dari DB
+                        tariff_row = db_fetchone(
+                            """SELECT cost_per_kwh, pbjt_rate, service_fee_per_kwh, ppn_rate
+                            FROM tariffs
+                            WHERE charge_point_pk = %s AND is_active = 1
+                            ORDER BY created_at DESC LIMIT 1""",
+                            (cp_pk,),
+                        )
+
+                        if tariff_row and energy_kwh > 0:
+                            billing = calculate_billing(
+                                energy_kwh=energy_kwh,
+                                tariff_per_kwh=float(tariff_row["cost_per_kwh"]),
+                                pbjt_rate=float(tariff_row["pbjt_rate"]),
+                                service_fee_per_kwh=float(
+                                    tariff_row["service_fee_per_kwh"]
+                                ),
+                                ppn_rate=float(tariff_row["ppn_rate"]),
+                                pricing_scheme="commercial",
+                            )
+                        else:
+                            billing = None
 
                 db_execute(
                     """UPDATE transactions SET
-                        meter_stop=%s, stop_timestamp=NOW(), stop_reason='AutoCompleted',
-                        energy_consumed_kwh=%s, total_cost=%s,
-                        status='Completed', auto_completed=1, updated_at=NOW()
-                        WHERE id=%s AND status='Active'""",
-                    (meter_stop, energy_kwh, total_cost, tx_pk),
+                        meter_stop=%s, stop_timestamp=%s, stop_reason=%s,
+                        energy_consumed_kwh=%s,
+                        tariff_per_kwh=%s, energy_cost=%s,
+                        pbjt_rate=%s, pbjt_amount=%s,
+                        service_fee_per_kwh=%s, service_fee_amount=%s,
+                        subtotal=%s, ppn_rate=%s, ppn_base=%s, ppn_amount=%s,
+                        total_cost=%s, total_amount=%s,
+                        status='Completed'
+                    WHERE id=%s""",
+                    (
+                        meter_stop,
+                        stop_ts,
+                        reason,
+                        energy_kwh,
+                        float(billing.tariff_per_kwh) if billing else None,
+                        float(billing.energy_cost) if billing else None,
+                        float(billing.pbjt_rate) if billing else None,
+                        float(billing.pbjt_amount) if billing else None,
+                        float(billing.service_fee_per_kwh) if billing else None,
+                        float(billing.service_fee_amount) if billing else None,
+                        float(billing.subtotal) if billing else None,
+                        float(billing.ppn_rate) if billing else None,
+                        float(billing.ppn_base) if billing else None,
+                        float(billing.ppn_amount) if billing else None,
+                        float(billing.total_amount) if billing else None,
+                        float(billing.total_amount) if billing else None,
+                        tx["tx_pk"],
+                    ),
+                )
+
+                logger.info(
+                    "[%s] Billing — energi: %.3f kWh, subtotal: %s, diskon: %s, PPN: %s, total: %s",
+                    self.id,
+                    energy_kwh,
+                    billing.subtotal if billing else "-",
+                    billing.discount_amount if billing else "-",
+                    billing.ppn_amount if billing else "-",
+                    billing.total_amount if billing else "-",
                 )
 
                 cp_row = db_fetchone(
@@ -273,42 +329,77 @@ async def auto_complete_stale_transactions():
 
 class ChargePoint(cp):
 
-    # ── 1. BootNotification ──────────────────────────────────
     @on(Action.boot_notification)
     async def on_boot_notification(
         self, charge_point_vendor, charge_point_model, **kwargs
     ):
-        try:
-            now_utc = datetime.now(timezone.utc)
-            logger.info("[%s] BootNotification DITERIMA! (Bypass mode aktif)", self.id)
-            return call_result.BootNotification(
-                current_time=now_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
-                interval=30,
-                status=RegistrationStatus.accepted,
-            )
-        except Exception as e:
-            logger.error(f"Gagal membalas BootNotification: {e}")
+        now_utc = datetime.now(timezone.utc)
+        logger.info("[%s] BootNotification DITERIMA! (Bypass mode aktif)", self.id)
 
-        cp_pk = get_cp_pk(self.id)
-        if cp_pk is None:
-            db_execute(
-                """INSERT IGNORE INTO charge_points
-                    (charge_point_id, name, vendor_name, model,
-                    cp_status, is_online, created_at, updated_at)
-                    VALUES (%s, %s, %s, %s, 'Available', 1, NOW(), NOW())""",
-                (
-                    self.id,
+        # Ambil field opsional dari kwargs
+        charge_point_serial_number = kwargs.get("charge_point_serial_number")
+        charge_box_serial_number = kwargs.get("charge_box_serial_number")
+        firmware_version = kwargs.get("firmware_version")
+        iccid = kwargs.get("iccid")
+        imsi = kwargs.get("imsi")
+        meter_type = kwargs.get("meter_type")
+        meter_serial_number = kwargs.get("meter_serial_number")
+
+        try:
+            cp_pk = get_cp_pk(self.id)
+            if cp_pk is None:
+                db_execute(
+                    """INSERT IGNORE INTO charge_points
+                        (charge_point_id, name, vendor_name, model,
+                        serial_number, charge_box_serial_number,
+                        firmware_version, iccid, imsi,
+                        meter_type, meter_serial_number,
+                        cp_status, is_online, created_at, updated_at)
+                        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'Available',1,NOW(),NOW())""",
+                    (
+                        self.id,
+                        self.id,
+                        charge_point_vendor,
+                        charge_point_model,
+                        charge_point_serial_number,
+                        charge_box_serial_number,
+                        firmware_version,
+                        iccid,
+                        imsi,
+                        meter_type,
+                        meter_serial_number,
+                    ),
+                )
+                logger.info(
+                    "[%s] Auto-registered ke DB (vendor=%s, model=%s)",
                     self.id,
                     charge_point_vendor,
                     charge_point_model,
-                ),
-            )
-            logger.info(
-                "[%s] Auto-registered ke DB (vendor=%s, model=%s)",
-                self.id,
-                charge_point_vendor,
-                charge_point_model,
-            )
+                )
+            else:
+                # Update field yang mungkin berubah saat reboot
+                db_execute(
+                    """UPDATE charge_points SET
+                        vendor_name=%s, model=%s,
+                        serial_number=%s, charge_box_serial_number=%s,
+                        firmware_version=%s, iccid=%s, imsi=%s,
+                        meter_type=%s, meter_serial_number=%s,
+                        is_online=1, cp_status='Available', updated_at=NOW()
+                    WHERE id=%s""",
+                    (
+                        charge_point_vendor,
+                        charge_point_model,
+                        charge_point_serial_number,
+                        charge_box_serial_number,
+                        firmware_version,
+                        iccid,
+                        imsi,
+                        meter_type,
+                        meter_serial_number,
+                        cp_pk,
+                    ),
+                )
+
             db_execute(
                 """INSERT IGNORE INTO configuration_keys
                     (charge_point_id, key_name, value, readonly, created_at)
@@ -317,6 +408,15 @@ class ChargePoint(cp):
                     ON DUPLICATE KEY UPDATE value=VALUES(value)""",
                 (self.id,),
             )
+
+        except Exception as e:
+            logger.error("[%s] Gagal proses BootNotification ke DB: %s", self.id, e)
+
+        return call_result.BootNotification(
+            current_time=now_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            interval=30,
+            status=RegistrationStatus.accepted,
+        )
 
     # ── 2. Heartbeat ─────────────────────────────────────────
     @on(Action.heartbeat)
@@ -608,12 +708,47 @@ class ChargePoint(cp):
                         )
 
                 db_execute(
-                    """UPDATE transactions SET meter_stop=%s, stop_timestamp=NOW(),
-                        stop_reason='StatusNotification', energy_consumed_kwh=%s,
-                        total_cost=%s, status='Completed', auto_completed=1, updated_at=NOW()
-                        WHERE id=%s AND status='Active'""",
-                    (meter_stop, energy_kwh, total_cost, active_tx["tx_pk"]),
+                    """UPDATE transactions SET
+                        meter_stop=%s, stop_timestamp=%s, stop_reason=%s,
+                        energy_consumed_kwh=%s,
+                        tariff_per_kwh=%s, energy_cost=%s,
+                        pbjt_rate=%s, pbjt_amount=%s,
+                        service_fee_per_kwh=%s, service_fee_amount=%s,
+                        subtotal=%s, ppn_rate=%s, ppn_base=%s, ppn_amount=%s,
+                        total_cost=%s, total_amount=%s,
+                        status='Completed'
+                    WHERE id=%s""",
+                    (
+                        meter_stop,
+                        stop_ts,
+                        reason,
+                        energy_kwh,
+                        float(billing.tariff_per_kwh) if billing else None,
+                        float(billing.energy_cost) if billing else None,
+                        float(billing.pbjt_rate) if billing else None,
+                        float(billing.pbjt_amount) if billing else None,
+                        float(billing.service_fee_per_kwh) if billing else None,
+                        float(billing.service_fee_amount) if billing else None,
+                        float(billing.subtotal) if billing else None,
+                        float(billing.ppn_rate) if billing else None,
+                        float(billing.ppn_base) if billing else None,
+                        float(billing.ppn_amount) if billing else None,
+                        float(billing.total_amount) if billing else None,
+                        float(billing.total_amount) if billing else None,
+                        tx["tx_pk"],
+                    ),
                 )
+
+                logger.info(
+                    "[%s] Billing — energi: %.3f kWh, subtotal: %s, diskon: %s, PPN: %s, total: %s",
+                    self.id,
+                    energy_kwh,
+                    billing.subtotal if billing else "-",
+                    billing.discount_amount if billing else "-",
+                    billing.ppn_amount if billing else "-",
+                    billing.total_amount if billing else "-",
+                )
+
                 db_execute(
                     "UPDATE charge_points SET cp_status='Available', updated_at=NOW() WHERE charge_point_id=%s",
                     (self.id,),
@@ -847,25 +982,73 @@ class ChargePoint(cp):
             energy_wh = meter_stop - tx["meter_start"]
             energy_kwh = round(energy_wh / 1000, 3)
             if tx["tariff_per_kwh"]:
-                total_cost = round(energy_kwh * float(tx["tariff_per_kwh"]), 2)
+                from app.core.billing_calculator import calculate_billing
+
+            # Ambil tarif lengkap dari DB
+            tariff_row = db_fetchone(
+                """SELECT cost_per_kwh, pbjt_rate, service_fee_per_kwh, ppn_rate
+                FROM tariffs
+                WHERE charge_point_pk = %s AND is_active = 1
+                ORDER BY created_at DESC LIMIT 1""",
+                (cp_pk,),
+            )
+
+            if tariff_row and energy_kwh > 0:
+                billing = calculate_billing(
+                    energy_kwh=energy_kwh,
+                    tariff_per_kwh=float(tariff_row["cost_per_kwh"]),
+                    pbjt_rate=float(tariff_row["pbjt_rate"]),
+                    service_fee_per_kwh=float(tariff_row["service_fee_per_kwh"]),
+                    ppn_rate=float(tariff_row["ppn_rate"]),
+                    pricing_scheme="commercial",
+                )
+            else:
+                billing = None
             logger.info(
                 "[%s] Energi: %s kWh, biaya: %s", self.id, energy_kwh, total_cost
             )
 
         # [v0.5] Update via PK internal (id)
         db_execute(
-            """UPDATE transactions SET meter_stop=%s, stop_timestamp=%s, stop_reason=%s,
-                energy_consumed_kwh=%s, total_cost=%s, status='Completed', updated_at=NOW()
-                WHERE id=%s AND charge_point_id=%s""",
+            """UPDATE transactions SET
+                meter_stop=%s, stop_timestamp=%s, stop_reason=%s,
+                energy_consumed_kwh=%s,
+                tariff_per_kwh=%s, energy_cost=%s,
+                pbjt_rate=%s, pbjt_amount=%s,
+                service_fee_per_kwh=%s, service_fee_amount=%s,
+                subtotal=%s, ppn_rate=%s, ppn_base=%s, ppn_amount=%s,
+                total_cost=%s, total_amount=%s,
+                status='Completed'
+            WHERE id=%s""",
             (
                 meter_stop,
-                parse_timestamp(timestamp),
+                stop_ts,
                 reason,
                 energy_kwh,
-                total_cost,
+                float(billing.tariff_per_kwh) if billing else None,
+                float(billing.energy_cost) if billing else None,
+                float(billing.pbjt_rate) if billing else None,
+                float(billing.pbjt_amount) if billing else None,
+                float(billing.service_fee_per_kwh) if billing else None,
+                float(billing.service_fee_amount) if billing else None,
+                float(billing.subtotal) if billing else None,
+                float(billing.ppn_rate) if billing else None,
+                float(billing.ppn_base) if billing else None,
+                float(billing.ppn_amount) if billing else None,
+                float(billing.total_amount) if billing else None,
+                float(billing.total_amount) if billing else None,
                 tx["tx_pk"],
-                self.id,
             ),
+        )
+
+        logger.info(
+            "[%s] Billing — energi: %.3f kWh, subtotal: %s, diskon: %s, PPN: %s, total: %s",
+            self.id,
+            energy_kwh,
+            billing.subtotal if billing else "-",
+            billing.discount_amount if billing else "-",
+            billing.ppn_amount if billing else "-",
+            billing.total_amount if billing else "-",
         )
 
         connector_id = tx["connector_id"]

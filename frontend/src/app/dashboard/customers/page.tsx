@@ -434,7 +434,7 @@ function DetailPanel({ customer, onClose, onDelete }: {
 
   const updateLimitMut = useMutation({
     mutationFn: (data: typeof limitForm) =>
-      api.put(`/api/charging-limit/customer/${customer.id}`, data),
+      api.put(`/api/customers/${customer.id}/limit`, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["customers"] });
       qc.invalidateQueries({ queryKey: ["limit-usage"] });
@@ -768,8 +768,8 @@ export default function CustomersPage() {
           {/* Pending requests badge */}
           <button onClick={() => setShowRequests(true)}
             className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors ${pendingCount > 0
-                ? "bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse"
-                : "bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white"
+              ? "bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse"
+              : "bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white"
               }`}>
             <ShieldAlert className="w-3.5 h-3.5" />
             Request Akses
