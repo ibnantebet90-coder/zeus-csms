@@ -32,7 +32,7 @@ from app.api import (
 )
 
 # [v0.5] customers dan charging_limit digabung dalam satu file
-from app.api.customers import customer_router, limit_router
+from app.api.customers import customer_router, id_tag_router, limit_router
 
 logger = logging.getLogger("zeus.main")
 
@@ -61,6 +61,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(charge_points.router)
 app.include_router(customer_router)
+app.include_router(id_tag_router)
 app.include_router(limit_router)
 app.include_router(transactions.router)
 app.include_router(alerts.router)

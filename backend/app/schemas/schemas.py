@@ -10,6 +10,16 @@ Perubahan dari v0.4:
 - TransactionResponse: rename transaction_id → ocpp_transaction_id; tambah auto_completed
 - ConnectorOut: rename timestamp → last_status_at
 - TariffCreate/Response: charge_point_id tetap ada (denormalized field)
+
+Tambahan pasca v0.5 (sinkronisasi frontend Customers):
+- IdTagCreate/Update/Response: schema baru untuk CRUD id_tags (relasi
+  1 customer → N id_tag). Frontend lama sempat mengasumsikan id_tag_token
+  dan status sebagai field langsung Customer — itu sudah tidak berlaku
+  sejak v0.5, id_tag_token/status sepenuhnya pindah ke tabel id_tags.
+- CustomerCreate: tambah field opsional id_tag (RFID pertama saat
+  membuat customer baru, dibuat sekaligus dalam 1 request).
+- CustomerResponse: tambah field id_tags (daftar semua id_tag milik
+  customer ini) supaya frontend tidak perlu request terpisah per baris.
 """
 
 from datetime import datetime
@@ -56,6 +66,35 @@ class UserResponse(BaseModel):
 
 
 # ════════════════════════════════════════════════════════════
+#  ID TAG  (RFID — relasi 1 customer → N id_tag)
+# ════════════════════════════════════════════════════════════
+
+
+class IdTagCreate(BaseModel):
+    id_tag: str
+    expiry_date: Optional[datetime] = None
+    status: str = "Accepted"  # Accepted/Blocked/Expired/Invalid/ConcurrentTx
+
+
+class IdTagUpdate(BaseModel):
+    expiry_date: Optional[datetime] = None
+    status: Optional[str] = None
+
+
+class IdTagResponse(BaseModel):
+    id: int
+    id_tag: str
+    customer_id: Optional[int]
+    expiry_date: Optional[datetime]
+    status: str
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# ════════════════════════════════════════════════════════════
 #  CUSTOMER
 # ════════════════════════════════════════════════════════════
 
@@ -69,6 +108,7 @@ class CustomerCreate(BaseModel):
     car_type: str = "private"
     charge_limit_enabled: bool = True
     monthly_charge_limit: Optional[int] = None
+    id_tag: Optional[str] = None  # RFID pertama, dibuat sekaligus jika diisi
 
 
 class CustomerUpdate(BaseModel):
@@ -91,6 +131,7 @@ class CustomerResponse(BaseModel):
     charge_limit_enabled: bool
     monthly_charge_limit: Optional[int]
     created_at: datetime
+    id_tags: List[IdTagResponse] = []
 
     class Config:
         from_attributes = True

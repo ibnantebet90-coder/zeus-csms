@@ -29,7 +29,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel
 from sqlalchemy import func
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.api.deps import get_current_user, require_admin
 from app.core.database import get_db
@@ -45,6 +45,9 @@ from app.schemas.schemas import (
     CustomerCreate,
     CustomerResponse,
     CustomerUpdate,
+    IdTagCreate,
+    IdTagResponse,
+    IdTagUpdate,
     TransactionResponse,
 )
 
@@ -270,18 +273,20 @@ customer_router = APIRouter(prefix="/api/customers", tags=["Customers"])
 
 @customer_router.get("", response_model=List[CustomerResponse])
 def list_customers(
-    search: Optional[str] = Query(None, description="Cari by nama atau email"),
+    search: Optional[str] = Query(None, description="Cari by nama, email, atau id tag"),
     limit: int = Query(50, le=200),
     offset: int = Query(0),
     db: Session = Depends(get_db),
     _: User = Depends(get_current_user),
 ):
-    q = db.query(Customer)
+    q = db.query(Customer).options(joinedload(Customer.id_tags))
     if search:
-        q = q.filter(
-            Customer.name.ilike(f"%{search}%") | Customer.email.ilike(f"%{search}%")
+        q = q.outerjoin(IdTag).filter(
+            Customer.name.ilike(f"%{search}%")
+            | Customer.email.ilike(f"%{search}%")
+            | IdTag.id_tag.ilike(f"%{search}%")
         )
-    return q.order_by(Customer.name).offset(offset).limit(limit).all()
+    return q.order_by(Customer.name).distinct().offset(offset).limit(limit).all()
 
 
 @customer_router.post("", response_model=CustomerResponse, status_code=201)
@@ -295,10 +300,27 @@ def create_customer(
             status_code=status.HTTP_409_CONFLICT,
             detail="Email sudah terdaftar",
         )
-    customer = Customer(**body.model_dump())
+
+    id_tag_value = body.id_tag
+    if id_tag_value:
+        if db.query(IdTag).filter(IdTag.id_tag == id_tag_value).first():
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=f"ID Tag '{id_tag_value}' sudah digunakan",
+            )
+
+    payload = body.model_dump(exclude={"id_tag"})
+    customer = Customer(**payload)
     db.add(customer)
     db.commit()
     db.refresh(customer)
+
+    if id_tag_value:
+        tag = IdTag(id_tag=id_tag_value, customer_id=customer.id, status="Accepted")
+        db.add(tag)
+        db.commit()
+        db.refresh(customer)
+
     return customer
 
 
@@ -308,7 +330,12 @@ def get_customer(
     db: Session = Depends(get_db),
     _: User = Depends(get_current_user),
 ):
-    customer = db.query(Customer).filter(Customer.id == customer_id).first()
+    customer = (
+        db.query(Customer)
+        .options(joinedload(Customer.id_tags))
+        .filter(Customer.id == customer_id)
+        .first()
+    )
     if not customer:
         raise HTTPException(status_code=404, detail="Customer tidak ditemukan")
     return customer
@@ -649,5 +676,89 @@ def reject_request(
     )
 
 
-# ── Ekspor kedua router ───────────────────────────────────────
+# ════════════════════════════════════════════════════════════
+#  ID TAG ENDPOINTS  (RFID — relasi 1 customer → N id_tag)
+# ════════════════════════════════════════════════════════════
+
+
+@customer_router.get("/{customer_id}/id-tags", response_model=List[IdTagResponse])
+def list_customer_id_tags(
+    customer_id: int,
+    db: Session = Depends(get_db),
+    _: User = Depends(get_current_user),
+):
+    customer = db.query(Customer).filter(Customer.id == customer_id).first()
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer tidak ditemukan")
+    return (
+        db.query(IdTag)
+        .filter(IdTag.customer_id == customer_id)
+        .order_by(IdTag.created_at.desc())
+        .all()
+    )
+
+
+@customer_router.post(
+    "/{customer_id}/id-tags", response_model=IdTagResponse, status_code=201
+)
+def create_customer_id_tag(
+    customer_id: int,
+    body: IdTagCreate,
+    db: Session = Depends(get_db),
+    _: User = Depends(require_admin),
+):
+    customer = db.query(Customer).filter(Customer.id == customer_id).first()
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer tidak ditemukan")
+    if db.query(IdTag).filter(IdTag.id_tag == body.id_tag).first():
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"ID Tag '{body.id_tag}' sudah digunakan",
+        )
+    tag = IdTag(
+        id_tag=body.id_tag,
+        customer_id=customer_id,
+        expiry_date=body.expiry_date,
+        status=body.status,
+    )
+    db.add(tag)
+    db.commit()
+    db.refresh(tag)
+    return tag
+
+
+id_tag_router = APIRouter(prefix="/api/id-tags", tags=["ID Tags"])
+
+
+@id_tag_router.put("/{id_tag_pk}", response_model=IdTagResponse)
+def update_id_tag(
+    id_tag_pk: int,
+    body: IdTagUpdate,
+    db: Session = Depends(get_db),
+    _: User = Depends(require_admin),
+):
+    tag = db.query(IdTag).filter(IdTag.id == id_tag_pk).first()
+    if not tag:
+        raise HTTPException(status_code=404, detail="ID Tag tidak ditemukan")
+    for field, value in body.model_dump(exclude_none=True).items():
+        setattr(tag, field, value)
+    db.commit()
+    db.refresh(tag)
+    return tag
+
+
+@id_tag_router.delete("/{id_tag_pk}", status_code=204)
+def delete_id_tag(
+    id_tag_pk: int,
+    db: Session = Depends(get_db),
+    _: User = Depends(require_admin),
+):
+    tag = db.query(IdTag).filter(IdTag.id == id_tag_pk).first()
+    if not tag:
+        raise HTTPException(status_code=404, detail="ID Tag tidak ditemukan")
+    db.delete(tag)
+    db.commit()
+
+
+# ── Ekspor router ───────────────────────────────────────────
 router = customer_router  # backward compat jika main.py import `router`
