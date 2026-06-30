@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 import {
   Users, Plus, X, RefreshCw, ChevronRight,
   Pencil, Trash2, Car, Tag, Phone, Mail,
@@ -12,6 +13,16 @@ import api from "@/lib/axios";
 
 // ── Types ────────────────────────────────────────────────────
 
+interface IdTag {
+  id: number;
+  id_tag: string;
+  customer_id: number | null;
+  expiry_date: string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
+
 interface Customer {
   id: number;
   name: string;
@@ -20,11 +31,10 @@ interface Customer {
   car_brand: string | null;
   car_model: string | null;
   car_type: string;
-  id_tag_token: string;
-  status: string;
   monthly_charge_limit: number | null;
   charge_limit_enabled: boolean;
   created_at: string;
+  id_tags: IdTag[];
 }
 
 interface Transaction {
@@ -73,7 +83,7 @@ interface LimitRequest {
 interface CustomerForm {
   name: string; email: string; phone: string;
   car_brand: string; car_model: string;
-  car_type: string; id_tag_token: string;
+  car_type: string; id_tag: string;
 }
 
 // ── Constants & Helpers ───────────────────────────────────────
@@ -105,7 +115,7 @@ const MONTH_NAMES = ["", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu",
 
 const emptyForm: CustomerForm = {
   name: "", email: "", phone: "", car_brand: "",
-  car_model: "", car_type: "private", id_tag_token: "",
+  car_model: "", car_type: "private", id_tag: "",
 };
 
 const inputCls = "w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500 transition-colors";
@@ -139,6 +149,15 @@ function Avatar({ name }: { name: string }) {
     <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${color}`}>
       {initials}
     </div>
+  );
+}
+
+function IdTagBadge({ tag }: { tag: IdTag }) {
+  return (
+    <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium border ${statusColor[tag.status] ?? statusColor.Invalid}`}>
+      <span className="font-mono">{tag.id_tag}</span>
+      <span className="opacity-70">· {tag.status}</span>
+    </span>
   );
 }
 
@@ -409,7 +428,6 @@ function DetailPanel({ customer, onClose, onDelete }: {
     phone: customer.phone ?? "",
     car_brand: customer.car_brand ?? "",
     car_model: customer.car_model ?? "",
-    status: customer.status,
   });
   const [limitForm, setLimitForm] = useState({
     monthly_charge_limit: customer.monthly_charge_limit,
@@ -430,6 +448,32 @@ function DetailPanel({ customer, onClose, onDelete }: {
   const updateMut = useMutation({
     mutationFn: (data: typeof form) => api.put(`/api/customers/${customer.id}`, data),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["customers"] }); setEditing(false); },
+  });
+
+  // ── ID Tag (RFID) management ──
+  const [showAddTag, setShowAddTag] = useState(false);
+  const [newTag, setNewTag] = useState("");
+  const [tagError, setTagError] = useState("");
+
+  const addTagMut = useMutation({
+    mutationFn: (id_tag: string) =>
+      api.post(`/api/customers/${customer.id}/id-tags`, { id_tag, status: "Accepted" }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["customers"] });
+      setNewTag(""); setShowAddTag(false); setTagError("");
+    },
+    onError: (err: AxiosError<{ detail?: string }>) => setTagError(err.response?.data?.detail ?? "Gagal menambahkan ID Tag"),
+  });
+
+  const updateTagStatusMut = useMutation({
+    mutationFn: ({ tagId, status: newStatus }: { tagId: number; status: string }) =>
+      api.put(`/api/id-tags/${tagId}`, { status: newStatus }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["customers"] }),
+  });
+
+  const deleteTagMut = useMutation({
+    mutationFn: (tagId: number) => api.delete(`/api/id-tags/${tagId}`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["customers"] }),
   });
 
   const updateLimitMut = useMutation({
@@ -473,10 +517,17 @@ function DetailPanel({ customer, onClose, onDelete }: {
         </div>
 
         <div className="p-5 space-y-5 flex-1">
-          {/* Status badge */}
-          <span className={`inline-flex px-2.5 py-1 rounded-lg text-xs font-medium border ${statusColor[customer.status] ?? statusColor.Invalid}`}>
-            {customer.status}
-          </span>
+          {/* Ringkasan jumlah RFID */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium border text-gray-300 bg-gray-800/60 border-gray-700">
+              <Tag className="w-3 h-3" /> {customer.id_tags.length} RFID terdaftar
+            </span>
+            {customer.id_tags.some((t) => t.status === "Blocked") && (
+              <span className="px-2.5 py-1 rounded-lg text-xs font-medium border text-red-400 bg-red-500/10 border-red-500/20">
+                Ada RFID diblokir
+              </span>
+            )}
+          </div>
 
           {/* Edit info */}
           {editing ? (
@@ -497,14 +548,6 @@ function DetailPanel({ customer, onClose, onDelete }: {
                 <input className={inputCls} value={form.car_model}
                   onChange={(e) => setForm({ ...form, car_model: e.target.value })} />
               </Field>
-              <Field label="Status">
-                <select className={inputCls} value={form.status}
-                  onChange={(e) => setForm({ ...form, status: e.target.value })}>
-                  {["Accepted", "Blocked", "Expired", "Invalid"].map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              </Field>
               <div className="flex gap-2">
                 <button onClick={() => setEditing(false)}
                   className="flex-1 px-3 py-2 bg-gray-800 text-gray-300 text-sm rounded-lg hover:bg-gray-700 transition-colors">
@@ -521,10 +564,79 @@ function DetailPanel({ customer, onClose, onDelete }: {
               <InfoRow label="No. Telepon" value={customer.phone ?? "-"} />
               <InfoRow label="Kendaraan" value={customer.car_brand ? `${customer.car_brand} ${customer.car_model}` : "-"} />
               <InfoRow label="Tipe" value={customer.car_type} />
-              <InfoRow label="ID Tag" value={customer.id_tag_token} mono />
               <InfoRow label="Terdaftar" value={formatDate(customer.created_at)} />
             </div>
           )}
+
+          {/* ── RFID / ID Tag Management ── */}
+          <div className="border border-gray-800 rounded-xl overflow-hidden">
+            <div className="px-4 py-3 bg-gray-800/40 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Tag className="w-3.5 h-3.5 text-emerald-400" />
+                <p className="text-xs font-semibold text-gray-300">RFID / ID Tag ({customer.id_tags.length})</p>
+              </div>
+              <button onClick={() => setShowAddTag(!showAddTag)}
+                className="text-xs text-gray-500 hover:text-white transition-colors flex items-center gap-1">
+                <Plus className="w-3 h-3" /> Tambah
+              </button>
+            </div>
+
+            <div className="p-4 space-y-2.5">
+              {tagError && (
+                <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+                  <p className="text-xs text-red-400">{tagError}</p>
+                </div>
+              )}
+
+              {showAddTag && (
+                <div className="flex gap-2 pb-2 border-b border-gray-800">
+                  <input
+                    className={`${inputCls} flex-1`}
+                    placeholder="RFID / Token baru"
+                    value={newTag}
+                    onChange={(e) => setNewTag(e.target.value)}
+                  />
+                  <button
+                    onClick={() => newTag.trim() && addTagMut.mutate(newTag.trim())}
+                    disabled={addTagMut.isPending || !newTag.trim()}
+                    className="px-3 py-2 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 text-gray-950 font-semibold text-xs rounded-lg transition-colors whitespace-nowrap">
+                    {addTagMut.isPending ? "..." : "Simpan"}
+                  </button>
+                </div>
+              )}
+
+              {customer.id_tags.length === 0 ? (
+                <p className="text-xs text-gray-600 text-center py-3">Belum ada RFID terdaftar</p>
+              ) : (
+                customer.id_tags.map((tag) => (
+                  <div key={tag.id} className="flex items-center justify-between gap-2 bg-gray-800/40 rounded-lg px-3 py-2">
+                    <div className="min-w-0">
+                      <p className="text-xs font-mono text-white truncate">{tag.id_tag}</p>
+                      {tag.expiry_date && (
+                        <p className="text-xs text-gray-500">Exp: {formatDate(tag.expiry_date)}</p>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      <select
+                        value={tag.status}
+                        onChange={(e) => updateTagStatusMut.mutate({ tagId: tag.id, status: e.target.value })}
+                        className={`text-xs font-medium rounded-md border px-2 py-1 bg-gray-900 focus:outline-none ${statusColor[tag.status] ?? statusColor.Invalid}`}
+                      >
+                        {["Accepted", "Blocked", "Expired", "Invalid", "ConcurrentTx"].map((s) => (
+                          <option key={s} value={s}>{s}</option>
+                        ))}
+                      </select>
+                      <button
+                        onClick={() => { if (confirm(`Hapus RFID ${tag.id_tag}?`)) deleteTagMut.mutate(tag.id); }}
+                        className="p-1 rounded-md hover:bg-red-500/10 text-gray-500 hover:text-red-400 transition-colors">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
 
           {/* ── Charging Limit Section ── */}
           <div className="border border-gray-800 rounded-xl overflow-hidden">
@@ -637,7 +749,7 @@ function AddModal({ onClose }: { onClose: () => void }) {
   const createMut = useMutation({
     mutationFn: (data: CustomerForm) => api.post("/api/customers", data),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["customers"] }); onClose(); },
-    onError: (err: any) => setError(err.response?.data?.detail ?? "Gagal membuat customer"),
+    onError: (err: AxiosError<{ detail?: string }>) => setError(err.response?.data?.detail ?? "Gagal membuat customer"),
   });
 
   return (
@@ -686,9 +798,10 @@ function AddModal({ onClose }: { onClose: () => void }) {
               <option value="public">Public</option>
             </select>
           </Field>
-          <Field label="ID Tag Token" required>
-            <input className={inputCls} placeholder="RFID / Token unik" value={form.id_tag_token}
-              onChange={(e) => setForm({ ...form, id_tag_token: e.target.value })} />
+          <Field label="ID Tag (RFID) Pertama" required>
+            <input className={inputCls} placeholder="RFID / Token unik" value={form.id_tag}
+              onChange={(e) => setForm({ ...form, id_tag: e.target.value })} />
+            <p className="text-xs text-gray-600 mt-1">RFID tambahan bisa ditambahkan nanti dari detail customer</p>
           </Field>
 
           <div className="flex gap-2 pt-2">
@@ -696,7 +809,7 @@ function AddModal({ onClose }: { onClose: () => void }) {
               className="flex-1 px-4 py-2 bg-gray-800 text-gray-300 text-sm rounded-lg hover:bg-gray-700 transition-colors">
               Batal
             </button>
-            <button onClick={() => createMut.mutate(form)} disabled={createMut.isPending || !form.name || !form.email || !form.id_tag_token}
+            <button onClick={() => createMut.mutate(form)} disabled={createMut.isPending || !form.name || !form.email || !form.id_tag}
               className="flex-1 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-40 text-gray-950 font-semibold text-sm rounded-lg transition-colors">
               {createMut.isPending ? "Menyimpan..." : "Tambah Customer"}
             </button>
@@ -711,7 +824,7 @@ function AddModal({ onClose }: { onClose: () => void }) {
 
 export default function CustomersPage() {
   const qc = useQueryClient();
-  const [selected, setSelected] = useState<Customer | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [showAdd, setShowAdd] = useState(false);
   const [showConfig, setShowConfig] = useState(false);
   const [showRequests, setShowRequests] = useState(false);
@@ -723,6 +836,11 @@ export default function CustomersPage() {
     queryFn: () => api.get("/api/customers?limit=100").then((r) => r.data),
     refetchInterval: 30000,
   });
+
+  // Derive customer terpilih langsung dari cache `customers` (bukan snapshot
+  // terpisah) supaya DetailPanel selalu menampilkan data id_tags terbaru
+  // setelah tambah/edit/hapus RFID, tanpa perlu effect tambahan.
+  const selected = selectedId != null ? (customers.find((c) => c.id === selectedId) ?? null) : null;
 
   const { data: usageList = [] } = useQuery<UsageInfo[]>({
     queryKey: ["limit-usage"],
@@ -738,7 +856,7 @@ export default function CustomersPage() {
 
   const deleteMut = useMutation({
     mutationFn: (id: number) => api.delete(`/api/customers/${id}`),
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ["customers"] }); setSelected(null); },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["customers"] }); setSelectedId(null); },
   });
 
   const usageMap = new Map(usageList.map((u) => [u.customer_id, u]));
@@ -749,8 +867,8 @@ export default function CustomersPage() {
     const matchSearch = !search ||
       c.name.toLowerCase().includes(search.toLowerCase()) ||
       c.email.toLowerCase().includes(search.toLowerCase()) ||
-      c.id_tag_token.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = statusFilter === "all" || c.status === statusFilter;
+      c.id_tags.some((t) => t.id_tag.toLowerCase().includes(search.toLowerCase()));
+    const matchStatus = statusFilter === "all" || c.id_tags.some((t) => t.status === statusFilter);
     return matchSearch && matchStatus;
   });
 
@@ -800,9 +918,9 @@ export default function CustomersPage() {
       <div className="grid grid-cols-2 xl:grid-cols-5 gap-3">
         {[
           { label: "Total", value: customers.length, color: "text-white" },
-          { label: "Accepted", value: customers.filter((c) => c.status === "Accepted").length, color: "text-emerald-400" },
-          { label: "Blocked", value: customers.filter((c) => c.status === "Blocked").length, color: "text-red-400" },
-          { label: "Expired", value: customers.filter((c) => c.status === "Expired").length, color: "text-amber-400" },
+          { label: "RFID Accepted", value: customers.filter((c) => c.id_tags.some((t) => t.status === "Accepted")).length, color: "text-emerald-400" },
+          { label: "RFID Blocked", value: customers.filter((c) => c.id_tags.some((t) => t.status === "Blocked")).length, color: "text-red-400" },
+          { label: "RFID Expired", value: customers.filter((c) => c.id_tags.some((t) => t.status === "Expired")).length, color: "text-amber-400" },
           { label: "Over Limit Bulan Ini", value: overLimitCount, color: overLimitCount > 0 ? "text-red-400" : "text-gray-500" },
         ].map((s) => (
           <div key={s.label} className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
@@ -871,8 +989,7 @@ export default function CustomersPage() {
                 <th className="px-4 py-3 text-left text-xs text-gray-500 font-medium">Pelanggan</th>
                 <th className="px-4 py-3 text-left text-xs text-gray-500 font-medium">Kontak</th>
                 <th className="px-4 py-3 text-left text-xs text-gray-500 font-medium">Kendaraan</th>
-                <th className="px-4 py-3 text-left text-xs text-gray-500 font-medium">ID Tag</th>
-                <th className="px-4 py-3 text-left text-xs text-gray-500 font-medium">Status</th>
+                <th className="px-4 py-3 text-left text-xs text-gray-500 font-medium">ID Tag (RFID)</th>
                 <th className="px-4 py-3 text-left text-xs text-gray-500 font-medium">Limit Bulan Ini</th>
                 <th className="px-4 py-3 text-left text-xs text-gray-500 font-medium">Terdaftar</th>
                 <th className="w-8" />
@@ -883,7 +1000,7 @@ export default function CustomersPage() {
                 const usage = usageMap.get(c.id);
                 return (
                   <tr key={c.id}
-                    onClick={() => setSelected(c)}
+                    onClick={() => setSelectedId(c.id)}
                     className="border-b border-gray-800/50 hover:bg-gray-800/30 cursor-pointer transition-colors group">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
@@ -914,12 +1031,18 @@ export default function CustomersPage() {
                       ) : <span className="text-xs text-gray-600">-</span>}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="text-xs font-mono text-emerald-400/80">{c.id_tag_token}</span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={`px-2 py-0.5 rounded-md text-xs font-medium border ${statusColor[c.status] ?? statusColor.Invalid}`}>
-                        {c.status}
-                      </span>
+                      {c.id_tags.length === 0 ? (
+                        <span className="text-xs text-gray-600">Belum ada RFID</span>
+                      ) : (
+                        <div className="flex flex-wrap gap-1 max-w-56">
+                          <IdTagBadge tag={c.id_tags[0]} />
+                          {c.id_tags.length > 1 && (
+                            <span className="px-1.5 py-0.5 rounded-md text-xs text-gray-500 bg-gray-800 border border-gray-700">
+                              +{c.id_tags.length - 1} lainnya
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </td>
                     <td className="px-4 py-3 min-w-36">
                       {usage ? (
@@ -973,7 +1096,7 @@ export default function CustomersPage() {
       {selected && (
         <DetailPanel
           customer={selected}
-          onClose={() => setSelected(null)}
+          onClose={() => setSelectedId(null)}
           onDelete={(id) => deleteMut.mutate(id)}
         />
       )}

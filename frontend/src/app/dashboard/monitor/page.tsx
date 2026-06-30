@@ -3,13 +3,14 @@
 import { useEffect, useState, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  AreaChart, Area, Tooltip, ResponsiveContainer,
 } from "recharts";
-import { Wifi, WifiOff, Zap, Activity, Circle, RefreshCw, Gauge, Radio } from "lucide-react";
-import EvChargerIcon from "@/components/EvChargerIcon";
+import { Wifi, WifiOff, Zap, Activity, Circle, RefreshCw, Gauge, Radio, ChevronRight } from "lucide-react";
 import EvChargerHud from "@/components/EvChargerHud";
 import HudStatRing from "@/components/HudStatRing";
 import AnimatedBatteryGauge from "@/components/AnimatedBatteryGauge";
+import DownloadMenu from "@/components/DownloadMenu";
+import { exportTransactionToCsv, exportTransactionToExcel } from "@/lib/exportTransactions";
 import api from "@/lib/axios";
 
 interface Connector { connector_id: number; status: string; }
@@ -25,8 +26,12 @@ interface ActiveTransaction {
   ocpp_transaction_id: number;
   charge_point_id: string;
   connector_id: number;
+  id_tag?: string | null;
   start_timestamp: string | null;
   meter_start: number | null;
+  energy_consumed_kwh?: number | null;
+  total_cost?: number | null;
+  status?: string;
 }
 
 interface MeterPoint {
@@ -94,10 +99,60 @@ const ChartTooltip = ({ active, payload, label }: any) => {
   );
 };
 
-// ── Transaction Meter Chart ─────────────────────────────────────
+// ── Transaction Meter Chart (multi-card per measurand) ──────────
+function SingleMeasurandCard({
+  measurand, points, txId,
+}: { measurand: string; points: MeterPoint[]; txId: number }) {
+  const filtered = useMemo(
+    () => points.filter((p) => p.measurand === measurand).map((p) => ({ time: fmtChartTime(p.timestamp), value: p.value })),
+    [points, measurand]
+  );
+  const latest = useMemo(() => {
+    const arr = points.filter((p) => p.measurand === measurand);
+    return arr[arr.length - 1];
+  }, [points, measurand]);
+  const color = colorFor(measurand, 0);
+
+  return (
+    <div className="hud-panel relative rounded-xl border border-gray-800 bg-gray-950/60 overflow-hidden">
+      <div className="relative z-10 p-3 space-y-2">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-mono text-gray-400 truncate" title={measurand}>{measurand}</p>
+          <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: color }} />
+        </div>
+        {latest && (
+          <p className="text-xl font-bold font-mono tabular-nums" style={{ color }}>
+            {latest.value} <span className="text-[11px] text-gray-500 font-normal">{latest.unit}</span>
+          </p>
+        )}
+        {filtered.length === 0 ? (
+          <div className="flex items-center justify-center h-[90px] text-gray-600 text-xs font-mono">
+            Menunggu data...
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height={90}>
+            <AreaChart data={filtered} margin={{ top: 2, right: 2, left: 2, bottom: 0 }}>
+              <defs>
+                <linearGradient id={`grad-${txId}-${measurand}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={color} stopOpacity={0.35} />
+                  <stop offset="95%" stopColor={color} stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <Tooltip content={<ChartTooltip />} />
+              <Area type="monotone" dataKey="value" name={measurand}
+                stroke={color} strokeWidth={1.5} dot={false}
+                fill={`url(#grad-${txId}-${measurand})`}
+                isAnimationActive={false} />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function TransactionMeterChart({ tx }: { tx: ActiveTransaction }) {
   const [points, setPoints] = useState<MeterPoint[]>([]);
-  const [selectedMeasurand, setSelectedMeasurand] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
   // Load histori awal via REST
@@ -110,8 +165,6 @@ function TransactionMeterChart({ tx }: { tx: ActiveTransaction }) {
         timestamp: mv.timestamp, measurand: mv.measurand, value: mv.value, unit: mv.unit,
       }));
       setPoints(hist);
-      const measurands = Array.from(new Set(hist.map((p) => p.measurand)));
-      if (measurands.length) setSelectedMeasurand((prev) => prev || measurands[0]);
       setLoading(false);
     }).catch(() => setLoading(false));
     return () => { cancelled = true; };
@@ -139,98 +192,131 @@ function TransactionMeterChart({ tx }: { tx: ActiveTransaction }) {
 
   const measurands = useMemo(() => Array.from(new Set(points.map((p) => p.measurand))).sort(), [points]);
 
-  const chartData = useMemo(() => {
-    if (!selectedMeasurand) return [];
-    return points
-      .filter((p) => p.measurand === selectedMeasurand)
-      .map((p) => ({ time: fmtChartTime(p.timestamp), value: p.value }));
-  }, [points, selectedMeasurand]);
-
-  const latest = points[points.length - 1];
-  const unit = latest?.unit ?? "";
+  const handleDownloadCsv = () => exportTransactionToCsv(tx, points);
+  const handleDownloadExcel = () => exportTransactionToExcel(tx, points);
 
   return (
-    <div className="hud-panel relative rounded-2xl border border-gray-800 bg-gray-950/70 overflow-hidden transition-colors hover:border-cyan-900/60">
-      <div className="relative z-10 p-4 space-y-3">
-        <div className="flex items-center justify-between flex-wrap gap-2">
-          <div className="flex items-center gap-2">
-            <Gauge className="w-4 h-4 text-cyan-400" />
-            <p className="text-sm font-medium text-white font-mono">
-              {tx.charge_point_id} · CN-{tx.connector_id}
-            </p>
-            <span className="text-xs font-mono text-gray-500">Tx #{tx.ocpp_transaction_id}</span>
-            <span className="flex items-center gap-1 text-[10px] text-cyan-400 ml-1 font-mono">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-blink-dot" />
-              LIVE
-            </span>
-          </div>
-          {measurands.length > 0 && (
-            <select
-              value={selectedMeasurand}
-              onChange={(e) => setSelectedMeasurand(e.target.value)}
-              className="bg-gray-900 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white font-mono focus:outline-none focus:border-cyan-500">
-              {measurands.map((m) => (
-                <option key={m} value={m}>{m}</option>
-              ))}
-            </select>
-          )}
+    <div className="space-y-3">
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="flex items-center gap-2">
+          <Gauge className="w-4 h-4 text-cyan-400" />
+          <p className="text-sm font-medium text-white font-mono">
+            {tx.charge_point_id} · CN-{tx.connector_id}
+          </p>
+          <span className="text-xs font-mono text-gray-500">Tx #{tx.ocpp_transaction_id}</span>
+          <span className="flex items-center gap-1 text-[10px] text-cyan-400 ml-1 font-mono">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-blink-dot" />
+            LIVE
+          </span>
         </div>
+        <DownloadMenu
+          onDownloadCsv={handleDownloadCsv}
+          onDownloadExcel={handleDownloadExcel}
+          disabled={points.length === 0}
+        />
+      </div>
 
-        {/* KPI nilai terkini besar */}
-        {latest && (
-          <div className="flex items-baseline gap-2">
-            <span key={latest.timestamp} className="text-3xl font-bold text-cyan-300 tabular-nums font-mono animate-counter-tick">
-              {latest.value}
-            </span>
-            <span className="text-xs text-gray-500 font-mono">{latest.unit} · {fmtChartTime(latest.timestamp)}</span>
-          </div>
-        )}
+      {loading ? (
+        <div className="flex items-center justify-center h-[100px]">
+          <RefreshCw className="w-4 h-4 animate-spin text-gray-500" />
+        </div>
+      ) : measurands.length === 0 ? (
+        <div className="flex items-center justify-center h-[100px] text-gray-600 text-sm font-mono">
+          Menunggu MeterValues...
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {measurands.map((m) => (
+            <SingleMeasurandCard key={m} measurand={m} points={points} txId={tx.id} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
-        {loading ? (
-          <div className="flex items-center justify-center h-[160px]">
-            <RefreshCw className="w-4 h-4 animate-spin text-gray-500" />
-          </div>
-        ) : chartData.length === 0 ? (
-          <div className="flex items-center justify-center h-[160px] text-gray-600 text-sm font-mono">
-            Menunggu MeterValues...
-          </div>
-        ) : (
-          <ResponsiveContainer width="100%" height={160}>
-            <AreaChart data={chartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-              <defs>
-                <linearGradient id={`gradMeter-${tx.id}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={colorFor(selectedMeasurand, 0)} stopOpacity={0.35} />
-                  <stop offset="95%" stopColor={colorFor(selectedMeasurand, 0)} stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-              <XAxis dataKey="time" tick={{ fill: "#6b7280", fontSize: 10 }} axisLine={false} tickLine={false}
-                interval={Math.floor(chartData.length / 6)} />
-              <YAxis tick={{ fill: "#6b7280", fontSize: 10 }} axisLine={false} tickLine={false} />
-              <Tooltip content={<ChartTooltip />} />
-              <Area type="monotone" dataKey="value" name={`${selectedMeasurand}${unit ? ` (${unit})` : ""}`}
-                stroke={colorFor(selectedMeasurand, 0)} strokeWidth={2} dot={false}
-                fill={`url(#gradMeter-${tx.id})`}
-                activeDot={{ r: 4, stroke: colorFor(selectedMeasurand, 0), strokeWidth: 2, fill: "#0f172a" }}
-                isAnimationActive={false} />
-            </AreaChart>
-          </ResponsiveContainer>
-        )}
+// ── Tabel rincian gabungan semua transaksi aktif ────────────────
+function ActiveTransactionsTable({ transactions }: { transactions: ActiveTransaction[] }) {
+  if (transactions.length === 0) return null;
+  return (
+    <div className="hud-panel rounded-2xl border border-gray-800 bg-gray-950/60 overflow-hidden">
+      <div className="px-4 py-2.5 border-b border-gray-800/80">
+        <p className="text-xs font-mono uppercase tracking-wider text-gray-500">Rincian Transaksi Aktif</p>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="text-left text-gray-500 font-mono border-b border-gray-800/80">
+              <th className="px-4 py-2 font-medium">Tx ID</th>
+              <th className="px-3 py-2 font-medium">Charge Point</th>
+              <th className="px-3 py-2 font-medium">CN</th>
+              <th className="px-3 py-2 font-medium">ID Tag</th>
+              <th className="px-3 py-2 font-medium">Mulai</th>
+              <th className="px-3 py-2 font-medium text-right">Meter Awal</th>
+              <th className="px-3 py-2 font-medium text-right">Energi (kWh)</th>
+              <th className="px-3 py-2 font-medium text-right">Estimasi Biaya</th>
+            </tr>
+          </thead>
+          <tbody className="font-mono text-gray-300">
+            {transactions.map((tx) => (
+              <tr key={tx.id} className="border-b border-gray-900 hover:bg-gray-900/60 transition-colors">
+                <td className="px-4 py-2 text-cyan-400">#{tx.ocpp_transaction_id}</td>
+                <td className="px-3 py-2">{tx.charge_point_id}</td>
+                <td className="px-3 py-2">CN-{tx.connector_id}</td>
+                <td className="px-3 py-2 text-gray-400">{tx.id_tag ?? "-"}</td>
+                <td className="px-3 py-2 text-gray-400">{formatTime(tx.start_timestamp)}</td>
+                <td className="px-3 py-2 text-right">{tx.meter_start ?? "-"}</td>
+                <td className="px-3 py-2 text-right text-emerald-400">{tx.energy_consumed_kwh?.toFixed?.(2) ?? "-"}</td>
+                <td className="px-3 py-2 text-right">{tx.total_cost != null ? `Rp${tx.total_cost.toLocaleString("id-ID")}` : "-"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
 }
 
 // ── Monitor Transaksi Section ───────────────────────────────────
-function TransactionMonitorSection() {
+function TransactionMonitorSection({ cpList }: { cpList: CPState[] }) {
   const { data: activeTx = [], isLoading } = useQuery<ActiveTransaction[]>({
     queryKey: ["transactions", "Active", "monitor"],
-    queryFn: () => api.get("/api/transactions?status=Active&limit=12").then((r) => r.data),
+    queryFn: () => api.get("/api/transactions?status=Active&limit=50").then((r) => r.data),
     refetchInterval: 15000,
   });
 
+  // CP yang sedang Charging (sumber: status real-time WebSocket)
+  const chargingCps = useMemo(
+    () => cpList.filter((cp) => cp.is_online && cp.cp_status === "Charging"),
+    [cpList]
+  );
+
+  const [selectedCpId, setSelectedCpId] = useState<string>("");
+  const [selectedTxId, setSelectedTxId] = useState<number | null>(null);
+
+  // Effective CP terpilih: pakai pilihan user kalau masih valid (masih Charging),
+  // kalau tidak fallback ke CP Charging pertama — dihitung langsung di render,
+  // tanpa useEffect+setState, supaya tidak ada cascading render.
+  const effectiveCpId = chargingCps.some((cp) => cp.charge_point_id === selectedCpId)
+    ? selectedCpId
+    : (chargingCps[0]?.charge_point_id ?? "");
+
+  // Transaksi aktif milik CP terpilih
+  const txForSelectedCp = useMemo(
+    () => activeTx.filter((tx) => tx.charge_point_id === effectiveCpId),
+    [activeTx, effectiveCpId]
+  );
+
+  // Effective transaksi terpilih: pakai pilihan user kalau masih valid,
+  // kalau tidak fallback ke transaksi pertama milik CP terpilih.
+  const effectiveTxId = txForSelectedCp.some((tx) => tx.id === selectedTxId)
+    ? selectedTxId
+    : (txForSelectedCp[0]?.id ?? null);
+
+  const selectedTx = txForSelectedCp.find((tx) => tx.id === effectiveTxId) ?? null;
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold text-white flex items-center gap-2 font-mono">
           <Activity className="w-4 h-4 text-cyan-400 animate-status-glow" /> ACTIVE_SESSIONS // TRANSAKSI BERJALAN
@@ -242,18 +328,69 @@ function TransactionMonitorSection() {
         <div className="flex items-center justify-center h-32 bg-gray-900 border border-gray-800 rounded-xl">
           <RefreshCw className="w-5 h-5 animate-spin text-gray-500" />
         </div>
-      ) : activeTx.length === 0 ? (
+      ) : chargingCps.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-32 bg-gray-900 border border-gray-800 rounded-xl">
           <Gauge className="w-8 h-8 text-gray-700 mb-2" />
-          <p className="text-sm text-gray-500">Tidak ada transaksi aktif saat ini</p>
+          <p className="text-sm text-gray-500 font-mono">Tidak ada charge point yang sedang Charging</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-          {activeTx.map((tx) => (
-            <TransactionMeterChart key={tx.id} tx={tx} />
-          ))}
-        </div>
+        <>
+          {/* Filter tingkat 1: pilih charge point yang Charging */}
+          <div className="space-y-1.5">
+            <p className="text-[11px] font-mono uppercase tracking-wider text-gray-500">Pilih Charge Point</p>
+            <div className="flex flex-wrap gap-2">
+              {chargingCps.map((cp) => (
+                <button
+                  key={cp.charge_point_id}
+                  onClick={() => setSelectedCpId(cp.charge_point_id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono transition-colors ${
+                    effectiveCpId === cp.charge_point_id
+                      ? "border-cyan-500 bg-cyan-500/10 text-cyan-300"
+                      : "border-gray-700 bg-gray-900 text-gray-400 hover:border-gray-600"
+                  }`}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-blink-dot" />
+                  {cp.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Filter tingkat 2: pilih transaksi (kalau CP punya >1 transaksi aktif) */}
+          {txForSelectedCp.length > 1 && (
+            <div className="space-y-1.5">
+              <p className="text-[11px] font-mono uppercase tracking-wider text-gray-500">Pilih Transaksi</p>
+              <div className="flex flex-wrap gap-2">
+                {txForSelectedCp.map((tx) => (
+                  <button
+                    key={tx.id}
+                    onClick={() => setSelectedTxId(tx.id)}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-md border text-xs font-mono transition-colors ${
+                      effectiveTxId === tx.id
+                        ? "border-cyan-500 bg-cyan-500/10 text-cyan-300"
+                        : "border-gray-700 bg-gray-900 text-gray-500 hover:border-gray-600"
+                    }`}
+                  >
+                    <ChevronRight className="w-3 h-3" /> CN-{tx.connector_id} · Tx#{tx.ocpp_transaction_id}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Chart per measurand untuk transaksi terpilih */}
+          {selectedTx ? (
+            <TransactionMeterChart key={selectedTx.id} tx={selectedTx} />
+          ) : (
+            <div className="flex items-center justify-center h-24 bg-gray-900 border border-gray-800 rounded-xl">
+              <p className="text-sm text-gray-500 font-mono">Tidak ada transaksi aktif pada charge point ini</p>
+            </div>
+          )}
+        </>
       )}
+
+      {/* Tabel rincian gabungan semua transaksi aktif */}
+      <ActiveTransactionsTable transactions={activeTx} />
     </div>
   );
 }
@@ -538,7 +675,7 @@ export default function MonitorPage() {
       )}
 
       {/* Monitor Transaksi — grafik meter values realtime per transaksi aktif */}
-      <TransactionMonitorSection />
+      <TransactionMonitorSection cpList={cpList} />
     </div>
   );
 }
