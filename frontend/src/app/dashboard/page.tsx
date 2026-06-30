@@ -5,7 +5,8 @@ import {
   AreaChart, Area, BarChart, Bar,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
-import { BatteryCharging, Zap, Receipt, TrendingUp, Wifi, RefreshCw } from "lucide-react";
+import { Zap, Receipt, TrendingUp, Wifi, RefreshCw } from "lucide-react";
+import EvChargerIcon from "@/components/EvChargerIcon";
 import api from "@/lib/axios";
 
 interface Summary {
@@ -64,9 +65,9 @@ const ChartTooltip = ({ active, payload, label }: any) => {
   );
 };
 
-function StatCard({ title, value, subtitle, icon: Icon, color }: {
+function StatCard({ title, value, subtitle, icon: Icon, color, customIcon }: {
   title: string; value: string | number; subtitle?: string;
-  icon: any; color: string;
+  icon?: any; color: string; customIcon?: React.ReactNode;
 }) {
   const colors: Record<string, string> = {
     emerald: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
@@ -75,12 +76,16 @@ function StatCard({ title, value, subtitle, icon: Icon, color }: {
     purple: "bg-purple-500/10 border-purple-500/20 text-purple-400",
   };
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
+    <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 transition-colors hover:border-gray-700">
       <div className="flex items-start justify-between mb-4">
         <p className="text-sm text-gray-400">{title}</p>
-        <div className={`w-9 h-9 rounded-lg border flex items-center justify-center ${colors[color]}`}>
-          <Icon className="w-4 h-4" />
-        </div>
+        {customIcon ? (
+          customIcon
+        ) : (
+          <div className={`w-9 h-9 rounded-lg border flex items-center justify-center ${colors[color]}`}>
+            <Icon className="w-4 h-4" />
+          </div>
+        )}
       </div>
       <p className="text-2xl font-bold text-white">{value}</p>
       {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
@@ -154,8 +159,18 @@ export default function DashboardPage() {
 
       {/* Stat Cards */}
       <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
-        <StatCard title="Total Charge Points" value={summary?.total_charge_points ?? 0}
-          subtitle={`${summary?.online_charge_points ?? 0} online`} icon={BatteryCharging} color="emerald" />
+        <StatCard
+          title="Total Charge Points"
+          value={summary?.total_charge_points ?? 0}
+          subtitle={`${summary?.online_charge_points ?? 0} online`}
+          color="emerald"
+          customIcon={
+            <EvChargerIcon
+              status={(summary?.active_transactions ?? 0) > 0 ? "Charging" : "Available"}
+              size={36}
+            />
+          }
+        />
         <StatCard title="Transaksi Aktif" value={summary?.active_transactions ?? 0}
           subtitle="Sedang mengisi daya" icon={Zap} color="blue" />
         <StatCard title="Transaksi Hari Ini" value={summary?.total_transactions_today ?? 0}
@@ -171,12 +186,20 @@ export default function DashboardPage() {
       {/* Charts */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         <div className="xl:col-span-2 bg-gray-900 border border-gray-800 rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-white mb-4">Energi 7 Hari Terakhir (kWh)</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-white">Energi 7 Hari Terakhir (kWh)</h2>
+            {(summary?.active_transactions ?? 0) > 0 && (
+              <span className="flex items-center gap-1.5 text-xs text-emerald-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Live
+              </span>
+            )}
+          </div>
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart data={today} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="gradEnergy" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
+                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
                   <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                 </linearGradient>
               </defs>
@@ -185,7 +208,10 @@ export default function DashboardPage() {
               <YAxis tick={{ fill: "#6b7280", fontSize: 12 }} axisLine={false} tickLine={false} />
               <Tooltip content={<ChartTooltip />} />
               <Area type="monotone" dataKey="energy" name="kWh" stroke="#10b981"
-                strokeWidth={2} fill="url(#gradEnergy)" dot={{ fill: "#10b981", r: 3 }} />
+                strokeWidth={2} fill="url(#gradEnergy)"
+                dot={{ fill: "#10b981", r: 3 }}
+                activeDot={{ r: 5, stroke: "#10b981", strokeWidth: 2, fill: "#030712" }}
+                animationDuration={600} />
             </AreaChart>
           </ResponsiveContainer>
         </div>

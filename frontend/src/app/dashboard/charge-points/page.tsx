@@ -5,8 +5,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Plus, X, Wifi, WifiOff, MapPin, Zap, RefreshCw,
   Pencil, Trash2, Check, ChevronRight, ChevronDown,
-  BatteryCharging, Activity, Server,
+  Activity, Server,
 } from "lucide-react";
+import EvChargerIcon from "@/components/EvChargerIcon";
 import api from "@/lib/axios";
 
 // ── Types ─────────────────────────────────────────────────────
@@ -96,9 +97,13 @@ function Field({ label, required, children }: { label: string; required?: boolea
 function ConnectorBadge({ connector }: { connector: Connector }) {
   const label = String.fromCharCode(64 + connector.connector_id); // A, B, C...
   const bg = connectorBg[connector.status] ?? connectorBg.Unknown;
+  const isCharging = connector.status === "Charging";
   return (
     <div className="relative inline-flex" title={`Connector ${label}: ${connector.status}`}>
-      <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${bg} ring-2 ring-gray-900`}>
+      {isCharging && (
+        <span className="absolute inset-0 rounded-full bg-blue-400 animate-ping opacity-40" />
+      )}
+      <span className={`relative w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${bg} ring-2 ring-gray-900`}>
         {label}
       </span>
     </div>
@@ -376,7 +381,7 @@ function CPRow({ cp, onEdit, onDelete }: {
         {/* Name */}
         <td className="px-3 py-3">
           <div className="flex items-center gap-2.5">
-            <div className={`w-2 h-2 rounded-full flex-shrink-0 ${cp.is_online ? "bg-emerald-400 shadow-[0_0_6px_#34d399]" : "bg-gray-600"}`} />
+            <EvChargerIcon status={cp.is_online ? cp.cp_status : "Unavailable"} size={22} />
             <div>
               <p className="text-sm font-medium text-white">{cp.name}</p>
               <p className="text-xs font-mono text-gray-500">{cp.charge_point_id}</p>
@@ -391,7 +396,7 @@ function CPRow({ cp, onEdit, onDelete }: {
               ? <Wifi className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
               : <WifiOff className="w-3.5 h-3.5 text-gray-600 flex-shrink-0" />
             }
-            <span className={`px-2 py-0.5 rounded-md text-xs font-medium border ${statusColor[cp.cp_status] ?? statusColor.Unknown}`}>
+            <span className={`px-2 py-0.5 rounded-md text-xs font-medium border transition-colors ${statusColor[cp.cp_status] ?? statusColor.Unknown}`}>
               {cp.cp_status}
             </span>
           </div>
@@ -512,13 +517,13 @@ export default function ChargePointsPage() {
       {/* Summary cards */}
       <div className="grid grid-cols-4 gap-3">
         {[
-          { label: "Total Stations", value: chargePoints.length, icon: Server, color: "text-white", bg: "bg-gray-800" },
-          { label: "Online", value: totalOnline, icon: Wifi, color: "text-emerald-400", bg: "bg-emerald-500/10" },
-          { label: "Sedang Mengisi", value: totalCharging, icon: Zap, color: "text-blue-400", bg: "bg-blue-500/10" },
-          { label: "Offline", value: chargePoints.length - totalOnline, icon: WifiOff, color: "text-gray-400", bg: "bg-gray-700/30" },
+          { label: "Total Stations", value: chargePoints.length, icon: Server, color: "text-white", bg: "bg-gray-800", pulse: false },
+          { label: "Online", value: totalOnline, icon: Wifi, color: "text-emerald-400", bg: "bg-emerald-500/10", pulse: false },
+          { label: "Sedang Mengisi", value: totalCharging, icon: Zap, color: "text-blue-400", bg: "bg-blue-500/10", pulse: totalCharging > 0 },
+          { label: "Offline", value: chargePoints.length - totalOnline, icon: WifiOff, color: "text-gray-400", bg: "bg-gray-700/30", pulse: false },
         ].map((s) => (
-          <div key={s.label} className="bg-gray-900 border border-gray-800 rounded-xl p-4 flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${s.bg}`}>
+          <div key={s.label} className="bg-gray-900 border border-gray-800 rounded-xl p-4 flex items-center gap-3 transition-colors hover:border-gray-700">
+            <div className={`p-2 rounded-lg ${s.bg} ${s.pulse ? "animate-status-glow" : ""}`} style={s.pulse ? { color: "#60a5fa" } : undefined}>
               <s.icon className={`w-4 h-4 ${s.color}`} />
             </div>
             <div>
@@ -570,7 +575,9 @@ export default function ChargePointsPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-48 text-center">
-            <BatteryCharging className="w-10 h-10 text-gray-700 mb-3" />
+            <div className="mb-3 opacity-60">
+              <EvChargerIcon status="Unavailable" size={48} />
+            </div>
             <p className="text-sm text-gray-500">
               {search ? "Tidak ada hasil pencarian" : "Belum ada charging station"}
             </p>

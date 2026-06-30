@@ -3,9 +3,13 @@
 import { useEffect, useState, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
-import { Wifi, WifiOff, Zap, Activity, Circle, RefreshCw, Gauge } from "lucide-react";
+import { Wifi, WifiOff, Zap, Activity, Circle, RefreshCw, Gauge, Radio } from "lucide-react";
+import EvChargerIcon from "@/components/EvChargerIcon";
+import EvChargerHud from "@/components/EvChargerHud";
+import HudStatRing from "@/components/HudStatRing";
+import AnimatedBatteryGauge from "@/components/AnimatedBatteryGauge";
 import api from "@/lib/axios";
 
 interface Connector { connector_id: number; status: string; }
@@ -146,54 +150,73 @@ function TransactionMeterChart({ tx }: { tx: ActiveTransaction }) {
   const unit = latest?.unit ?? "";
 
   return (
-    <div className="bg-gray-800/50 rounded-xl p-4 space-y-3">
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <div className="flex items-center gap-2">
-          <Gauge className="w-4 h-4 text-emerald-400" />
-          <p className="text-sm font-medium text-white">
-            {tx.charge_point_id} · Konektor {tx.connector_id}
-          </p>
-          <span className="text-xs font-mono text-gray-500">Tx #{tx.ocpp_transaction_id}</span>
+    <div className="hud-panel relative rounded-2xl border border-gray-800 bg-gray-950/70 overflow-hidden transition-colors hover:border-cyan-900/60">
+      <div className="relative z-10 p-4 space-y-3">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center gap-2">
+            <Gauge className="w-4 h-4 text-cyan-400" />
+            <p className="text-sm font-medium text-white font-mono">
+              {tx.charge_point_id} · CN-{tx.connector_id}
+            </p>
+            <span className="text-xs font-mono text-gray-500">Tx #{tx.ocpp_transaction_id}</span>
+            <span className="flex items-center gap-1 text-[10px] text-cyan-400 ml-1 font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-blink-dot" />
+              LIVE
+            </span>
+          </div>
+          {measurands.length > 0 && (
+            <select
+              value={selectedMeasurand}
+              onChange={(e) => setSelectedMeasurand(e.target.value)}
+              className="bg-gray-900 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white font-mono focus:outline-none focus:border-cyan-500">
+              {measurands.map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+            </select>
+          )}
         </div>
-        {measurands.length > 0 && (
-          <select
-            value={selectedMeasurand}
-            onChange={(e) => setSelectedMeasurand(e.target.value)}
-            className="bg-gray-800 border border-gray-700 rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-emerald-500">
-            {measurands.map((m) => (
-              <option key={m} value={m}>{m}</option>
-            ))}
-          </select>
+
+        {/* KPI nilai terkini besar */}
+        {latest && (
+          <div className="flex items-baseline gap-2">
+            <span key={latest.timestamp} className="text-3xl font-bold text-cyan-300 tabular-nums font-mono animate-counter-tick">
+              {latest.value}
+            </span>
+            <span className="text-xs text-gray-500 font-mono">{latest.unit} · {fmtChartTime(latest.timestamp)}</span>
+          </div>
+        )}
+
+        {loading ? (
+          <div className="flex items-center justify-center h-[160px]">
+            <RefreshCw className="w-4 h-4 animate-spin text-gray-500" />
+          </div>
+        ) : chartData.length === 0 ? (
+          <div className="flex items-center justify-center h-[160px] text-gray-600 text-sm font-mono">
+            Menunggu MeterValues...
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height={160}>
+            <AreaChart data={chartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
+              <defs>
+                <linearGradient id={`gradMeter-${tx.id}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={colorFor(selectedMeasurand, 0)} stopOpacity={0.35} />
+                  <stop offset="95%" stopColor={colorFor(selectedMeasurand, 0)} stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
+              <XAxis dataKey="time" tick={{ fill: "#6b7280", fontSize: 10 }} axisLine={false} tickLine={false}
+                interval={Math.floor(chartData.length / 6)} />
+              <YAxis tick={{ fill: "#6b7280", fontSize: 10 }} axisLine={false} tickLine={false} />
+              <Tooltip content={<ChartTooltip />} />
+              <Area type="monotone" dataKey="value" name={`${selectedMeasurand}${unit ? ` (${unit})` : ""}`}
+                stroke={colorFor(selectedMeasurand, 0)} strokeWidth={2} dot={false}
+                fill={`url(#gradMeter-${tx.id})`}
+                activeDot={{ r: 4, stroke: colorFor(selectedMeasurand, 0), strokeWidth: 2, fill: "#0f172a" }}
+                isAnimationActive={false} />
+            </AreaChart>
+          </ResponsiveContainer>
         )}
       </div>
-
-      {loading ? (
-        <div className="flex items-center justify-center h-[180px]">
-          <RefreshCw className="w-4 h-4 animate-spin text-gray-500" />
-        </div>
-      ) : chartData.length === 0 ? (
-        <div className="flex items-center justify-center h-[180px] text-gray-600 text-sm">
-          Menunggu MeterValues...
-        </div>
-      ) : (
-        <ResponsiveContainer width="100%" height={180}>
-          <LineChart data={chartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-            <XAxis dataKey="time" tick={{ fill: "#6b7280", fontSize: 10 }} axisLine={false} tickLine={false}
-              interval={Math.floor(chartData.length / 6)} />
-            <YAxis tick={{ fill: "#6b7280", fontSize: 10 }} axisLine={false} tickLine={false} />
-            <Tooltip content={<ChartTooltip />} />
-            <Line type="monotone" dataKey="value" name={`${selectedMeasurand}${unit ? ` (${unit})` : ""}`}
-              stroke={colorFor(selectedMeasurand, 0)} strokeWidth={2} dot={false} isAnimationActive={false} />
-          </LineChart>
-        </ResponsiveContainer>
-      )}
-
-      {latest && (
-        <p className="text-xs text-gray-500">
-          Nilai terakhir: <span className="text-white font-semibold">{latest.value} {latest.unit}</span> · {fmtChartTime(latest.timestamp)}
-        </p>
-      )}
     </div>
   );
 }
@@ -209,10 +232,10 @@ function TransactionMonitorSection() {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-white flex items-center gap-2">
-          <Activity className="w-4 h-4 text-emerald-400" /> Monitor Transaksi Aktif
+        <h2 className="text-sm font-semibold text-white flex items-center gap-2 font-mono">
+          <Activity className="w-4 h-4 text-cyan-400 animate-status-glow" /> ACTIVE_SESSIONS // TRANSAKSI BERJALAN
         </h2>
-        <span className="text-xs text-gray-500">{activeTx.length} transaksi berjalan</span>
+        <span className="text-xs text-gray-500 font-mono">[{activeTx.length}]</span>
       </div>
 
       {isLoading ? (
@@ -388,33 +411,36 @@ export default function MonitorPage() {
   const charging = cpList.filter(cp => cp.cp_status === "Charging").length;
 
   return (
-    <div className="p-6 space-y-5">
+    <div className="relative p-6 space-y-6 hud-grid-bg rounded-2xl">
+      {/* ── Header ───────────────────────────────────────────── */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-white">Monitoring Real-time</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Live status charge point via WebSocket</p>
+          <h1 className="text-xl font-bold text-white flex items-center gap-2">
+            <Radio className="w-5 h-5 text-cyan-400" />
+            EVCS Command Center
+          </h1>
+          <p className="text-sm text-gray-500 mt-0.5 font-mono">
+            Live status charge point via WebSocket
+          </p>
         </div>
-        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-medium ${wsConnected ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
-          : "text-red-400 bg-red-500/10 border-red-500/20"
+        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-mono font-medium ${wsConnected ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/30 shadow-[0_0_12px_-4px_#34d399]"
+          : "text-red-400 bg-red-500/10 border-red-500/30"
           }`}>
-          <Circle className={`w-2 h-2 fill-current ${wsConnected ? "animate-pulse" : ""}`} />
-          {wsConnected ? "Connected" : "Disconnected"}
+          <Circle className={`w-2 h-2 fill-current ${wsConnected ? "animate-blink-dot" : ""}`} />
+          {wsConnected ? "LINK ESTABLISHED" : "LINK LOST"}
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          { label: "Total CP", value: cpList.length, color: "text-white" },
-          { label: "Online", value: online, color: "text-emerald-400" },
-          { label: "Charging", value: charging, color: "text-blue-400" },
-        ].map(s => (
-          <div key={s.label} className="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
-            <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
-            <p className="text-xs text-gray-500 mt-1">{s.label}</p>
-          </div>
-        ))}
+      {/* ── Strip ringkasan HUD (ring counter) ──────────────── */}
+      <div className="hud-panel border border-gray-800 rounded-2xl bg-gray-950/60 backdrop-blur-sm overflow-hidden">
+        <div className="relative z-10 flex items-stretch justify-center divide-x divide-gray-800/80">
+          <HudStatRing label="Total CP" value={cpList.length} color="#e5e7eb" />
+          <HudStatRing label="Online" value={online} total={cpList.length || 1} color="#34d399" pulse={online > 0} />
+          <HudStatRing label="Charging" value={charging} total={cpList.length || 1} color="#22d3ee" pulse={charging > 0} />
+        </div>
       </div>
 
+      {/* ── Grid kartu charger HUD ───────────────────────────── */}
       {loading ? (
         <div className="flex items-center justify-center h-40">
           <RefreshCw className="w-5 h-5 animate-spin text-gray-500" />
@@ -425,48 +451,89 @@ export default function MonitorPage() {
           <p className="text-sm text-gray-500">Belum ada charge point</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-          {cpList.map(cp => (
-            <div key={cp.charge_point_id} className={`bg-gray-900 border rounded-xl overflow-hidden ${cp.is_online ? "border-gray-700" : "border-gray-800 opacity-60"
-              }`}>
-              <div className="px-4 py-3 border-b border-gray-800 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className={`w-2.5 h-2.5 rounded-full ${cp.is_online ? "bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]" : "bg-gray-600"
-                    }`} />
-                  <div>
-                    <p className="text-sm font-semibold text-white">{cp.name}</p>
-                    <p className="text-xs font-mono text-gray-500">{cp.charge_point_id}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={`px-2 py-0.5 rounded-md text-xs font-medium border ${statusColor[cp.cp_status] ?? statusColor.Unknown}`}>
-                    {cp.cp_status}
-                  </span>
-                  {cp.is_online ? <Wifi className="w-4 h-4 text-emerald-400" /> : <WifiOff className="w-4 h-4 text-gray-600" />}
-                </div>
-              </div>
-              <div className="p-4 space-y-3">
-                {cp.vendor_name && <p className="text-xs text-gray-500">{cp.vendor_name} · {cp.model}</p>}
-                {cp.connectors.length > 0 ? (
-                  <div className="space-y-1.5">
-                    <p className="text-xs font-medium text-gray-500">Konektor</p>
-                    <div className="grid grid-cols-2 gap-2">
-                      {cp.connectors.map(c => (
-                        <div key={c.connector_id} className={`rounded-lg border px-3 py-2.5 flex items-center justify-between ${statusColor[c.status] ?? statusColor.Unknown}`}>
-                          <div className="flex items-center gap-1.5">
-                            <Zap className="w-3.5 h-3.5" />
-                            <span className="text-xs font-medium">Konektor {c.connector_id}</span>
-                          </div>
-                          <span className="text-xs font-bold">{c.status}</span>
-                        </div>
-                      ))}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {cpList.map(cp => {
+            const effectiveStatus = cp.is_online ? cp.cp_status : "Unavailable";
+            const isLive = cp.is_online && (cp.cp_status === "Charging" || cp.cp_status === "Preparing");
+            const ringGlow = effectiveStatus === "Charging" ? "shadow-cyan-500/30"
+              : effectiveStatus === "Faulted" ? "shadow-red-500/30"
+              : effectiveStatus === "Available" ? "shadow-emerald-500/20"
+              : "shadow-transparent";
+            return (
+              <div
+                key={cp.charge_point_id}
+                className={`hud-panel relative rounded-2xl overflow-hidden border transition-all ${cp.is_online ? "border-gray-700" : "border-gray-800 opacity-50"} ${isLive ? `animate-border-glow-pulse shadow-lg ${ringGlow}` : ""}`}
+                style={isLive ? { ["--tw-shadow-color" as any]: effectiveStatus === "Charging" ? "#22d3ee" : "#fbbf24" } : undefined}
+              >
+                {/* Scanline animasi melintas di atas kartu aktif */}
+                {isLive && (
+                  <div className="absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-cyan-400/10 to-transparent animate-hud-scan pointer-events-none z-0" />
+                )}
+
+                <div className="relative z-10 bg-gray-950/70 backdrop-blur-sm">
+                  {/* Header card: nama + status badge */}
+                  <div className="px-4 py-3 border-b border-gray-800/80 flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-semibold text-white">{cp.name}</p>
+                      <p className="text-xs font-mono text-gray-500">{cp.charge_point_id}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-0.5 rounded-md text-xs font-mono font-medium border transition-colors ${statusColor[cp.cp_status] ?? statusColor.Unknown}`}>
+                        {cp.cp_status.toUpperCase()}
+                      </span>
+                      {cp.is_online ? <Wifi className="w-4 h-4 text-emerald-400" /> : <WifiOff className="w-4 h-4 text-gray-600" />}
                     </div>
                   </div>
-                ) : <p className="text-xs text-gray-600">Menunggu StatusNotification...</p>}
-                {cp.last_heartbeat && <p className="text-xs text-gray-600">Heartbeat: {formatTime(cp.last_heartbeat)}</p>}
+
+                  {/* Hero: ikon charger HUD besar di tengah */}
+                  <div className="flex items-center justify-center py-5 relative">
+                    <span className="hud-corner hud-corner-tl text-gray-700" />
+                    <span className="hud-corner hud-corner-tr text-gray-700" />
+                    <span className="hud-corner hud-corner-bl text-gray-700" />
+                    <span className="hud-corner hud-corner-br text-gray-700" />
+                    <EvChargerHud status={effectiveStatus} size={132} />
+                  </div>
+
+                  {/* Vendor / model */}
+                  {cp.vendor_name && (
+                    <p className="text-center text-xs text-gray-500 font-mono -mt-2 mb-2">
+                      {cp.vendor_name} · {cp.model}
+                    </p>
+                  )}
+
+                  {/* Konektor */}
+                  <div className="p-4 pt-2 space-y-3">
+                    {cp.connectors.length > 0 ? (
+                      <div className="space-y-1.5">
+                        <p className="text-[11px] font-mono uppercase tracking-wider text-gray-500">Konektor</p>
+                        <div className="grid grid-cols-2 gap-2">
+                          {cp.connectors.map(c => (
+                            <div key={c.connector_id} className={`relative rounded-lg border px-3 py-2.5 flex items-center justify-between transition-colors ${statusColor[c.status] ?? statusColor.Unknown}`}>
+                              <div className="flex items-center gap-1.5">
+                                <Zap className={`w-3.5 h-3.5 ${c.status === "Charging" ? "animate-status-glow" : ""}`} />
+                                <span className="text-xs font-mono font-medium">CN-{c.connector_id}</span>
+                              </div>
+                              {c.status === "Charging" ? (
+                                <AnimatedBatteryGauge isCharging size="sm" />
+                              ) : (
+                                <span className="text-xs font-bold font-mono">{c.status}</span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : <p className="text-xs text-gray-600 font-mono">Menunggu StatusNotification...</p>}
+                    {cp.last_heartbeat && (
+                      <p className="text-xs text-gray-600 font-mono flex items-center gap-1.5">
+                        <span className={`w-1.5 h-1.5 rounded-full ${cp.is_online ? "bg-emerald-500 animate-blink-dot" : "bg-gray-600"}`} />
+                        HB: {formatTime(cp.last_heartbeat)}
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
